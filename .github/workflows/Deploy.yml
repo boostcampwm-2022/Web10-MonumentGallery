@@ -13,18 +13,23 @@ jobs:
         run: |
           docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
           echo "---- express-server ----"
+          echo ${{secrets.MONGO_URL}} > ./server/.env
           docker build -t express-server ./server
           docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server
           docker push ${{secrets.DOCKER_USERNAME}}/express-server
           echo "---- fastapi-server ----"
           docker build -t fastapi-server ./python
           docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server
-          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-serve
+          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-server
       - name: Deploy
-        uses: cross-the-world/ssh-pipeline@v1.2.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.NCLOUD_HOST}}
-          user: root
-          pass: ${{secrets.NCLOUD_PASSWORD}}
+          username: ${{secrets.NCLOUD_USERNAME}}
+          password: ${{secrets.NCLOUD_PASSWORD}}
+          port: ${{secrets.NCLOUD_PORT}}
           script: |
-            echo "---- ssh complete! ----"
+            docker pull ${{secrets.DOCKER_USERNAME}}/express-server
+            docker tag ${{secrets.DOCKER_USERNAME}}/express-server express-server
+            docker stop express-server
+            docker run -d --rm --name express-server -p 3000:3000 express-server

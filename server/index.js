@@ -9,7 +9,7 @@ const app = express();
 const port = 3000;
 
 const mongoURI = process.env.mongo_url;
-await mongoose.connect(mongoURI);
+mongoose.connect(mongoURI);
 const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
@@ -47,7 +47,7 @@ app.get("/testGet", async (req, res) => {
   // Promise 객체를 정말로 상속하는가?
   // 아니면 Promise 프로토콜같은 게 있어서 그걸 따르기만 하면 await를 넣을 수 있는것일까?
   console.log(allData);
-  res.json({ result: "test" });
+  res.json(allData);
 });
 
 // FastAPI 연결 확인 test

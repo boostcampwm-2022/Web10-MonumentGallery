@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
-const mongoURI = process.env.mongo_url;
+const mongoURI = process.env.MONGO_URL;
 mongoose.connect(mongoURI);
 const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
@@ -52,7 +52,7 @@ app.get("/testGet", async (req, res) => {
 
 // FastAPI 연결 확인 test
 app.get("/pytest", (req, res) => {
-  const fastapiEndpoint = process.env.fastapi_endpoint;
+  const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
   axios.get(fastapiEndpoint).then(() => {
     res.send("pytest");
   });

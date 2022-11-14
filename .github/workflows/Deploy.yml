@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: ["main"]
+    branches: ["feat/docker"]
   pull_request:
-    branches: ["main"]
+    branches: ["feat/docker"]
 jobs:
   build:
     runs-on: ubuntu-latest

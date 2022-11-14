@@ -1,0 +1,30 @@
+name: Deploy
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the express Docker image & push to dockerhub
+        run: |
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+          echo "---- express-server ----"
+          docker build -t express-server ./server
+          docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server
+          docker push ${{secrets.DOCKER_USERNAME}}/express-server
+          echo "---- fastapi-server ----"
+          docker build -t fastapi-server ./python
+          docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server
+          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-serve
+      - name: Deploy
+        uses: cross-the-world/ssh-pipeline@v1.2.0
+        with:
+          host: ${{secrets.NCLOUD_HOST}}
+          user: root
+          pass: ${{secrets.NCLOUD_PASSWORD}}
+          script: |
+            echo "---- ssh complete! ----"

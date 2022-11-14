@@ -10,7 +10,10 @@
 
 ### python 인터프리터 선택
 
-`.venv/bin/activate` 또는 `source .venv/bin/activate`
+- window
+  `.venv\Scripts\activate.bat`
+- mac
+  `source .venv/bin/activate`
 
 ### dependency 설치
 

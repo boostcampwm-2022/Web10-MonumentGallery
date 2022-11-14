@@ -52,7 +52,8 @@ app.get("/testGet", async (req, res) => {
 
 // FastAPI 연결 확인 test
 app.get("/pytest", (req, res) => {
-  axios.get("http://127.0.0.1:8000/").then(() => {
+  const fastapiEndpoint = process.env.fastapi_endpoint;
+  axios.get(fastapiEndpoint).then(() => {
     res.send("pytest");
   });
 });

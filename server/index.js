@@ -1,17 +1,18 @@
 import express from "express";
 import proxy from "express-http-proxy";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
 import authRouter from "./router/authRouter.js";
 import pageRouter from "./router/pageRouter.js";
 import testRouter from "./router/testRouter.js";
 import devRedirectRouter from "./router/devRedirectRouter.js";
-import {HttpError} from "./utils/httpError.js";
-import {HTTP_STATUS} from "./utils/constants.js";
+import { HttpError } from "./utils/httpError.js";
+import { HTTP_STATUS } from "./utils/constants.js";
 
 dotenv.config();
+
 const app = express();
 const port = 3000;
 
@@ -49,18 +50,17 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // error handler
-app.use( (err, req, res, next)=>{
-  if(err instanceof HttpError) {
-    res.status(err.statusCode).send( {reason:err.message} );
-  }
-  else {
-    console.error( err.stack );
-    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send( {
-      reason:"Server is bugged:( Plz report the bug to admin."
-    } );
+app.use((err, req, res, next) => {
+  if (err instanceof HttpError) {
+    res.status(err.statusCode).send({ reason: err.message });
+  } else {
+    console.error(err.stack);
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).send({
+      reason: "Server is bugged:( Plz report the bug to admin.",
+    });
   }
   next();
-} );
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

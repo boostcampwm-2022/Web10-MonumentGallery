@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import TestModel from "./model/testSchema.js";
 import axios from "axios";
-
+import authRouter from "./router/authRouter.js";
+import pageRouter from "./router/pageRouter.js";
 dotenv.config();
 const app = express();
 const port = 3000;
@@ -19,6 +20,9 @@ app.use(express.urlencoded({ extended: false }));
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+app.use("/", pageRouter);
+app.use("/auth", authRouter);
+
 app.get("/", (req, res) => {
   res.send("data");
 });

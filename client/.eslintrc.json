@@ -7,7 +7,7 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "eslint-config-prettier"
+    "plugin:prettier/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -17,12 +17,14 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "semi": ["error", "always"],
     "no-var": "error",
-    "quotes": ["error", "double"],
-    "indent": ["error", 2],
     "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
-    "max-len": ["error", { "code": 120 }],
+    "max-len": ["error", { 
+      "code": 120, 
+      "ignoreComments": true,
+      "ignoreUrls": true,
+      "ignoreStrings": true
+     }],
     "no-undef": 0,
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off"

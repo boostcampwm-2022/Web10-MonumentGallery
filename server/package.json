@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "set NODE_ENV=production& node index.js",
-    "server-dev": "set NODE_ENV=development& nodemon index.js",
+    "server": "cross-env NODE_ENV=production node index.js",
+    "server-dev": "cross-env NODE_ENV=development nodemon index.js",
     "client": "cd ../client && npm run dev",
     "dev": "concurrently \"npm run server-dev\" \"npm run client\"",
     "lint": "eslint ."
@@ -16,6 +16,7 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^7.5.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.27.0",
     "nodemon": "^2.0.20"
   },

@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import authRouter from "./router/authRouter.js";
 import pageRouter from "./router/pageRouter.js";
 import testRouter from "./router/testRouter.js";
-import devRedirectRouter from"./router/devRedirectRouter.js";
+import devRedirectRouter from "./router/devRedirectRouter.js";
 
 dotenv.config();
 const app = express();
@@ -27,19 +27,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/auth", authRouter);
 app.use("/test", testRouter);
 
-if(process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development") {
   console.log("dev!");
   app.use("/", devRedirectRouter);
-  app.use("/", proxy(
-    "http://localhost:5173",
-    {
-      skipToNextHandlerFilter: function(proxyRes) {
+  app.use(
+    "/",
+    proxy("http://localhost:5173", {
+      skipToNextHandlerFilter: function (proxyRes) {
         return proxyRes.statusCode === 404;
-      }
-    },
-  ));
+      },
+    })
+  );
 }
-if(process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
   console.log("prod!");
   app.use("/", pageRouter);
 }

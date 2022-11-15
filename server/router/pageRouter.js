@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 });
 router.get("/create", async (req, res) => {
   // res.sendFile(path.join(__dirname, "../client/build/create.html"));
-  res.send("create 페이지 입니다.");
+  res.sendFile(path.resolve("../client/dist/create.html"));
 });
 
 export default router;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FullScreenModal from "../../components/modal/FullScreenModal";
+import FullScreenModal from "../components/modal/FullScreenModal";
 import "./style.scss";
 
 export default function MainPage() {

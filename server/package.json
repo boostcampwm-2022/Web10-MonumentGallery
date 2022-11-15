@@ -5,10 +5,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "set NODE_ENV=production & node index.js",
-    "server-dev": "set NODE_ENV=development & nodemon index.js",
+    "server": "set NODE_ENV=production& node index.js",
+    "server-dev": "set NODE_ENV=development& nodemon index.js",
     "client": "cd ../client && npm run dev",
-    "dev": "concurrently \"npm run server-dev\" \"npm run client\""
+    "dev": "concurrently \"npm run server-dev\" \"npm run client\"",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "axios": "^1.1.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-http-proxy": "^1.6.3",
     "mongoose": "^6.7.2"
   }
 }

@@ -1,13 +1,18 @@
 import express from "express";
+import proxy from "express-http-proxy";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import TestModel from "./model/testSchema.js";
-import axios from "axios";
+
 import authRouter from "./router/authRouter.js";
 import pageRouter from "./router/pageRouter.js";
+import testRouter from "./router/testRouter.js";
+import devRedirectRouter from"./router/devRedirectRouter.js";
+
 dotenv.config();
 const app = express();
 const port = 3000;
+
+console.log(`[${process.env.NODE_ENV}]`);
 
 const mongoURI = process.env.MONGO_URL;
 mongoose.connect(mongoURI);
@@ -15,49 +20,30 @@ const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
 
+app.use("/assets", express.static("../client/dist/assets"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use("/auth", authRouter);
+app.use("/test", testRouter);
+
+if(process.env.NODE_ENV === "development") {
+  console.log("dev!");
+  app.use("/", devRedirectRouter);
+  app.use("/", proxy(
+    "http://localhost:5173",
+    {
+      skipToNextHandlerFilter: function(proxyRes) {
+        return proxyRes.statusCode === 404;
+      }
+    },
+  ));
+}
+if(process.env.NODE_ENV === "production") {
+  console.log("prod!");
+  app.use("/", pageRouter);
+}
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-});
-app.use("/", pageRouter);
-app.use("/auth", authRouter);
-
-app.get("/", (req, res) => {
-  res.send("data");
-});
-
-app.get("/testPost", (req, res) => {
-  const username = `${Math.floor(Math.random() * 100000)}`;
-  TestModel.create({
-    username,
-    password: "password",
-  })
-    .then((e) => {
-      console.log("success!");
-      console.log(e);
-      res.json({ result: "success" });
-    })
-    .catch((e) => {
-      console.log("failed!");
-      console.log(e);
-      res.json({ result: "fail" });
-    });
-});
-
-app.get("/testGet", async (req, res) => {
-  const allData = await TestModel.find();
-  // TestModel.find()는 Query 객체를 반환하는데 await가 됨. 왜일까
-  // Promise 객체를 정말로 상속하는가?
-  // 아니면 Promise 프로토콜같은 게 있어서 그걸 따르기만 하면 await를 넣을 수 있는것일까?
-  console.log(allData);
-  res.json(allData);
-});
-
-// FastAPI 연결 확인 test
-app.get("/pytest", (req, res) => {
-  const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
-  axios.get(fastapiEndpoint).then(() => {
-    res.send("pytest");
-  });
 });

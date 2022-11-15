@@ -5,11 +5,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node index.js",
-    "server-dev": "nodemon index.js",
+    "server": "set NODE_ENV=production & node index.js",
+    "server-dev": "set NODE_ENV=development & nodemon index.js",
     "client": "cd ../client && npm run dev",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server-dev\" \"npm run client\""
   },
   "keywords": [],
   "author": "",

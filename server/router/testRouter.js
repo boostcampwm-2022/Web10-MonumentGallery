@@ -1,5 +1,5 @@
 import express from "express";
-import {loadDataFromToken} from "../model/accessTokenStore.js";
+import { loadDataFromToken } from "../model/accessTokenStore.js";
 import TestModel from "../model/testSchema.js";
 import { Client } from "@notionhq/client";
 
@@ -33,7 +33,7 @@ router.get("/testGet", async (req, res) => {
 
 router.get("/getData", async (req, res) => {
   const token = req.cookies.token;
-  const { accessToken } = loadDataFromToken(token);
+  const { accessToken } = await loadDataFromToken(token);
   if (accessToken) {
     const notion = new Client({ auth: accessToken });
     const response = await notion.search({

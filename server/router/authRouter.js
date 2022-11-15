@@ -1,5 +1,6 @@
 import express from "express";
 import axios from "axios";
+import { createToken } from "../service/authService.js";
 
 const router = express.Router();
 
@@ -23,6 +24,9 @@ router.get("/notion/callback", async (req, res) => {
       },
     });
     console.log("ACCESS_TOKEN: ", response.data.access_token);
+    console.log({ token: createToken(response.data.owner.user) });
+    const token = createToken(response.data.owner.user);
+    res.cookie("token", token, { httpOnly: true, maxAge: 3600 * 1000 });
     res.redirect("http://localhost:3000/create");
   }
 });

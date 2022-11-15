@@ -17,6 +17,7 @@ jobs:
           echo "${{secrets.FASTAPI_ENDPOINT}}" >> ./server/.env
           echo "${{secrets.NOTION_CLIENT_ID}}" >> ./server/.env
           echo "${{secrets.NOTION_CLIENT_SECRET}}" >> ./server/.env
+          echo "${{secrets.TOKEN_SECRET}}" >> ./server/.env
           cat ./server/.env
           docker build -t express-server ./server
           docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server

@@ -7,6 +7,7 @@ import authRouter from "./router/authRouter.js";
 import pageRouter from "./router/pageRouter.js";
 import testRouter from "./router/testRouter.js";
 import devRedirectRouter from "./router/devRedirectRouter.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,7 @@ db.on("error", (err) => console.log("DB connection failed : ", err));
 
 app.use("/assets", express.static("../client/dist/assets"));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/auth", authRouter);

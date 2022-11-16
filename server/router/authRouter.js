@@ -5,7 +5,8 @@ import { TOKEN_EXPIRES } from "../utils/constants.js";
 
 const router = express.Router();
 
-router.get("/notion/oauth", (req, res) => {
+
+router.get("/login", (req, res)=>{
   res.redirect(process.env.NOTION_LOGIN_URL);
 });
 
@@ -22,5 +23,10 @@ router.get(
     res.redirect("/create");
   }),
 );
+
+router.get("/check", (req, res)=>{
+  const id = req.userid ?? null;
+  res.json({logined: !!id, id});
+});
 
 export default router;

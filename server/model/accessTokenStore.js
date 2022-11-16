@@ -37,6 +37,13 @@ export async function saveTokenData(token, data) {
   await client.set(token, JSON.stringify(data), options);
 }
 
+export async function hasTokenData(token) {
+  const client = await getRedisClient();
+  const isExists = await client.exists(token);
+  if(isExists) return true;
+  throw new Error("JWT Token doesn't exist in Database!");
+}
+
 export async function loadDataFromToken(token) {
   const client = await getRedisClient();
   const isExists = await client.exists(token);

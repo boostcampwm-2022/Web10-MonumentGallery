@@ -8,6 +8,7 @@ router.get("/", (req, res) => {
   res.sendFile(path.resolve("../client/dist/index.html"));
 });
 router.get("/create", async (req, res) => {
+  if( req.userid == null ) return res.redirect("/");
   res.sendFile(path.resolve("../client/dist/create.html"));
 });
 

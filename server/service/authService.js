@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { saveTokenData } from "../model/accessTokenStore.js";
+import { saveTokenData, hasTokenData, loadDataFromToken } from "../model/accessTokenStore.js";
 import { UnauthenticatedError } from "../utils/httpError.js";
 
 export async function getTokenDataFromNotion(code) {
@@ -38,4 +38,21 @@ export function saveToken({ user, accessToken }) {
   const jwtToken = createToken(user);
   saveTokenData(jwtToken, { user, accessToken });
   return jwtToken;
+}
+
+export async function validateToken(jwtToken) {
+  if(jwtToken == null) return {success:false, reason:"미로그인 상태"};
+
+  try {
+    const tokenRawData = jwt.verify(jwtToken, process.env.TOKEN_SECRET);
+    await hasTokenData(jwtToken);
+    return {success:true, data:tokenRawData};
+  }
+  catch(e) {
+    return {success:false, reason:e.message};
+  }
+}
+
+export function extractUserDataFromToken(jwtToken) {
+  return loadDataFromToken(jwtToken);
 }

@@ -9,6 +9,10 @@
   box-sizing: border-box;
 }
 
+a {
+  text-decoration: none;
+}
+
 button {
   font-family: inherit;
   border: 0;
@@ -20,6 +24,15 @@ body {
   font-family: "MapoFlowerIsland";
   font-size: 16px;
   margin: 0;
+}
+
+.canvas-outer {
+  width: 100vw;
+  height: 100vh;
+}
+
+.canvas-inner {
+  background-color: #999999;
 }
 
 /* 혹시 모름 쓸지도 모름 참고용으로 남겨둠

@@ -1,13 +1,13 @@
 import React from "react";
-import Menu from "../../../public/images/hamburger.svg";
+import Menu from "../../assets/images/hamburger.svg";
 import "./style.scss";
 
 export default function Header() {
   return (
     <div className="header">
-      <button>
+      <a href="/">
         <span className="logo">MonumentGallery</span>
-      </button>
+      </a>
       <button>
         <img width={24} height={24} src={Menu} />
       </button>

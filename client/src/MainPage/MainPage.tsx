@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import FullScreenModal from "../components/modal/FullScreenModal";
 import FloatLayout from "../layouts/FloatLayout";
-import NotionIcon from "../../public/images/notion-icon.png";
+import NotionIcon from "../assets/images/notion-icon.png";
 import "./style.scss";
 
 export default function MainPage() {

@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: ["feat/docker"]
+    branches: ["feat/notion-oauth"]
   pull_request:
-    branches: ["feat/docker"]
+    branches: ["feat/notion-oauth"]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,6 +15,10 @@ jobs:
           echo "---- express-server ----"
           echo "${{secrets.MONGO_URL}}" >> ./server/.env
           echo "${{secrets.FASTAPI_ENDPOINT}}" >> ./server/.env
+          echo "${{secrets.NOTION_CLIENT_ID}}" >> ./server/.env
+          echo "${{secrets.NOTION_CLIENT_SECRET}}" >> ./server/.env
+          echo "${{secrets.TOKEN_SECRET}}" >> ./server/.env
+          echo "${{secrets.REDIS_URL}}" >> ./server/.env
           cat ./server/.env
           docker build -t express-server ./server
           docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server

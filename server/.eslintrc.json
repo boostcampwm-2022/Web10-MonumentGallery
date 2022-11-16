@@ -9,6 +9,20 @@
     "sourceType": "module"
   },
   "rules": {
+    "semi": ["error", "always"],
+    "no-var": "error",
+    "quotes": ["error", "double"],
+    "indent": ["error", 2],
+    "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true
+      }
+    ],
     "no-undef": 0
   }
 }

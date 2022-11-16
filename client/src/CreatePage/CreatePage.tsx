@@ -13,6 +13,11 @@ export default function CreatePage() {
       console.log(response.data);
     });
   }
+
+  function showModal() {
+    setShow(true);
+  }
+
   return (
     <main>
       <div className="canvas-outer">
@@ -22,13 +27,7 @@ export default function CreatePage() {
       </div>
       <FloatLayout>
         <Header />
-        <button
-          className="upload-btn"
-          type="button"
-          onClick={() => {
-            setShow(true);
-          }}
-        >
+        <button className="upload-btn" type="button" onClick={showModal}>
           Upload
         </button>
       </FloatLayout>

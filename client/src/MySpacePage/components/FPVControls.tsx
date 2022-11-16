@@ -1,15 +1,25 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
 
-export default function FPVControls() {
+export default function FPVControls({
+  locked,
+  setLocked,
+}: {
+  locked: boolean;
+  setLocked: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const controlsRef = useRef<any>(null!);
-  const isLocked = useRef(false);
   const [moveForward, setMoveForward] = useState(false);
   const [moveBackward, setMoveBackward] = useState(false);
   const [moveLeft, setMoveLeft] = useState(false);
   const [moveRight, setMoveRight] = useState(false);
 
+  useEffect(() => {
+    if (locked) {
+      controlsRef.current.lock();
+    }
+  });
   useFrame(() => {
     const velocity = 0.05;
     if (moveForward) {
@@ -23,7 +33,7 @@ export default function FPVControls() {
     }
   });
 
-  function onKeyDown(event: any) {
+  function onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case "ArrowUp":
       case "KeyW":
@@ -49,7 +59,7 @@ export default function FPVControls() {
     }
   }
 
-  function onKeyUp(event: any) {
+  function onKeyUp(event: KeyboardEvent) {
     switch (event.code) {
       case "ArrowUp":
       case "KeyW":
@@ -71,6 +81,10 @@ export default function FPVControls() {
         setMoveRight(false);
         break;
 
+      case "KeyE":
+        setLocked(true);
+        break;
+
       default:
         return;
     }
@@ -78,16 +92,15 @@ export default function FPVControls() {
 
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("keyup", onKeyUp);
-
   return (
     <PointerLockControls
       onUpdate={() => {
         if (controlsRef.current) {
           controlsRef.current.addEventListener("lock", () => {
-            isLocked.current = true;
+            setLocked(true);
           });
           controlsRef.current.addEventListener("unlock", () => {
-            isLocked.current = false;
+            setLocked(false);
           });
         }
       }}

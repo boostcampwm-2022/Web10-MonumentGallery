@@ -10,7 +10,8 @@
   },
   "rules": {
     "no-var": "error",
-    "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+    "no-unused-vars": "off",
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
     "max-len": [
       "error",
       {

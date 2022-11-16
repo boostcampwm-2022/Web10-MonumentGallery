@@ -41,15 +41,14 @@ export function saveToken({ user, accessToken }) {
 }
 
 export async function validateToken(jwtToken) {
-  if(jwtToken == null) return {success:false, reason:"미로그인 상태"};
+  if (jwtToken == null) return { success: false, reason: "미로그인 상태" };
 
   try {
     const tokenRawData = jwt.verify(jwtToken, process.env.TOKEN_SECRET);
     await hasTokenData(jwtToken);
-    return {success:true, data:tokenRawData};
-  }
-  catch(e) {
-    return {success:false, reason:e.message};
+    return { success: true, data: tokenRawData };
+  } catch (e) {
+    return { success: false, reason: e.message };
   }
 }
 

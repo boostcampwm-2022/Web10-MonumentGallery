@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
-import {authMiddleware, catchAuthError} from "./middleware/authMiddleware.js";
+import { authMiddleware, catchAuthError } from "./middleware/authMiddleware.js";
 import authRouter from "./router/authRouter.js";
 import pageRouter from "./router/pageRouter.js";
 import testRouter from "./router/testRouter.js";
@@ -70,7 +70,6 @@ app.use((err, req, res, next) => {
     });
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

@@ -26,6 +26,7 @@ const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
 
+app.use("/reset.css", express.static("../client/dist/reset.css"));
 app.use("/assets", express.static("../client/dist/assets"));
 app.use(express.json());
 app.use(cookieParser());

@@ -9,32 +9,11 @@ import Header from "../components/Header";
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
   function getData() {
-    axios
-      .get("/test/getData", {
-        // withCredentials: true, // 쿠키 cors 통신 설정
-      })
-      .then((response) => {
-        console.log(response);
-        console.log(response.data);
-      });
+    axios.get("/test/getData").then((response) => {
+      console.log(response.data);
+    });
   }
   return (
-    // <div>
-    //   <button
-    //     className="upload-btn"
-    //     type="button"
-    //     onClick={() => {
-    //       setShow(true);
-    //     }}
-    //   >
-    //     upload
-    //   </button>
-    // <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
-    //   <button type="button" onClick={getData}>
-    //     생성
-    //   </button>
-    // </FullScreenModal>
-    // </div>
     <main>
       <div className="canvas-outer">
         <Canvas className="canvas-inner">
@@ -60,9 +39,6 @@ export default function CreatePage() {
             <span>생성하기</span>
           </button>
         </div>
-        {/* <button type="button" onClick={getData}>
-          생성
-        </button> */}
       </FullScreenModal>
     </main>
   );

@@ -12,5 +12,9 @@ router.get("/create", async (req, res) => {
   // res.sendFile(path.join(__dirname, "../client/build/create.html"));
   res.sendFile(path.resolve("../client/dist/create.html"));
 });
+router.get("/myspace", async (req, res) => {
+  console.log("this is myspace");
+  res.sendFile(path.resolve("../client/dist/myspace.html"));
+});
 
 export default router;

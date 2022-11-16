@@ -10,11 +10,11 @@ import testRouter from "./router/testRouter.js";
 import devRedirectRouter from "./router/devRedirectRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
-import { startRedis } from "./model/accessTokenStore.js";
+import { startRedis, getRedisClient } from "./model/accessTokenStore.js";
 
 dotenv.config();
 
-await startRedis();
+startRedis();
 const app = express();
 const port = 3000;
 

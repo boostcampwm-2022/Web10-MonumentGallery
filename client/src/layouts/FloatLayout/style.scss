@@ -1,0 +1,10 @@
+.float-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  .float-relative {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+}

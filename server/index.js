@@ -27,7 +27,7 @@ const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
 
-// express middleware
+app.use("/reset.css", express.static("../client/dist/reset.css"));
 app.use("/assets", express.static("../client/dist/assets"));
 app.use(express.json());
 app.use(cookieParser());
@@ -51,7 +51,7 @@ if (process.env.NODE_ENV === "development") {
       skipToNextHandlerFilter: function (proxyRes) {
         return proxyRes.statusCode === HTTP_STATUS.NOT_FOUND;
       },
-    })
+    }),
   );
 }
 if (process.env.NODE_ENV === "production") {

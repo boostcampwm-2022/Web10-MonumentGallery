@@ -1,4 +1,4 @@
-import {HTTP_STATUS} from "./constants.js";
+import { HTTP_STATUS } from "./constants.js";
 
 class HttpError extends Error {
   name = "HttpError";
@@ -45,11 +45,11 @@ class InternalServerError extends HttpError {
 }
 
 export {
-  HttpError, 
-  BadRequestError, 
-  UnauthenticatedError, 
-  ForbiddenError, 
+  HttpError,
+  BadRequestError,
+  UnauthenticatedError,
+  ForbiddenError,
   NotFoundError,
   ConflictError,
-  InternalServerError
+  InternalServerError,
 };

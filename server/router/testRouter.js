@@ -61,7 +61,7 @@ router.get("/pytest", (req, res) => {
   });
 });
 
-router.get("/error", (req, res)=>{
+router.get("/error", (req, res) => {
   throw new Error("holy shit");
 });
 

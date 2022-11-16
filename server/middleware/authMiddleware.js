@@ -12,7 +12,10 @@ export async function authMiddleware(req, res, next) {
 		req.userid = user.id;
 		req.accessToken = accessToken;
 	}
-	else req.authFailedReason = reason;
+	else {
+		res.clearCookie("token");
+		req.authFailedReason = reason;
+	}
 	next();
 }
 

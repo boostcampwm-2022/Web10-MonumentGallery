@@ -20,4 +20,9 @@ router.get("/notion/callback", asyncHandler(async (req, res) => {
   res.redirect("/create");
 }));
 
+router.get("/check", (req, res)=>{
+  const id = req.userid ?? null;
+  res.json({logined: !!id, id});
+});
+
 export default router;

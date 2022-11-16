@@ -47,6 +47,8 @@ jobs:
             docker tag ${{secrets.DOCKER_USERNAME}}/express-server express
             docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi
             cd ~/proxy
+            curl -o docker-compose.yaml https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/feat/https/docker-compose.yaml
+            curl -o nginx.conf https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/feat/https/proxy/nginx.conf
             docker-compose stop
             docker rm express
             docker rm fastapi

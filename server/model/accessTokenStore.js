@@ -19,12 +19,12 @@ export function startRedis() {
 }
 
 export function getRedisClient() {
-  return new Promise( (resolve, reject)=>{
-    if(connectStatus === true) return resolve(client);
-    const timeoutEvent = setTimeout(()=>{
+  return new Promise((resolve, reject) => {
+    if (connectStatus === true) return resolve(client);
+    const timeoutEvent = setTimeout(() => {
       reject(new Error("timeout error!"));
     }, 100000);
-    client.once("ready", ()=>{
+    client.once("ready", () => {
       clearTimeout(timeoutEvent);
       resolve(client);
     });

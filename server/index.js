@@ -10,7 +10,7 @@ import testRouter from "./router/testRouter.js";
 import devRedirectRouter from "./router/devRedirectRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
-import { startRedis, getRedisClient } from "./model/accessTokenStore.js";
+import { startRedis } from "./model/accessTokenStore.js";
 
 dotenv.config();
 
@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === "development") {
       skipToNextHandlerFilter: function (proxyRes) {
         return proxyRes.statusCode === HTTP_STATUS.NOT_FOUND;
       },
-    })
+    }),
   );
 }
 if (process.env.NODE_ENV === "production") {

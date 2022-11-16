@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: ["feat/notion-oauth"]
+    branches: ["feat/https"]
   pull_request:
-    branches: ["feat/notion-oauth"]
+    branches: ["feat/https"]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +12,12 @@ jobs:
       - name: Build the express Docker image & push to dockerhub
         run: |
           docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+          echo "---- build client ----"
+          cd ./client
+          npm i
+          npm run build
+          mv -R ./dist ../server/dist
+          cd ..
           echo "---- express-server ----"
           echo "${{secrets.MONGO_URL}}" >> ./server/.env
           echo "${{secrets.FASTAPI_ENDPOINT}}" >> ./server/.env
@@ -19,14 +25,15 @@ jobs:
           echo "${{secrets.NOTION_CLIENT_SECRET}}" >> ./server/.env
           echo "${{secrets.TOKEN_SECRET}}" >> ./server/.env
           echo "${{secrets.REDIS_URL}}" >> ./server/.env
+          echo "NODE_ENV=production" >> ./server/.env
           cat ./server/.env
           docker build -t express-server ./server
-          docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server
-          docker push ${{secrets.DOCKER_USERNAME}}/express-server
+          docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
+          docker push ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
           echo "---- fastapi-server ----"
           docker build -t fastapi-server ./python
-          docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server
-          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-server
+          docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
+          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -35,11 +42,11 @@ jobs:
           password: ${{secrets.NCLOUD_PASSWORD}}
           port: ${{secrets.NCLOUD_PORT}}
           script: |
-            docker pull ${{secrets.DOCKER_USERNAME}}/express-server
-            docker pull ${{secrets.DOCKER_USERNAME}}/fastapi-server
-            docker tag ${{secrets.DOCKER_USERNAME}}/express-server express-server
-            docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi-server
-            docker stop express-server
-            docker stop fastapi-server
-            docker run -d --rm --name express-server -p 3000:3000 express-server
-            docker run -d --rm --name fastapi-server -p 8000:8000 fastapi-server
+            docker pull ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
+            docker pull ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
+            docker tag ${{secrets.DOCKER_USERNAME}}/express-server express
+            docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi
+            docker-compose stop
+            docker rm express
+            docker rm fastapi
+            docker-compose up -d

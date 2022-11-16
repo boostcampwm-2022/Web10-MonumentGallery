@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
 
-export default function Controls() {
+export default function FPVControls() {
   const controlsRef = useRef<any>(null!);
   const isLocked = useRef(false);
   const [moveForward, setMoveForward] = useState(false);
@@ -23,7 +23,7 @@ export default function Controls() {
     }
   });
 
-  const onKeyDown = function (event: any) {
+  function onKeyDown(event: any) {
     switch (event.code) {
       case "ArrowUp":
       case "KeyW":
@@ -47,9 +47,9 @@ export default function Controls() {
       default:
         return;
     }
-  };
+  }
 
-  const onKeyUp = function (event: any) {
+  function onKeyUp(event: any) {
     switch (event.code) {
       case "ArrowUp":
       case "KeyW":
@@ -74,7 +74,7 @@ export default function Controls() {
       default:
         return;
     }
-  };
+  }
 
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("keyup", onKeyUp);
@@ -84,11 +84,9 @@ export default function Controls() {
       onUpdate={() => {
         if (controlsRef.current) {
           controlsRef.current.addEventListener("lock", () => {
-            console.log("lock");
             isLocked.current = true;
           });
           controlsRef.current.addEventListener("unlock", () => {
-            console.log("unlock");
             isLocked.current = false;
           });
         }

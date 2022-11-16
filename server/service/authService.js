@@ -1,10 +1,10 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import {saveTokenData} from "../model/accessTokenStore.js";
-import {UnauthenticatedError} from "../utils/httpError.js";
+import { saveTokenData } from "../model/accessTokenStore.js";
+import { UnauthenticatedError } from "../utils/httpError.js";
 
 export async function getTokenDataFromNotion(code) {
-  if(code == null) {
+  if (code == null) {
     throw new UnauthenticatedError("코드를 못 받아옴");
   }
   const response = await axios({
@@ -23,7 +23,7 @@ export async function getTokenDataFromNotion(code) {
       redirect_uri: "http://localhost:3000/auth/notion/callback",
     },
   });
-  const {user} = response.data.owner;
+  const { user } = response.data.owner;
   const accessToken = response.data.access_token;
 
   return { user, accessToken };
@@ -34,8 +34,8 @@ export function createToken(user) {
   return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn });
 }
 
-export function saveToken({user, accessToken}) {
+export function saveToken({ user, accessToken }) {
   const jwtToken = createToken(user);
-  saveTokenData(jwtToken, {user, accessToken});
+  saveTokenData(jwtToken, { user, accessToken });
   return jwtToken;
 }

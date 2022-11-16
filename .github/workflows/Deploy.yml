@@ -44,8 +44,8 @@ jobs:
           script: |
             docker pull ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
             docker pull ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
-            docker tag ${{secrets.DOCKER_USERNAME}}/express-server express
-            docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi
+            docker tag ${{secrets.DOCKER_USERNAME}}/express-server express-server
+            docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi-server
             cd ~/proxy
             curl -o docker-compose.yaml https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/feat/https/docker-compose.yaml
             curl -o nginx.conf https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/feat/https/proxy/nginx.conf

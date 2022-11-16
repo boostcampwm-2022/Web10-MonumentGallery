@@ -12,13 +12,13 @@ services:
       - ./data/certbot/www:/var/www/certbot
     container_name: myweb-proxy
   express:
-    image: reljacer/express-server
+    image: express-server
     container_name: express
     ports:
       - 3000:3000
     restart: unless-stopped
   fastapi:
-    image: reljacer/fastapi-server
+    image: fastapi-server
     container_name: fastapi
     ports:
       - 8000:8000

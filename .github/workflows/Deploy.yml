@@ -46,6 +46,7 @@ jobs:
             docker pull ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
             docker tag ${{secrets.DOCKER_USERNAME}}/express-server express
             docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi
+            cd ~/proxy
             docker-compose stop
             docker rm express
             docker rm fastapi

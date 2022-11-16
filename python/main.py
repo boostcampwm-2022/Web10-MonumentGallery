@@ -4,6 +4,6 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/")
+@app.get("/preprocess")
 def root():
     return {"message": "Hello World"}

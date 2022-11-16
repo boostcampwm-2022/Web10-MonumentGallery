@@ -14,7 +14,7 @@ import { startRedis } from "./model/accessTokenStore.js";
 
 dotenv.config();
 
-await startRedis();
+startRedis();
 const app = express();
 const port = 3000;
 
@@ -26,7 +26,10 @@ const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
 
-app.use("/assets", express.static("../client/dist/assets"));
+app.use("/assets", express.static("./dist/assets"));
+app.use("/reset.css", express.static("./dist/reset.css"));
+app.use("/vite.svg", express.static("./dist/vite.svg"));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));

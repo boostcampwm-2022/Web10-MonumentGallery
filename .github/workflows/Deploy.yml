@@ -17,6 +17,7 @@ jobs:
           password: ${{secrets.NCLOUD_PASSWORD}}
           port: ${{secrets.NCLOUD_PORT}}
           script: |
+            echo "hello ssh"
             cd ~/proxy
             curl -o docker-compose.yaml https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/feat/https/docker-compose.yaml
             curl -o nginx.conf https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/feat/https/proxy/nginx.conf

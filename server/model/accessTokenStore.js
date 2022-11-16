@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import { createClient } from "redis";
+import { TOKEN_EXPIRES } from "../utils/constants.js";
+
 dotenv.config();
 
 const client = createClient({ url: process.env.REDIS_URL });
@@ -31,12 +33,15 @@ export function getRedisClient() {
 
 export async function saveTokenData(token, data) {
   const client = await getRedisClient();
-  await client.set(token, JSON.stringify(data));
+  const options = { EX: TOKEN_EXPIRES };
+  console.log(options);
+  await client.set(token, JSON.stringify(data), options);
 }
 
 export async function loadDataFromToken(token) {
   const client = await getRedisClient();
-  const isExists = client.exists(token);
+  const isExists = await client.exists(token);
+  console.log({isExists, token});
   if (!isExists) return null;
   const data = await client.get(token);
   return JSON.parse(data);

@@ -15,4 +15,6 @@ const HTTP_STATUS = {
 };
 Object.freeze(HTTP_STATUS);
 
-export {HTTP_STATUS};
+const TOKEN_EXPIRES = 3600;
+
+export {HTTP_STATUS, TOKEN_EXPIRES};

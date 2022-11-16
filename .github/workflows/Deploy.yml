@@ -9,31 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build the express Docker image & push to dockerhub
-        run: |
-          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
-          echo "---- build client ----"
-          cd ./client
-          npm i
-          npm run build
-          mv ./dist/ ../server/dist/
-          cd ..
-          echo "---- express-server ----"
-          echo "${{secrets.MONGO_URL}}" >> ./server/.env
-          echo "${{secrets.FASTAPI_ENDPOINT}}" >> ./server/.env
-          echo "${{secrets.NOTION_CLIENT_ID}}" >> ./server/.env
-          echo "${{secrets.NOTION_CLIENT_SECRET}}" >> ./server/.env
-          echo "${{secrets.TOKEN_SECRET}}" >> ./server/.env
-          echo "${{secrets.REDIS_URL}}" >> ./server/.env
-          echo "NODE_ENV=production" >> ./server/.env
-          cat ./server/.env
-          docker build -t express-server ./server
-          docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
-          docker push ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
-          echo "---- fastapi-server ----"
-          docker build -t fastapi-server ./python
-          docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
-          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:

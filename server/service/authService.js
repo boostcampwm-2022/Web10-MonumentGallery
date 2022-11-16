@@ -20,7 +20,7 @@ export async function getTokenDataFromNotion(code) {
     data: {
       grant_type: "authorization_code",
       code,
-      redirect_uri: "http://localhost:3000/auth/notion/callback",
+      redirect_uri: process.env.NOTION_REDIRECT_URL,
     },
   });
   const {user} = response.data.owner;

@@ -17,6 +17,10 @@ export default function MainPage() {
     window.location.href = "/auth/login";
   }
 
+  function showModal() {
+    setShow(true);
+  }
+
   return (
     <main>
       <div className="canvas-outer">
@@ -26,15 +30,15 @@ export default function MainPage() {
       </div>
       <FloatLayout>
         <Header />
-        <button
-          className="upload-btn"
-          type="button"
-          onClick={() => {
-            setShow(true);
-          }}
-        >
-          {isLoggedIn ? "My Monument" : "Upload"}
-        </button>
+        {isLoggedIn ? (
+          <button className="my-monument-btn" type="button" onClick={showModal}>
+            My Monument
+          </button>
+        ) : (
+          <button className="upload-btn" type="button" onClick={showModal}>
+            Upload
+          </button>
+        )}
       </FloatLayout>
       <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
         <div className="create-modal">

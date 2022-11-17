@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./style.scss";
 
-type selectorValue = unknown | null;
+export type selectorValue = unknown | null;
 
 interface SelectorWrapperProps {
   className: string;

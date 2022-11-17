@@ -22,7 +22,7 @@ export default function MainPage() {
   }
 
   return (
-    <main>
+    <>
       <div className="canvas-outer">
         <Canvas className="canvas-inner">
           <mesh></mesh>
@@ -49,6 +49,6 @@ export default function MainPage() {
           </button>
         </div>
       </FullScreenModal>
-    </main>
+    </>
   );
 }

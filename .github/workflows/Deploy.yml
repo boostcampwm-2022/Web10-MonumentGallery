@@ -16,7 +16,6 @@ jobs:
           cd ./client
           npm i
           npm run build
-          mv ./dist/ ../server/dist/
           cd ..
           echo "---- express-server ----"
           echo "${{secrets.MONGO_URL}}" >> ./server/.env

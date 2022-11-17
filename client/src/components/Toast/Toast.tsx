@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { IToast } from "../../@types/common";
+import toastStore from "../../store/toast.store";
 import "./toast.scss";
-interface propsType {
-  toastList: toast[];
+interface ToastProps {
   position: string;
   autoDelete: boolean;
   autoDeleteTime: number;
 }
-export interface toast {
-  id: number;
-  type: string;
-  description: string;
-  backgroundColor: string;
-  icon: string;
-}
+
 Toast.defaultProps = {
   position: "bottom-right",
 };
-export function Toast(props: propsType) {
-  const { toastList, position, autoDelete, autoDeleteTime } = props;
+export function Toast({ position, autoDelete, autoDeleteTime }: ToastProps) {
+  const { toastList } = toastStore();
   const [list, setList] = useState(toastList);
 
   useEffect(() => {
@@ -45,7 +40,7 @@ export function Toast(props: propsType) {
   return (
     <>
       <div className={`notification-container ${position}`}>
-        {list.map((toast: toast, i) => (
+        {list.map((toast: IToast, i) => (
           <div key={i} className={`notification toast ${position}`} style={{ backgroundColor: toast.backgroundColor }}>
             <div className="notification-image">
               <img src={toast.icon} alt="" />

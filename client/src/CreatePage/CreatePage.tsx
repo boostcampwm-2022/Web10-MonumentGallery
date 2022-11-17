@@ -33,7 +33,7 @@ export default function CreatePage() {
           fetcher={fetcher}
           onSubmit={(period, theme) => {
             console.log({ period, theme });
-            setFetcher(fetchData());
+            setFetcher(fetchData(period, theme));
           }}
         />
       </FullScreenModal>

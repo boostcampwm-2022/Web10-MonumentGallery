@@ -16,7 +16,7 @@ export default function CreatePage() {
   }
 
   return (
-    <main>
+    <>
       <div className="canvas-outer">
         <Canvas className="canvas-inner">
           <mesh></mesh>
@@ -41,6 +41,6 @@ export default function CreatePage() {
           />
         </div>
       </FullScreenModal>
-    </main>
+    </>
   );
 }

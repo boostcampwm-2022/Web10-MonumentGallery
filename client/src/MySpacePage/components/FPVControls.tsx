@@ -2,13 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
 
-export default function FPVControls({
-  locked,
-  setLocked,
-}: {
+interface FPVControlsProps {
   locked: boolean;
-  setLocked: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+  setLocked: (lock: boolean) => void;
+}
+
+export default function FPVControls({ locked, setLocked }: FPVControlsProps) {
   const controlsRef = useRef<any>(null!);
   const [moveForward, setMoveForward] = useState(false);
   const [moveBackward, setMoveBackward] = useState(false);

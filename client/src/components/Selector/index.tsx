@@ -4,21 +4,27 @@ import "./style.scss";
 export type selectorValue = unknown | null;
 
 interface SelectorWrapperProps {
-  className: string;
+  className?: string;
   title: string | null;
   children: React.ReactNode;
 }
 
-interface SelectorItemProps {
-  value: selectorValue;
-  className: string;
+interface SelectorItemProps<T> {
+  value: T;
+  className?: string;
   children: React.ReactNode;
 }
 
-export default function useSelectorComponent(defaultSelect: selectorValue) {
-  const [selected, setSelected] = useState<selectorValue>(defaultSelect ?? null);
+export default function useSelectorComponent<T>(
+  defaultSelect: T,
+): [
+  T | null,
+  ({ className, title, children }: SelectorWrapperProps) => JSX.Element,
+  ({ value, className, children }: SelectorItemProps<T>) => JSX.Element,
+] {
+  const [selected, setSelected] = useState<T | null>(defaultSelect ?? null);
 
-  function SelectorItem({ value, className = "", children }: SelectorItemProps) {
+  function SelectorItem({ value, className = "", children }: SelectorItemProps<T>) {
     function onClick() {
       setSelected(value);
     }

@@ -32,7 +32,13 @@ export default function CreatePage() {
           <span className="make-gallery">갤러리 만들기</span>
 
           {fetcher ? (
-            <Suspense fallback={<button>로딩중...</button>}>
+            <Suspense
+              fallback={
+                <button>
+                  <i className="fa fa-circle-o-notch fa-spin"></i> 생성중...
+                </button>
+              }
+            >
               <Data resource={fetcher} />
             </Suspense>
           ) : (

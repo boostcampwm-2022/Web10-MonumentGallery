@@ -24,6 +24,8 @@ jobs:
           echo "${{secrets.NOTION_CLIENT_SECRET}}" >> ./server/.env
           echo "${{secrets.TOKEN_SECRET}}" >> ./server/.env
           echo "${{secrets.REDIS_URL}}" >> ./server/.env
+          echo "${{secrets.NOTION_LOGIN_URL}}" >> ./server/.env
+          echo "${{secerts.NOTION_REDIRECT_URL}}" >> ./server/.env
           echo "NODE_ENV=production" >> ./server/.env
           cat ./server/.env
           docker build -t express-server ./server

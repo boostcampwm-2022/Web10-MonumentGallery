@@ -69,7 +69,6 @@ async function getDataFromPage(notion, pageId) {
   console.log(`페이지 컨텐츠 로딩 시간 : ${Date.now() - loading}`);
   const processing = Date.now();
   await content.results.forEach((val) => {
-
     switch (val.type) {
       case "child_page":
         res.node.push({

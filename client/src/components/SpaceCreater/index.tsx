@@ -2,14 +2,17 @@ import useSelectorComponent from "../Selector";
 import SuspenseButton from "../SuspenseButton/SuspenseButton";
 import styles from "./style.module.scss";
 
+type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
+type ThemeType = "dream" | "spring" | "summer" | "autumn" | "winter";
+
 interface SpaceCreaterProps {
   fetcher: { get: () => void } | boolean;
-  onSubmit: () => void;
+  onSubmit: (period: PeriodType | null, theme: ThemeType | null) => void;
 }
 
 export default function SpaceCreater({ fetcher, onSubmit }: SpaceCreaterProps) {
-  const [period, PeriodSelectorWrapper, PeriodSelectorItem] = useSelectorComponent("all");
-  const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent("dream");
+  const [period, PeriodSelectorWrapper, PeriodSelectorItem] = useSelectorComponent<PeriodType>("all");
+  const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent<ThemeType>("dream");
 
   return (
     <div className="create-modal">

@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: ["feat/https"]
+    branches: ["main"]
   pull_request:
-    branches: ["feat/https"]
+    branches: ["main"]
 jobs:
   build:
     runs-on: ubuntu-latest

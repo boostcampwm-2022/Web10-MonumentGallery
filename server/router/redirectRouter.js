@@ -1,13 +1,11 @@
 import express from "express";
+import path from "node:path";
 
 const router = express.Router();
 
-router.get("/create", (req, res) => {
+router.get("/create", (req, res, next) => {
   if (req.userid == null) return res.redirect("/");
-  res.redirect("/create.html");
-});
-router.get("/myspace", (req, res) => {
-  res.redirect("/myspace.html");
+  next();
 });
 
 export default router;

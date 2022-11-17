@@ -22,3 +22,4 @@ services:
     container_name: fastapi
     ports:
       - 8000:8000
+    restart: unless-stopped

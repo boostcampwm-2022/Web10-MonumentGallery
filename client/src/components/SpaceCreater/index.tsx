@@ -2,8 +2,8 @@ import useSelectorComponent from "../Selector";
 import SuspenseButton from "../SuspenseButton/SuspenseButton";
 import styles from "./style.module.scss";
 
-type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
-type ThemeType = "dream" | "spring" | "summer" | "autumn" | "winter";
+export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
+export type ThemeType = "dream" | "spring" | "summer" | "autumn" | "winter";
 
 interface SpaceCreaterProps {
   fetcher: { get: () => void } | boolean;

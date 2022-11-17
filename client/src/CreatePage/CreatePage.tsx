@@ -4,7 +4,7 @@ import "./style.scss";
 import { Canvas } from "@react-three/fiber";
 import FloatLayout from "../layouts/FloatLayout";
 import Header from "../components/Header";
-import SpaceCreater from "../components/SpaceCreater";
+import SpaceCreater, { PeriodType, ThemeType } from "../components/SpaceCreater";
 import { fetchData } from "./api/fetchData";
 
 export default function CreatePage() {
@@ -31,7 +31,7 @@ export default function CreatePage() {
       <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
         <SpaceCreater
           fetcher={fetcher}
-          onSubmit={(period, theme) => {
+          onSubmit={(period: PeriodType | null, theme: ThemeType | null) => {
             console.log({ period, theme });
             setFetcher(fetchData(period, theme));
           }}

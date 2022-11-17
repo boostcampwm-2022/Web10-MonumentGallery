@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { OrbitControls } from "@react-three/drei";
 import lockStore from "../../store/lock.store";
 import toastStore from "../../store/toast.store";
-import { TOAST_ERROR } from "../../components/Toast/ToastList";
+import TOAST from "../../components/Toast/ToastList";
 export default function ORBControls() {
   const { locked, setLocked } = lockStore();
   const { addToast } = toastStore();
@@ -21,7 +21,7 @@ export default function ORBControls() {
       if (event.code !== "KeyE") return;
       if (!canSwitch) {
         console.log("toast push");
-        addToast(TOAST_ERROR);
+        addToast(TOAST.ERROR());
         return;
       }
       setLocked(true);

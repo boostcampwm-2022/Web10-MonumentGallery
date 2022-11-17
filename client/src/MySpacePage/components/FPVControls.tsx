@@ -1,24 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
+import lockStore from "../../store/lock.store";
 
-interface FPVControlsProps {
-  locked: boolean;
-  setLocked: (lock: boolean) => void;
-}
-
-export default function FPVControls({ locked, setLocked }: FPVControlsProps) {
-  const controlsRef = useRef<any>(null!);
+export default function FPVControls() {
+  const { locked, setLocked } = lockStore();
+  const controlsRef = useRef<any>();
   const [moveForward, setMoveForward] = useState(false);
   const [moveBackward, setMoveBackward] = useState(false);
   const [moveLeft, setMoveLeft] = useState(false);
   const [moveRight, setMoveRight] = useState(false);
 
-  useEffect(() => {
-    if (locked) {
-      controlsRef.current.lock();
-    }
-  });
   useFrame(() => {
     const velocity = 0.05;
     if (moveForward) {
@@ -32,78 +24,91 @@ export default function FPVControls({ locked, setLocked }: FPVControlsProps) {
     }
   });
 
-  function onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
-      case "ArrowUp":
-      case "KeyW":
-        setMoveForward(true);
-        break;
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      switch (event.code) {
+        case "ArrowUp":
+        case "KeyW":
+          setMoveForward(true);
+          break;
 
-      case "ArrowLeft":
-      case "KeyA":
-        setMoveLeft(true);
-        break;
+        case "ArrowLeft":
+        case "KeyA":
+          setMoveLeft(true);
+          break;
 
-      case "ArrowDown":
-      case "KeyS":
-        setMoveBackward(true);
-        break;
+        case "ArrowDown":
+        case "KeyS":
+          setMoveBackward(true);
+          break;
 
-      case "ArrowRight":
-      case "KeyD":
-        setMoveRight(true);
-        break;
-      default:
-        return;
+        case "ArrowRight":
+        case "KeyD":
+          setMoveRight(true);
+          break;
+        default:
+          return;
+      }
     }
-  }
 
-  function onKeyUp(event: KeyboardEvent) {
-    switch (event.code) {
-      case "ArrowUp":
-      case "KeyW":
-        setMoveForward(false);
-        break;
+    function onKeyUp(event: KeyboardEvent) {
+      switch (event.code) {
+        case "ArrowUp":
+        case "KeyW":
+          setMoveForward(false);
+          break;
 
-      case "ArrowLeft":
-      case "KeyA":
-        setMoveLeft(false);
-        break;
+        case "ArrowLeft":
+        case "KeyA":
+          setMoveLeft(false);
+          break;
 
-      case "ArrowDown":
-      case "KeyS":
-        setMoveBackward(false);
-        break;
+        case "ArrowDown":
+        case "KeyS":
+          setMoveBackward(false);
+          break;
 
-      case "ArrowRight":
-      case "KeyD":
-        setMoveRight(false);
-        break;
+        case "ArrowRight":
+        case "KeyD":
+          setMoveRight(false);
+          break;
 
-      case "KeyE":
-        setLocked(true);
-        break;
+        case "KeyE":
+          setLocked(true);
+          break;
 
-      default:
-        return;
+        default:
+          return;
+      }
     }
-  }
 
-  document.addEventListener("keydown", onKeyDown);
-  document.addEventListener("keyup", onKeyUp);
+    if (locked) {
+      controlsRef.current.lock();
+      document.addEventListener("keydown", onKeyDown);
+      document.addEventListener("keyup", onKeyUp);
+    }
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
+    };
+  }, [locked]);
   return (
-    <PointerLockControls
-      onUpdate={() => {
-        if (controlsRef.current) {
-          controlsRef.current.addEventListener("lock", () => {
-            setLocked(true);
-          });
-          controlsRef.current.addEventListener("unlock", () => {
-            setLocked(false);
-          });
-        }
-      }}
-      ref={controlsRef}
-    />
+    <>
+      {locked && (
+        <PointerLockControls
+          onUpdate={() => {
+            if (controlsRef.current) {
+              controlsRef.current.addEventListener("lock", () => {
+                setLocked(true);
+              });
+              controlsRef.current.addEventListener("unlock", () => {
+                setLocked(false);
+              });
+            }
+          }}
+          ref={controlsRef}
+        />
+      )}
+    </>
   );
 }

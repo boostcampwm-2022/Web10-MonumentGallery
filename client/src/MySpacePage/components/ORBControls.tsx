@@ -1,17 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { OrbitControls } from "@react-three/drei";
+import lockStore from "../../store/lock.store";
+import toastStore from "../../store/toast.store";
+import { TOAST_ERROR } from "../../components/Toast/ToastList";
+export default function ORBControls() {
+  const { locked, setLocked } = lockStore();
+  const { addToast } = toastStore();
+  const [canSwitch, setCanSwitch] = useState<boolean>(false);
 
-interface ORBControlsProps {
-  setLocked: (lock: boolean) => void;
-}
+  useEffect(() => {
+    if (locked) return;
+    setCanSwitch(false);
+    setTimeout(() => {
+      setCanSwitch(true);
+    }, 1500);
+  }, [locked]);
 
-export default function ORBControls({ setLocked }: ORBControlsProps) {
-  function onKeyDown(event: KeyboardEvent) {
-    if (event.code === "KeyE") {
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.code !== "KeyE") return;
+      if (!canSwitch) {
+        console.log("toast push");
+        addToast(TOAST_ERROR);
+        return;
+      }
       setLocked(true);
     }
-  }
 
-  document.addEventListener("keydown", onKeyDown);
-  return <OrbitControls />;
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [locked, canSwitch]);
+
+  return <>{!locked && <OrbitControls />}</>;
 }

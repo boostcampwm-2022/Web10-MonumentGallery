@@ -69,7 +69,7 @@ async function getDataFromPage(notion, pageId) {
   console.log(`페이지 컨텐츠 로딩 시간 : ${Date.now() - loading}`);
   const processing = Date.now();
   await content.results.forEach((val) => {
-    // console.log(val);
+
     switch (val.type) {
       case "child_page":
         res.node.push({
@@ -111,7 +111,6 @@ async function getDataFromPage(notion, pageId) {
     }
   });
   //paragraphs, title, sub-title은 자연어 처리 서버로
-  //   console.log(paragraphs);
   console.log(`페이지 컨텐츠 처리 시간 : ${Date.now() - processing}`);
   return res;
 }
@@ -136,22 +135,3 @@ function getLimitTime(duration) {
       return 0;
   }
 }
-// const response = await notion.search({
-//   filter: { property: "object", value: "page" },
-// });
-// const pageIds = [];
-// console.log(response.results);
-// response.results.forEach((result) => {
-//   if (result.object === "page") {
-//     pageIds.push(result.id);
-//   }
-// });
-// const pageContents = [];
-// for (let i = 0; i < pageIds.length; i++) {
-//   const content = await notion.blocks.children.list({
-//     block_id: pageIds[i],
-//     page_size: 50,
-//   });
-//   getDataFromPageContent(content);
-//   pageContents.push(content);
-// }

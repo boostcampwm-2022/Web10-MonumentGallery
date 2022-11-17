@@ -2,6 +2,7 @@ import express from "express";
 import { Client } from "@notionhq/client";
 import axios from "axios";
 import TestModel from "../model/testSchema.js";
+import { getContentsFromNotion } from "../service/notionService.js";
 
 const router = express.Router();
 
@@ -32,26 +33,12 @@ router.get("/testGet", async (req, res) => {
 });
 
 router.get("/getData", async (req, res) => {
+  //duration= 2w||1m||3m||1y
   const notionAccessToken = req.accessToken;
-  const notion = new Client({ auth: notionAccessToken });
-  const response = await notion.search({
-    filter: { property: "object", value: "page" },
-  });
-  const pageIds = [];
-  response.results.forEach((result) => {
-    if (result.object === "page") {
-      pageIds.push(result.id);
-    }
-  });
-  const pageContents = [];
-  for (let i = 0; i < pageIds.length; i++) {
-    const content = await notion.blocks.children.list({
-      block_id: pageIds[i],
-      page_size: 50,
-    });
-    pageContents.push(content);
-  }
-  res.status(200).json(pageContents);
+  const nowTime = Date.now();
+
+  res.status(200).json(await getContentsFromNotion(notionAccessToken, req.query));
+  console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
 
 // FastAPI 연결 확인 test

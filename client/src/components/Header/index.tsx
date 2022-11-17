@@ -1,16 +1,13 @@
 import React from "react";
-import Menu from "../../assets/images/hamburger.svg";
 import "./style.scss";
 
-export default function Header() {
+export default function Header({ children }: { children?: React.ReactNode }) {
   return (
     <div className="header">
       <a href="/">
         <span className="logo">MonumentGallery</span>
       </a>
-      <button>
-        <img width={24} height={24} src={Menu} />
-      </button>
+      <div className="header-right-elem">{children}</div>
     </div>
   );
 }

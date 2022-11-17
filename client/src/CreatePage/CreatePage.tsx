@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import FullScreenModal from "../components/modal/FullScreenModal";
 import "./style.scss";
-import axios from "axios";
 import { Canvas } from "@react-three/fiber";
 import FloatLayout from "../layouts/FloatLayout";
 import Header from "../components/Header";
+import SuspenseButton from "./components/SuspenseButton";
+import { fetchData } from "./api/fetchData";
 
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
-  function getData() {
-    axios.get("/test/getData").then((response) => {
-      console.log(response.data);
-    });
-  }
+  const [fetcher, setFetcher] = useState<{ get: () => void } | boolean>(false);
 
   function showModal() {
     setShow(true);
@@ -34,9 +31,14 @@ export default function CreatePage() {
       <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
         <div className="create-modal">
           <span className="make-gallery">갤러리 만들기</span>
-          <button type="button" onClick={getData}>
-            <span>생성하기</span>
-          </button>
+          <SuspenseButton
+            fallback="생성중..."
+            name="생성하기"
+            fetcher={fetcher}
+            onClick={() => {
+              setFetcher(fetchData());
+            }}
+          />
         </div>
       </FullScreenModal>
     </main>

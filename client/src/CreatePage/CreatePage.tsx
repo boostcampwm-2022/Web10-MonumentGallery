@@ -1,9 +1,10 @@
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import FullScreenModal from "../components/modal/FullScreenModal";
 import "./style.scss";
 import { Canvas } from "@react-three/fiber";
 import FloatLayout from "../layouts/FloatLayout";
 import Header from "../components/Header";
+import SuspenseButton from "./components/SuspenseButton";
 import { fetchData } from "./api/fetchData";
 
 export default function CreatePage() {
@@ -30,27 +31,16 @@ export default function CreatePage() {
       <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
         <div className="create-modal">
           <span className="make-gallery">갤러리 만들기</span>
-
-          {fetcher ? (
-            <Suspense
-              fallback={
-                <button>
-                  <i className="fa fa-circle-o-notch fa-spin"></i> 생성중...
-                </button>
-              }
-            >
-              <Data resource={fetcher} />
-            </Suspense>
-          ) : (
-            <button onClick={() => setFetcher(fetchData())}>생성하기</button>
-          )}
+          <SuspenseButton
+            fallback="생성중..."
+            name="생성하기"
+            fetcher={fetcher}
+            onClick={() => {
+              setFetcher(fetchData());
+            }}
+          />
         </div>
       </FullScreenModal>
     </main>
   );
-}
-
-function Data({ resource }: { resource: any }) {
-  const data = resource.get();
-  return <div style={{ overflow: "scroll" }}>{JSON.stringify(data, null, 2)}</div>;
 }

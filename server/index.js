@@ -6,9 +6,9 @@ import dotenv from "dotenv";
 
 import { authMiddleware, catchAuthError } from "./middleware/authMiddleware.js";
 import authRouter from "./router/authRouter.js";
+import redirectRouter from "./router/redirectRouter.js";
 import pageRouter from "./router/pageRouter.js";
 import testRouter from "./router/testRouter.js";
-import devRedirectRouter from "./router/devRedirectRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
 import { startRedis } from "./model/accessTokenStore.js";
@@ -42,11 +42,11 @@ app.use(["/test/getData"], catchAuthError);
 // api routing
 app.use("/auth", authRouter);
 app.use("/test", testRouter);
+app.use("/", redirectRouter);
 
 // page routing
 if (process.env.NODE_ENV === "development") {
   console.log("dev!");
-  app.use("/", devRedirectRouter);
   app.use(
     "/",
     proxy("http://localhost:5173", {

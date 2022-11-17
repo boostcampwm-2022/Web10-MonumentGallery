@@ -4,7 +4,7 @@ import MySpace from "./MySpace";
 import UI from "./components/UI";
 import { useState } from "react";
 export default function MySpacePage() {
-  const [locked, setLocked] = useState(true);
+  const [locked, setLocked] = useState(false);
   return (
     <>
       {!locked && <UI />}

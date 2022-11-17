@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export function fetchData() {
+export function fetchData(period, theme) {
   let data: any[] | null = null;
-  const suspender = axios.get("/test/getData").then((res) => {
+  const suspender = axios.get("/test/getData", { params: { period, theme } }).then((res) => {
     data = res.data;
   });
   return {

@@ -16,10 +16,10 @@ export default function SpaceCreater({ fetcher, onSubmit }: SpaceCreaterProps) {
       <span className="make-gallery">갤러리 만들기</span>
       <PeriodSelectorWrapper title="기간">
         <PeriodSelectorItem value="all">전체</PeriodSelectorItem>
-        <PeriodSelectorItem value="14day">14일</PeriodSelectorItem>
-        <PeriodSelectorItem value="1month">1개월</PeriodSelectorItem>
-        <PeriodSelectorItem value="3month">3개월</PeriodSelectorItem>
-        <PeriodSelectorItem value="1year">1년</PeriodSelectorItem>
+        <PeriodSelectorItem value="2w">14일</PeriodSelectorItem>
+        <PeriodSelectorItem value="1m">1개월</PeriodSelectorItem>
+        <PeriodSelectorItem value="3m">3개월</PeriodSelectorItem>
+        <PeriodSelectorItem value="1y">1년</PeriodSelectorItem>
       </PeriodSelectorWrapper>
       <ThemeSelectorWrapper title="테마">
         <ThemeSelectorItem value="dream" className={styles.dream}>

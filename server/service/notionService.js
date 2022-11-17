@@ -3,8 +3,8 @@ import { Client } from "@notionhq/client";
 const urlRegEx =
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim;
 
-export async function getContentsFromNotion(notionAccessToken, query) {
-  const limitTime = getLimitTime("1y");
+export async function getContentsFromNotion(notionAccessToken, period, theme) {
+  const limitTime = getLimitTime(period);
   const notion = new Client({ auth: notionAccessToken });
   const pageContents = {};
   const pageIds = [];
@@ -39,7 +39,7 @@ export async function getContentsFromNotion(notionAccessToken, query) {
   //토탈 키워드 추가 등등
 
   const res = {
-    theme: query.theme ? query.theme : "default",
+    theme,
     totalKeywords: {},
     pages: pageContents,
   };
@@ -119,10 +119,10 @@ function getTextFromTextObject(textObject) {
   return textObject && textObject.plain_text !== undefined ? textObject.plain_text : null;
 }
 
-function getLimitTime(duration) {
+function getLimitTime(period) {
   const twoWeeks = 1209600033;
-  if (!duration) return 0;
-  switch (duration) {
+  if (!period) return 0;
+  switch (period) {
     case "2w":
       return Date.now() - twoWeeks;
     case "1m":

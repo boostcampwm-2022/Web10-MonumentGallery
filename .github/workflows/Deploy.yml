@@ -10,11 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Deploy
-        uses: cross-the-world/ssh-pipeline@v1.2.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.NCLOUD_HOST}}
-          user: root
-          pass: ${{secrets.NCLOUD_PASSWORD}}
+          username: reet
+          password: ${{secrets.NCLOUD_PASSWORD}}
           script: |
             echo "hello ssh"
             cd ~/proxy

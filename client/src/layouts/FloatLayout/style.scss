@@ -1,0 +1,14 @@
+.float-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  .float-relative {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    * {
+      pointer-events: auto;
+    }
+  }
+}

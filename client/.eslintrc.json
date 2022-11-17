@@ -18,15 +18,19 @@
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "no-var": "error",
-    "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
-    "max-len": ["error", { 
-      "code": 120, 
-      "ignoreComments": true,
-      "ignoreUrls": true,
-      "ignoreStrings": true
-     }],
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true
+      }
+    ],
     "no-undef": 0,
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react/no-unknown-property": "off"
   }
 }

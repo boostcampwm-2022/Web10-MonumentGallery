@@ -33,6 +33,7 @@ router.get("/testGet", async (req, res) => {
 });
 
 router.get("/getData", async (req, res) => {
+  //duration= 2w||1m||3m||1y
   const notionAccessToken = req.accessToken;
   const nowTime = Date.now();
   // console.log(await getContentsFromNotion(notionAccessToken));
@@ -57,7 +58,7 @@ router.get("/getData", async (req, res) => {
   //   pageContents.push(content);
   // }
 
-  res.status(200).json(await getContentsFromNotion(notionAccessToken));
+  res.status(200).json(await getContentsFromNotion(notionAccessToken, req.query));
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
 

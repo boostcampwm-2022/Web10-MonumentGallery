@@ -3,7 +3,8 @@ import { Client } from "@notionhq/client";
 const urlRegEx =
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim;
 
-export async function getContentsFromNotion(notionAccessToken) {
+export async function getContentsFromNotion(notionAccessToken, query) {
+  const limitTime = getLimitTime("1y");
   const notion = new Client({ auth: notionAccessToken });
   const pageContents = {};
   const pageIds = [];
@@ -14,10 +15,16 @@ export async function getContentsFromNotion(notionAccessToken) {
   console.log(`page list 불러오는 시간 ${Date.now() - prev}`);
   const next = Date.now();
   response.results.forEach((result) => {
-    if (result.object === "page") {
+    console.log(result);
+    if (result.object === "page" && Date.parse(result.last_edited_time) > limitTime) {
       pageIds.push(result.id);
       const innerText = getTextFromTextObject(result.properties.title.title[0]);
-      if (innerText) pageContents[result.id] = { title: innerText };
+      if (innerText)
+        pageContents[result.id] = {
+          title: innerText,
+          created_time: result.created_time,
+          last_edited_time: result.last_edited_time,
+        };
     }
   });
   console.log(`page title 처리 시간 : ${Date.now() - next}`);
@@ -28,7 +35,18 @@ export async function getContentsFromNotion(notionAccessToken) {
   }
 
   console.log(`page 처리 로직 총 시간 (불러오기 + 처리) : ${Date.now() - next2}`);
-  return pageContents;
+
+  //토탈 키워드 추가 등등
+
+  const res = {
+    theme: query.theme ? query.theme : "default",
+    totalKeywords: {},
+    pages: pageContents,
+  };
+
+  //DB 저장
+
+  return res;
 }
 
 async function getDataFromPage(notion, pageId) {
@@ -100,6 +118,23 @@ async function getDataFromPage(notion, pageId) {
 
 function getTextFromTextObject(textObject) {
   return textObject && textObject.plain_text !== undefined ? textObject.plain_text : null;
+}
+
+function getLimitTime(duration) {
+  const twoWeeks = 1209600033;
+  if (!duration) return 0;
+  switch (duration) {
+    case "2w":
+      return Date.now() - twoWeeks;
+    case "1m":
+      return Date.now() - 2 * twoWeeks;
+    case "3m":
+      return Date.now() - 6 * twoWeeks;
+    case "1y":
+      return Date.now() - 24 * twoWeeks;
+    default:
+      return 0;
+  }
 }
 // const response = await notion.search({
 //   filter: { property: "object", value: "page" },

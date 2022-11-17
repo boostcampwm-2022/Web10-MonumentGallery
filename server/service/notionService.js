@@ -18,7 +18,7 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
     console.log(result);
     if (result.object === "page" && Date.parse(result.last_edited_time) > limitTime) {
       pageIds.push(result.id);
-      const innerText = getTextFromTextObject(result.properties.title.title[0]);
+      const innerText = getTextFromTextObject(result.properties.title?.title[0]);
       if (innerText)
         pageContents[result.id] = {
           title: innerText,

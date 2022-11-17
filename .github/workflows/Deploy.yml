@@ -13,7 +13,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.NCLOUD_HOST}}
-          username: reet
+          username: ${{secrets.NCLOUD_USERNAME}}
           password: ${{secrets.NCLOUD_PASSWORD}}
           script: |
             echo "hello ssh"

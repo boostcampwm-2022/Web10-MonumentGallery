@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   console.log("this is main page!");
-  res.sendFile(path.resolve("../client/dist/index.html"));
+  res.sendFile(path.resolve("./dist/index.html"));
 });
 router.get("/create", async (req, res) => {
   if (req.userid == null) return res.redirect("/");

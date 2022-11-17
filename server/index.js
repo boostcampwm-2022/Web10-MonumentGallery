@@ -27,8 +27,10 @@ const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
 
-app.use("/reset.css", express.static("../client/dist/reset.css"));
-app.use("/assets", express.static("../client/dist/assets"));
+app.use("/assets", express.static("./dist/assets"));
+app.use("/reset.css", express.static("./dist/reset.css"));
+app.use("/vite.svg", express.static("./dist/vite.svg"));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));

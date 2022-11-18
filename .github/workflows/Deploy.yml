@@ -24,15 +24,17 @@ jobs:
           echo "${{secrets.NOTION_CLIENT_SECRET}}" >> ./server/.env
           echo "${{secrets.TOKEN_SECRET}}" >> ./server/.env
           echo "${{secrets.REDIS_URL}}" >> ./server/.env
+          echo "${{secrets.NOTION_LOGIN_URL}}" >> ./server/.env
+          echo "${{secrets.NOTION_REDIRECT_URL}}" >> ./server/.env
           echo "NODE_ENV=production" >> ./server/.env
           cat ./server/.env
           docker build -t express-server ./server
-          docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
-          docker push ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
+          docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server
+          docker push ${{secrets.DOCKER_USERNAME}}/express-server
           echo "---- fastapi-server ----"
           docker build -t fastapi-server ./python
-          docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
-          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
+          docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server
+          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-server
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -40,8 +42,8 @@ jobs:
           username: ${{secrets.NCLOUD_USERNAME}}
           password: ${{secrets.NCLOUD_PASSWORD}}
           script: |
-            docker pull ${{secrets.DOCKER_USERNAME}}/express-server:${GITHUB_SHA::7}
-            docker pull ${{secrets.DOCKER_USERNAME}}/fastapi-server:${GITHUB_SHA::7}
+            docker pull ${{secrets.DOCKER_USERNAME}}/express-server
+            docker pull ${{secrets.DOCKER_USERNAME}}/fastapi-server
             docker tag ${{secrets.DOCKER_USERNAME}}/express-server express-server
             docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi-server
             cd ~/proxy

@@ -9,7 +9,7 @@ import { fetchData } from "./api/fetchData";
 
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
-  const [fetcher, setFetcher] = useState<{ get: () => void } | boolean>(false);
+  const [fetcher, setFetcher] = useState<{ get: () => void } | null>(null);
 
   function showModal() {
     setShow(true);

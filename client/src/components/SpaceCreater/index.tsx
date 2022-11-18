@@ -6,7 +6,7 @@ export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
 export type ThemeType = "dream" | "spring" | "summer" | "autumn" | "winter";
 
 interface SpaceCreaterProps {
-  fetcher: { get: () => void } | boolean;
+  fetcher: { get: () => void } | null;
   onSubmit: (period: PeriodType | null, theme: ThemeType | null) => void;
 }
 

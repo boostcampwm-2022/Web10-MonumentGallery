@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 
 interface SuspenseButtonProps {
-  fetcher: { get: () => void } | boolean;
+  fetcher: { get: () => void } | null;
   fallback: string;
   name: string;
   onClick: () => void;
@@ -27,7 +27,7 @@ export default function SuspenseButton({ fetcher, fallback, name, onClick }: Sus
   );
 }
 
-function Data({ resource }: { resource: any }) {
+function Data({ resource }: { resource: { get: () => void } }) {
   const data = resource.get();
   return <div style={{ overflow: "scroll" }}>{JSON.stringify(data, null, 2)}</div>;
 }

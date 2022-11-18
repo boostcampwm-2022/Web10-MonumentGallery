@@ -15,13 +15,7 @@ interface SelectorItemProps<T> {
   children: React.ReactNode;
 }
 
-export default function useSelectorComponent<T>(
-  defaultSelect: T,
-): [
-  T | null,
-  ({ className, title, children }: SelectorWrapperProps) => JSX.Element,
-  ({ value, className, children }: SelectorItemProps<T>) => JSX.Element,
-] {
+export default function useSelectorComponent<T>(defaultSelect: T) {
   const [selected, setSelected] = useState<T | null>(defaultSelect ?? null);
 
   function SelectorItem({ value, className = "", children }: SelectorItemProps<T>) {
@@ -46,5 +40,5 @@ export default function useSelectorComponent<T>(
     );
   }
 
-  return [selected, SelecterWrapper, SelectorItem];
+  return [selected, SelecterWrapper, SelectorItem] as const;
 }

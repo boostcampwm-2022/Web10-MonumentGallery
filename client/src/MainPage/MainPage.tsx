@@ -6,12 +6,10 @@ import FloatLayout from "../layouts/FloatLayout";
 import NotionIcon from "../assets/images/notion-icon.png";
 import "./style.scss";
 import useLoggedIn from "../hooks/useLoggedIn";
-import userStore from "../store/user.store";
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
-  const { isLoggedIn } = userStore();
-  useLoggedIn();
+  const [isLoggedIn] = useLoggedIn();
 
   function notionOauthHandler() {
     window.location.href = "/auth/login";

@@ -3,7 +3,7 @@ import axios from "axios";
 import userStore from "../store/user.store";
 
 export default function useLoggedIn() {
-  const { setUser } = userStore();
+  const { isLoggedIn, userId, setUser } = userStore();
 
   useEffect(() => {
     axios.get("/auth/check").then((res) => {
@@ -13,4 +13,6 @@ export default function useLoggedIn() {
       }
     });
   }, []);
+
+  return [isLoggedIn, userId] as const;
 }

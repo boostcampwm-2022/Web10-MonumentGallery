@@ -1,5 +1,5 @@
 import useSelectorComponent from "../Selector";
-import SuspenseButton from "../SuspenseButton/SuspenseButton";
+import SuspenseButton from "../buttons/SuspenseButton";
 import styles from "./style.module.scss";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";

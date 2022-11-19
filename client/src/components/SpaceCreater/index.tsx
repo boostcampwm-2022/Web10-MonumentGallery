@@ -1,16 +1,17 @@
 import useSelectorComponent from "../Selector";
-import SuspenseButton from "../SuspenseButton/SuspenseButton";
+import SuspenseButton from "../buttons/SuspenseButton";
 import styles from "./style.module.scss";
+import { Resource } from "../../utils/suspender";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
 export type ThemeType = "dream" | "spring" | "summer" | "autumn" | "winter";
 
 interface SpaceCreaterProps {
-  fetcher: { get: () => void } | boolean;
+  resource: Resource | null;
   onSubmit: (period: PeriodType | null, theme: ThemeType | null) => void;
 }
 
-export default function SpaceCreater({ fetcher, onSubmit }: SpaceCreaterProps) {
+export default function SpaceCreater({ resource, onSubmit }: SpaceCreaterProps) {
   const [period, PeriodSelectorWrapper, PeriodSelectorItem] = useSelectorComponent<PeriodType>("all");
   const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent<ThemeType>("dream");
 
@@ -41,7 +42,12 @@ export default function SpaceCreater({ fetcher, onSubmit }: SpaceCreaterProps) {
           겨울
         </ThemeSelectorItem>
       </ThemeSelectorWrapper>
-      <SuspenseButton fallback="생성중..." name="생성하기" fetcher={fetcher} onClick={() => onSubmit(period, theme)} />
+      <SuspenseButton
+        fallback="생성중..."
+        name="생성하기"
+        resource={resource}
+        onClick={() => onSubmit(period, theme)}
+      />
     </div>
   );
 }

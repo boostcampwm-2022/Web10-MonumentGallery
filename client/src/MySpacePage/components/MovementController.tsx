@@ -8,7 +8,7 @@ interface KeyState {
 
 interface KeyStateReducerProps {
   code: string;
-  type: "keydown" | "keyup" | "toggle" | true | false;
+  type: "keydown" | "keyup";
 }
 
 interface MovementControllerProps {
@@ -38,13 +38,9 @@ function mapMovementKey(code: string) {
 function keyStateReducer(state: KeyState, { code, type }: KeyStateReducerProps) {
   switch (type) {
     case "keydown":
-    case true:
       return { ...state, [code]: true };
     case "keyup":
-    case false:
       return { ...state, [code]: false };
-    case "toggle":
-      return { ...state, [code]: !state[code] };
     default:
       throw new Error("invalid command!");
   }

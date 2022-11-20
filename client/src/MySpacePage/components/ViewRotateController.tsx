@@ -23,10 +23,12 @@ function useMouseHold(dom: HTMLElement) {
       setMouseHold(false);
     }
     dom.addEventListener("mousedown", handleMouseStart);
-    dom.addEventListener("mouseup", handleMouseEnd);
+    document.addEventListener("mouseup", handleMouseEnd);
+    document.addEventListener("mouseleave", handleMouseEnd);
     return () => {
       dom.removeEventListener("mousedown", handleMouseStart);
-      dom.removeEventListener("mouseup", handleMouseEnd);
+      document.removeEventListener("mouseup", handleMouseEnd);
+      document.removeEventListener("mouseleave", handleMouseEnd);
     };
   }, []);
 

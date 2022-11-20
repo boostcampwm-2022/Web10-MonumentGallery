@@ -97,18 +97,19 @@ function MovementController({ camera, speed = 1 }: MovementControllerProps) {
     const [front, right] = getCameraXZAxis(targetCamera);
     const moveVector = new Vector3();
     if (isPressed("Front")) {
-      moveVector.addScaledVector(front, speed * delta);
+      moveVector.addScaledVector(front, 1);
     }
     if (isPressed("Back")) {
-      moveVector.addScaledVector(front, -speed * delta);
+      moveVector.addScaledVector(front, -1);
     }
     if (isPressed("Right")) {
-      moveVector.addScaledVector(right, speed * delta);
+      moveVector.addScaledVector(right, 1);
     }
     if (isPressed("Left")) {
-      moveVector.addScaledVector(right, -speed * delta);
+      moveVector.addScaledVector(right, -1);
     }
-    targetCamera.position.add(moveVector);
+    moveVector.normalize();
+    targetCamera.position.addScaledVector(moveVector, speed * delta);
   }
 
   useFrame((_, delta) => {

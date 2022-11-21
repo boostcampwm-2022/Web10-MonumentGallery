@@ -42,6 +42,13 @@ router.get("/getData", async (req, res) => {
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
 
+router.get("/gallery", (req, res) => {
+  console.log("test gallery");
+  setTimeout(() => {
+    res.send("zzzz");
+  }, 3000);
+});
+
 // FastAPI 연결 확인 test
 router.get("/pytest", (req, res) => {
   const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;

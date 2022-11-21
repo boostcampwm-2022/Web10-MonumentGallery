@@ -8,7 +8,8 @@
     "build": "tsc && vite build --emptyOutDir",
     "preview": "vite preview",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "lint-fix": "eslint src/**/*.{ts,tsx} --fix"
+    "lint-fix": "eslint src/**/*.{ts,tsx} --fix",
+    "type-check": "tsc"
   },
   "dependencies": {
     "@react-three/cannon": "^6.5.0",

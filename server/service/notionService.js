@@ -109,6 +109,8 @@ async function getDataFromPage(notion, pageId) {
             paragraphs.push(getTextFromTextObject(val.paragraph?.rich_text[0]));
           }
         }
+      case "column_list":
+        res.columnList.push(val.id);
         break;
       case "image":
         //file말고 다른 타입도 있으려나
@@ -121,6 +123,36 @@ async function getDataFromPage(notion, pageId) {
   });
   //paragraphs, title, sub-title은 자연어 처리 서버로
   console.log(`페이지 컨텐츠 처리 시간 : ${Date.now() - processing}`);
+async function getColumnFromColumnList(notion, columnListId) {
+  const columns = await notion.blocks.children.list({
+    block_id: columnListId,
+    page_size: 50,
+  });
+
+  const res = {
+    position: [],
+    childPages: [], // 자식 페이지들
+    heading_1: [],
+    heading_2: [],
+    heading_3: [],
+    links: [],
+    image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
+    texts: [],
+    columnList: [],
+  };
+
+  for (let i = 0; i < columns.results.length; i++) {
+    const columnData = await notion.blocks.children.list({
+      block_id: columns.results[i].id,
+      page_size: 50,
+    });
+    const processedData = await processPageData(notion, columnData.results);
+
+    Object.keys(processedData).forEach((key) => {
+      res[key] = [...res[key], ...processedData[key]];
+    });
+  }
+
   return res;
 }
 

@@ -1,46 +1,10 @@
 from fastapi import FastAPI
-from typing import Dict,List,Optional
-from pydantic import BaseModel
 from konlpy.tag import Kkma
-from konlpy.utils import pprint
-from collections import defaultdict
+from model import NotionData,preprocessedNotionData,preprocessedPage
 
 kkma = Kkma()
 
 app = FastAPI()
-
-class Page(BaseModel):
-    title: str
-    h1: Optional[List[str]]
-    h2: Optional[List[str]]
-    h3: Optional[List[str]]
-    paragraph: Optional[List[str]]
-class NotionData(BaseModel):
-    pages: Dict[str,Page]
-class preprocessedPage(BaseModel):
-    keywords: Dict[str,int]
-    title: str
-    h1: Optional[List[str]]
-    h2: Optional[List[str]]
-    h3: Optional[List[str]]
-    paragraph: Optional[List[str]]
-class preprocessedNotionData(BaseModel):
-    totalKeywords: Dict[str,int]
-    pages: Dict[str,preprocessedPage]
-
-
-class preprocessedPage:
-    def __init__(self):
-        self.keywords = defaultdict(int)
-        self.title = []
-        self.h1_keywords = []
-        self.h2_keywords = []
-        self.h3_keywords = []
-        self.p_keywords = []
-class preprocessedNotionData:
-     def __init__(self):
-        self.totalKeywords = defaultdict(int)
-        self.ppPages = {}
 
 @app.post("/preprocess")
 def root(notionData:NotionData):

@@ -6,15 +6,33 @@ const urlRegEx =
 export async function getContentsFromNotion(notionAccessToken, period, theme) {
   const limitTime = getLimitTime(period);
   const notion = new Client({ auth: notionAccessToken });
+
+  console.log(await getPages(notion, limitTime));
+  //   //토탈 키워드 추가 등등
+
+  //   const res = {
+  //     theme,
+  //     totalKeywords: {},
+  //     pages: pageContents,
+  //   };
+
+  //   //DB 저장
+
+  //   return res;
+}
+
+async function getPages(notion, limitTime) {
   const pageContents = {};
   const pageIds = [];
-  const prev = Date.now();
-  const response = await notion.search({
+  //   const prev = Date.now();
+
+  const pageResponse = await notion.search({
     filter: { property: "object", value: "page" },
   });
+
   //   console.log(`page list 불러오는 시간 ${Date.now() - prev}`);
   const next = Date.now();
-  response.results.forEach((result) => {
+  pageResponse.results.forEach((result) => {
     // console.log(result);
     // console.log(result.properties);
     // console.log(result.properties?.title);
@@ -64,20 +82,8 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
       };
     }
   }
-  console.log(pageContents);
-  //   console.log(`page 처리 로직 총 시간 (불러오기 + 처리) : ${Date.now() - next2}`);
 
-  //   //토탈 키워드 추가 등등
-
-  //   const res = {
-  //     theme,
-  //     totalKeywords: {},
-  //     pages: pageContents,
-  //   };
-
-  //   //DB 저장
-
-  //   return res;
+  return pageContents;
 }
 
 async function getDataFromPage(notion, pageId) {
@@ -121,7 +127,7 @@ async function processPageData(notion, data) {
   };
 
   await data.forEach(async (val) => {
-    // console.log(val);
+    console.log(val);
     switch (val.type) {
       case "child_page":
         console.log(val);

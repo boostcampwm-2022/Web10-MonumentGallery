@@ -23,8 +23,8 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
       if (innerText)
         pageContents[result.id] = {
           title: innerText,
-          created_time: result.created_time,
-          last_edited_time: result.last_edited_time,
+          createdTime: result.created_time,
+          lastEditedTime: result.last_edited_time,
         };
     }
   });
@@ -76,8 +76,8 @@ async function getDataFromPage(notion, pageId) {
         res.node.push({
           id: val.id,
           title: val.child_page.title,
-          created_time: val.created_time,
-          last_edited_time: val.last_edited_time,
+          createdTime: val.created_time,
+          lastEditedTime: val.last_edited_time,
         });
       case "heading_1":
         if (getTextFromTextObject(val.heading_1?.rich_text))

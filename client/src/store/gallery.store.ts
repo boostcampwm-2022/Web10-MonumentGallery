@@ -1,12 +1,18 @@
 import create from "zustand";
+import { IGallaryMapData } from "../@types/gallery";
 
 interface GalleryStore {
-  data: any;
-  setData: (data: any) => void;
+  data: IGallaryMapData;
+  setData: (data: IGallaryMapData) => void;
 }
 
 const galleryStore = create<GalleryStore>((set) => ({
-  data: {},
+  data: {
+    uuid: "",
+    nodes: [[]],
+    pages: [],
+    totalKeywords: {},
+  },
   setData: (data) => set(() => ({ data })),
 }));
 

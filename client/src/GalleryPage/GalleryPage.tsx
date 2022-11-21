@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import galleryStore from "../store/gallery.store";
 import useResource from "../hooks/useResource";
 import { useParams } from "../hooks/useParams";
+import { IGallaryMapData } from "../@types/gallery";
 export default function GalleryPage() {
   return (
     <>
@@ -21,7 +22,7 @@ export default function GalleryPage() {
   );
 }
 
-function CanvasLoader({ resource }: { resource: Resource }) {
+function CanvasLoader({ resource }: { resource: Resource<IGallaryMapData> }) {
   const [user, history] = useParams("gallery", []);
 
   const { setData } = galleryStore();

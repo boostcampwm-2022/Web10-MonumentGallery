@@ -41,6 +41,7 @@ app.use(["/test/getData"], catchAuthError);
 
 // api routing
 app.use("/auth", authRouter);
+// app.use("/gallery", galleryRouter);
 app.use("/test", testRouter);
 app.use("/", redirectRouter);
 

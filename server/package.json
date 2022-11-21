@@ -9,6 +9,7 @@
     "server-dev": "cross-env NODE_ENV=development nodemon index.js",
     "client": "cd ../client && npm run dev",
     "dev": "concurrently \"npm run server-dev\" \"npm run client\"",
+    "prod": "cd ../client && npm run build && cd ../server && npm run server",
     "lint": "eslint ."
   },
   "keywords": [],

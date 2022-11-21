@@ -1,18 +1,18 @@
 import { Vector3, Quaternion } from "three";
-import { Vector3 as IVector3, Color, applyProps } from "@react-three/fiber";
+import { Color } from "@react-three/fiber";
+
+type Vector3Arr = [x: number, y: number, z: number];
 
 interface BridgeProps {
-  start: IVector3;
-  end: IVector3;
+  start: Vector3Arr;
+  end: Vector3Arr;
   width?: number;
   height?: number;
   color?: Color;
 }
 
-function propToVector3(valueToApply: IVector3) {
-  const result = { vector: new Vector3() };
-  applyProps(result, { vector: valueToApply });
-  return result.vector;
+function propToVector3(valueToApply: Vector3Arr) {
+  return new Vector3(...valueToApply);
 }
 
 export default function Bridge({ start, end, width = 1.5, height = 0.4, color = 0xffffff }: BridgeProps) {

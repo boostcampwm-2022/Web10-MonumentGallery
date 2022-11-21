@@ -1,7 +1,7 @@
-import { IGallaryPageData } from "../../@types/common";
+import { IGalleryPageData } from "../../@types/gallery";
 import Island from "./Island";
 
-export default function GalleryPageIsland({ position }: IGallaryPageData) {
+export default function GalleryPageIsland({ position }: IGalleryPageData) {
   return (
     <>
       <Island x={position[0]} z={position[1]} />

@@ -42,12 +42,16 @@ export default function SpaceCreater({ resource, onSubmit }: SpaceCreaterProps) 
           겨울
         </ThemeSelectorItem>
       </ThemeSelectorWrapper>
-      <SuspenseButton
-        fallback="생성중..."
-        name="생성하기"
-        resource={resource}
-        onClick={() => onSubmit(period, theme)}
-      />
+      <SuspenseButton fallback="생성중..." name="생성하기" resource={resource} onClick={() => onSubmit(period, theme)}>
+        <Data resource={resource} />
+      </SuspenseButton>
     </div>
   );
+}
+
+function Data({ resource }: { resource: Resource | null }) {
+  const data = resource?.read({ method: "get", url: "/test/getData" });
+  console.log(data);
+  window.location.href = "/gallery/cc";
+  return <></>;
 }

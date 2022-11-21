@@ -2,6 +2,7 @@ import useSelectorComponent from "../Selector";
 import SuspenseButton from "../buttons/SuspenseButton";
 import styles from "./style.module.scss";
 import { Resource } from "../../utils/suspender";
+import { v4 } from "uuid";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
 export type ThemeType = "dream" | "spring" | "summer" | "autumn" | "winter";
@@ -50,8 +51,7 @@ export default function SpaceCreater({ resource, onSubmit }: SpaceCreaterProps) 
 }
 
 function Data({ resource }: { resource: Resource | null }) {
-  const data = resource?.read({ method: "get", url: "/test/getData" });
-  console.log(data);
-  window.location.href = "/gallery/cc";
+  resource?.read({ method: "get", url: "/test/getData" });
+  window.location.href = `/gallery/${v4()}/${v4()}`;
   return null;
 }

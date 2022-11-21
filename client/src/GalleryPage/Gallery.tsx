@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import GalleryWorld from "./GalleryWorld";
-import Light from "./components/Light";
+import Light from "./mapObjects/Light";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
 import dummyData from "./dummyData";

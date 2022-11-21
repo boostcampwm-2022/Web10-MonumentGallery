@@ -15,8 +15,16 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
   //   console.log(`page list 불러오는 시간 ${Date.now() - prev}`);
   const next = Date.now();
   response.results.forEach((result) => {
-    console.log(result);
-    if (result.object === "page" && Date.parse(result.last_edited_time) > limitTime) {
+    // console.log(result);
+    // console.log(result.properties);
+    // console.log(result.properties?.title);
+    // console.log(result.properties?.keyword?.rich_text);
+
+    if (
+      result.object === "page" &&
+      result.parent.type !== "database_id" &&
+      Date.parse(result.last_edited_time) > limitTime
+    ) {
       pageIds.push(result.id);
       const innerText = getTitleFromProperties(result.properties);
       console.log(innerText);

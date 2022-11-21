@@ -11,12 +11,12 @@ import { useParams } from "../hooks/useParams";
 export default function GalleryPage() {
   return (
     <>
-      <div className="canvas-outer">
-        <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading />}>
+        <div className="canvas-outer">
           <CanvasLoader resource={createResource()} />
-        </Suspense>
-      </div>
-      <DomElements />
+        </div>
+        <DomElements />
+      </Suspense>
     </>
   );
 }

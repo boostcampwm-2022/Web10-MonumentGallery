@@ -1,19 +1,22 @@
-import Light from "./components/Light";
-import Plane from "./components/Plane";
+import { Canvas } from "@react-three/fiber";
+import { IGalleryMapData } from "../@types/gallery";
+
+import GalleryWorld from "./GalleryWorld";
+import Light from "./mapObjects/Light";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
+// import dummyData from "./dummyData";
+import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
+  const { data } = galleryStore();
+
   return (
-    <>
+    <Canvas className="canvas-inner" camera={{ fov: 75, near: 0.1, far: 100, position: [0, 1.5, 2] }}>
       <Light />
       <MovementController speed={5} />
       <ViewRotateController />
-      <mesh position={[0, 1, 0]} rotation={[0, Math.PI * 0.25, 0]} scale={1.5}>
-        <boxGeometry />
-        <meshStandardMaterial color="mediumpurple" />
-      </mesh>
-      <Plane />
-    </>
+      <GalleryWorld data={data as IGalleryMapData} />
+    </Canvas>
   );
 }

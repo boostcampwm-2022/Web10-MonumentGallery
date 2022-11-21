@@ -2,7 +2,7 @@ export interface IKeywordMap {
   [keyword: string]: number;
 }
 
-export interface IGallaryPageData {
+export interface IGalleryPageData {
   position: number[];
   title: string;
   subtitle: string[];
@@ -14,9 +14,9 @@ export interface IGallaryPageData {
   imagePixel?: number[][];
 }
 
-export interface IGallaryMapData {
+export interface IGalleryMapData {
   uuid: string;
   totalKeywords: IKeywordMap;
-  pages: IGallaryPageData[];
+  pages: IGalleryPageData[];
   nodes: number[][];
 }

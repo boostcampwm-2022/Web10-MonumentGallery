@@ -4,6 +4,7 @@ import { Client } from "@notionhq/client";
 import axios from "axios";
 import TestModel from "../model/testSchema.js";
 import { getContentsFromNotion } from "../service/notionService.js";
+import galleryMockData from "../model/galleryDummyData.js";
 
 const router = express.Router();
 
@@ -46,11 +47,7 @@ router.get("/getData", async (req, res) => {
 router.get("/gallery/:user/:history", (req, res) => {
   const { user, history } = req.params;
   setTimeout(() => {
-    res.json({
-      uuid: v4(),
-      user,
-      history,
-    });
+    res.json(galleryMockData);
   }, 3000);
 });
 

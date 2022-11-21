@@ -1,9 +1,9 @@
 import create from "zustand";
-import { IGallaryMapData } from "../@types/gallery";
+import { IGalleryMapData } from "../@types/gallery";
 
 interface GalleryStore {
-  data: IGallaryMapData;
-  setData: (data: IGallaryMapData) => void;
+  data: IGalleryMapData;
+  setData: (data: IGalleryMapData) => void;
 }
 
 const galleryStore = create<GalleryStore>((set) => ({

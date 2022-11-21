@@ -4,7 +4,7 @@ import Gallery from "./Gallery";
 import DomElements from "./components/DomElements";
 import React, { Suspense } from "react";
 import { createResource, Resource } from "../utils/suspender";
-import Loading from "./Loading";
+import Loading from "./components/Loading";
 import galleryStore from "../store/gallery.store";
 import useResource from "../hooks/useResource";
 import { useParams } from "../hooks/useParams";

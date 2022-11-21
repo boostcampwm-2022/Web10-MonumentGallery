@@ -2,11 +2,8 @@ import Light from "./components/Light";
 import Plane from "./components/Plane";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
-import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
-  const { data } = galleryStore();
-  console.log(data);
   return (
     <>
       <Light />

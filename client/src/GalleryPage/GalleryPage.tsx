@@ -24,9 +24,9 @@ export default function GalleryPage() {
 
 function CanvasLoader({ resource }: { resource: Resource<IGallaryMapData> }) {
   const [user, history] = useParams("gallery", []);
-
   const { setData } = galleryStore();
   useResource(resource, { method: "get", url: `/test/gallery/${user}/${history}` }, (res) => setData(res));
+
   return (
     <Canvas className="canvas-inner" camera={{ fov: 75, near: 1, far: 20, position: [0, 5, 10] }}>
       <Gallery />

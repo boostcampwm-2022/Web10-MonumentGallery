@@ -31,5 +31,5 @@ export function CheckLoggedIn({ resource }: { resource: Resource }) {
       clearUser();
     }
   }, []);
-  return <></>;
+  return null;
 }

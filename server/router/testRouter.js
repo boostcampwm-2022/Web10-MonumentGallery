@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import express from "express";
 import { Client } from "@notionhq/client";
 import axios from "axios";
@@ -42,10 +43,14 @@ router.get("/getData", async (req, res) => {
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
 
-router.get("/gallery", (req, res) => {
-  console.log("test gallery");
+router.get("/gallery/:user/:history", (req, res) => {
+  const { user, history } = req.params;
   setTimeout(() => {
-    res.send("zzzz");
+    res.json({
+      uuid: v4(),
+      user,
+      history,
+    });
   }, 3000);
 });
 

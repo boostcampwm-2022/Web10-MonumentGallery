@@ -53,5 +53,5 @@ function Data({ resource }: { resource: Resource | null }) {
   const data = resource?.read({ method: "get", url: "/test/getData" });
   console.log(data);
   window.location.href = "/gallery/cc";
-  return <></>;
+  return null;
 }

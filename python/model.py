@@ -27,7 +27,7 @@ class preprocessedNotionData(BaseModel):
 class preprocessedPage:
     def __init__(self):
         self.keywords = defaultdict(int)
-        self.title = []
+        self.title = ""
         self.h1_keywords = []
         self.h2_keywords = []
         self.h3_keywords = []

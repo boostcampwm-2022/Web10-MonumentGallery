@@ -2,6 +2,7 @@ import useSelectorComponent from "../Selector";
 import SuspenseButton from "../buttons/SuspenseButton";
 import styles from "./style.module.scss";
 import { Resource } from "../../utils/suspender";
+import { v4 } from "uuid";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
 export type ThemeType = "dream" | "spring" | "summer" | "autumn" | "winter";
@@ -42,12 +43,15 @@ export default function SpaceCreater({ resource, onSubmit }: SpaceCreaterProps) 
           겨울
         </ThemeSelectorItem>
       </ThemeSelectorWrapper>
-      <SuspenseButton
-        fallback="생성중..."
-        name="생성하기"
-        resource={resource}
-        onClick={() => onSubmit(period, theme)}
-      />
+      <SuspenseButton fallback="생성중..." name="생성하기" resource={resource} onClick={() => onSubmit(period, theme)}>
+        <Data resource={resource} />
+      </SuspenseButton>
     </div>
   );
+}
+
+function Data({ resource }: { resource: Resource | null }) {
+  resource?.read({ method: "get", url: "/test/getData" });
+  window.location.href = `/gallery/${v4()}/${v4()}`;
+  return null;
 }

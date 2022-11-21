@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import express from "express";
 import { Client } from "@notionhq/client";
 import axios from "axios";
@@ -40,6 +41,17 @@ router.get("/getData", async (req, res) => {
 
   res.status(200).json(await getContentsFromNotion(notionAccessToken, period, theme));
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
+});
+
+router.get("/gallery/:user/:history", (req, res) => {
+  const { user, history } = req.params;
+  setTimeout(() => {
+    res.json({
+      uuid: v4(),
+      user,
+      history,
+    });
+  }, 3000);
 });
 
 // FastAPI 연결 확인 test

@@ -10,6 +10,7 @@ export default defineConfig({
     devRouter([
       ["/create", "/create.html"],
       ["/gallery", "/gallery.html"],
+      ["/gallery/*", "/gallery.html"],
     ]),
     react(),
     eslint(),

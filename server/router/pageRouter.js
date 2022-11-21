@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 router.get("/create", async (req, res) => {
   res.sendFile(path.resolve("./dist/create.html"));
 });
-router.get("/gallery", async (req, res) => {
+router.get(["/gallery", "/gallery/*"], async (req, res) => {
   res.sendFile(path.resolve("./dist/gallery.html"));
 });
 

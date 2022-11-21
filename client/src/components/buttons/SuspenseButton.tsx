@@ -2,13 +2,14 @@ import React, { Suspense } from "react";
 import { Resource } from "../../utils/suspender";
 
 interface SuspenseButtonProps {
+  children?: React.ReactNode;
   resource: Resource | null;
   fallback: string;
   name: string;
   onClick: () => void;
 }
 
-export default function SuspenseButton({ resource, fallback, name, onClick }: SuspenseButtonProps) {
+export default function SuspenseButton({ children, resource, fallback, name, onClick }: SuspenseButtonProps) {
   return (
     <>
       {resource ? (
@@ -19,16 +20,11 @@ export default function SuspenseButton({ resource, fallback, name, onClick }: Su
             </button>
           }
         >
-          <Data resource={resource} />
+          {children}
         </Suspense>
       ) : (
         <button onClick={onClick}>{name}</button>
       )}
     </>
   );
-}
-
-function Data({ resource }: { resource: Resource }) {
-  const data = resource.read({ method: "get", url: "/test/getData" });
-  return <div style={{ overflow: "scroll" }}>{JSON.stringify(data, null, 2)}</div>;
 }

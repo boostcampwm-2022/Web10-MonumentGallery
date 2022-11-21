@@ -36,26 +36,48 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
         };
     }
   });
-  console.log(`page title 처리 시간 : ${Date.now() - next}`);
-  const next2 = Date.now();
+  //   console.log(pageContents);
+  //   console.log(`page title 처리 시간 : ${Date.now() - next}`);
+  //   const next2 = Date.now();
 
   for (let i = 0; i < pageIds.length; i++) {
-    pageContents[pageIds[i]] = { ...pageContents[pageIds[i]], ...(await getDataFromPage(notion, pageIds[i])) };
+    const pageData = await getDataFromPage(notion, pageIds[i]);
+    pageContents[pageIds[i]] = await { ...pageContents[pageIds[i]], ...pageData };
+    // console.log(await getDataFromPage(notion, pageIds[i]));
   }
 
-  console.log(`page 처리 로직 총 시간 (불러오기 + 처리) : ${Date.now() - next2}`);
+  console.log(pageContents);
+  let cursor = -1;
 
-  //토탈 키워드 추가 등등
+  while (++cursor < pageIds.length && pageIds.length < 100) {
+    console.log(cursor);
+    const cursorId = pageIds[cursor];
+    for (let i = 0; i < pageContents[cursorId].childPages.length && pageIds.length < 100; i++) {
+      const nowPage = pageContents[cursorId].childPages[i];
+      if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
+      pageIds.push(nowPage.id);
+      pageContents[nowPage.id] = {
+        title: nowPage.title,
+        createdTime: nowPage.createdTime,
+        lastEditedTime: nowPage.lastEditedTime,
+        ...(await getDataFromPage(notion, nowPage.id)),
+      };
+    }
+  }
+  console.log(pageContents);
+  //   console.log(`page 처리 로직 총 시간 (불러오기 + 처리) : ${Date.now() - next2}`);
 
-  const res = {
-    theme,
-    totalKeywords: {},
-    pages: pageContents,
-  };
+  //   //토탈 키워드 추가 등등
 
-  //DB 저장
+  //   const res = {
+  //     theme,
+  //     totalKeywords: {},
+  //     pages: pageContents,
+  //   };
 
-  return res;
+  //   //DB 저장
+
+  //   return res;
 }
 
 async function getDataFromPage(notion, pageId) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import axios from "axios";
 import userStore from "../store/user.store";
 import { Resource } from "../utils/suspender";
@@ -20,9 +20,14 @@ export function useLoggedIn() {
   return [isLoggedIn, userId] as const;
 }
 
+interface ICheck {
+  logined: boolean;
+  id: string;
+}
+
 export function CheckLoggedIn({ resource }: { resource: Resource }) {
   const { setUser, clearUser } = userStore();
-  const { logined, user } = useMemo(() => resource.read({ method: "get", url: "/auth/check" }) as any, []);
+  const { logined, id: user } = useMemo(() => resource.read({ method: "get", url: "/auth/check" }) as ICheck, []);
 
   useEffect(() => {
     if (logined) {
@@ -31,5 +36,5 @@ export function CheckLoggedIn({ resource }: { resource: Resource }) {
       clearUser();
     }
   }, []);
-  return <></>;
+  return null;
 }

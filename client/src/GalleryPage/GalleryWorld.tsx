@@ -9,6 +9,7 @@ interface GalleryWorldProps {
 
 export default function GalleryWorld({ data }: GalleryWorldProps) {
   const { totalKeywords, pages, nodes } = data;
+  console.log(data);
 
   const pageIslandPosition = pages.map(({ position }) => [position[0], 0, position[1]] as const);
   const getIslandPosition = (i: number): [x: number, y: number, z: number] => {

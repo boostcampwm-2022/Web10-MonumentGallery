@@ -8,7 +8,7 @@ import { IGallaryMapData } from "../@types/common";
 
 export default function Gallery() {
   return (
-    <Canvas className="canvas-inner" camera={{ fov: 75, near: 1, far: 20, position: [0, 5, 10] }}>
+    <Canvas className="canvas-inner" camera={{ fov: 75, near: 0.1, far: 100, position: [0, 1.5, 2] }}>
       <Light />
       <MovementController speed={5} />
       <ViewRotateController />

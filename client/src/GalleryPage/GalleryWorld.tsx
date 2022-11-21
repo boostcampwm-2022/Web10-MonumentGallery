@@ -1,4 +1,5 @@
-import Plane from "./components/Plane";
+import GalleryPageIsland from "./mapObjects/GalleryPageIsland";
+import GalleryCenterIsland from "./mapObjects/GalleryCenterIsland";
 import { IGallaryMapData } from "../@types/common";
 
 interface GalleryWorldProps {
@@ -6,14 +7,15 @@ interface GalleryWorldProps {
 }
 
 export default function GalleryWorld({ data }: GalleryWorldProps) {
-  console.log(data);
+  const { totalKeywords, pages, nodes } = data;
+
   return (
     <>
-      <mesh position={[0, 1, 0]} rotation={[0, Math.PI * 0.25, 0]} scale={1.5}>
-        <boxGeometry />
-        <meshStandardMaterial color="mediumpurple" />
-      </mesh>
-      <Plane />
+      <GalleryCenterIsland />
+      {pages.map((pageData, i) => {
+        const id = `${pageData.title}__${i}`;
+        return <GalleryPageIsland {...pageData} key={id} />;
+      })}
     </>
   );
 }

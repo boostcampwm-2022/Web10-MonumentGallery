@@ -12,7 +12,7 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
   const response = await notion.search({
     filter: { property: "object", value: "page" },
   });
-  console.log(`page list 불러오는 시간 ${Date.now() - prev}`);
+  //   console.log(`page list 불러오는 시간 ${Date.now() - prev}`);
   const next = Date.now();
   response.results.forEach((result) => {
     console.log(result);
@@ -79,16 +79,16 @@ async function getDataFromPage(notion, pageId) {
           last_edited_time: val.last_edited_time,
         });
       case "heading_1":
-        if (getTextFromTextObject(val.heading_1?.rich_text[0]))
-          res.subTitle.push(getTextFromTextObject(val.heading_1?.rich_text[0]));
+        if (getTextFromTextObject(val.heading_1?.rich_text))
+          res.heading_1.push(getTextFromTextObject(val.heading_1?.rich_text));
         break;
       case "heading_2":
-        if (getTextFromTextObject(val.heading_2?.rich_text[0]))
-          res.subTitle.push(getTextFromTextObject(val.heading_2?.rich_text[0]));
+        if (getTextFromTextObject(val.heading_2?.rich_text))
+          res.heading_2.push(getTextFromTextObject(val.heading_2?.rich_text));
         break;
       case "heading_3":
-        if (getTextFromTextObject(val.heading_3?.rich_text[0]))
-          res.subTitle.push(getTextFromTextObject(val.heading_3?.rich_text[0]));
+        if (getTextFromTextObject(val.heading_3?.rich_text))
+          res.heading_3.push(getTextFromTextObject(val.heading_3?.rich_text));
         break;
       case "paragraph":
         if (getTextFromTextObject(val.paragraph?.rich_text[0])) {
@@ -116,7 +116,8 @@ async function getDataFromPage(notion, pageId) {
 }
 
 function getTextFromTextObject(textObject) {
-  return textObject && textObject.plain_text !== undefined ? textObject.plain_text : null;
+  if (!textObject?.length || textObject?.length <= 0) return "";
+  return textObject[0].plain_text;
 }
 
 function getLimitTime(period) {

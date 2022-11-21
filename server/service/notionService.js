@@ -44,8 +44,12 @@ async function getPages(notion, limitTime) {
       Date.parse(result.last_edited_time) > limitTime
     ) {
       pageIds.push(result.id);
+<<<<<<< HEAD
       const innerText = getTitleFromProperties(result.properties);
       console.log(innerText);
+=======
+      const innerText = getTextFromTextObject(result.properties.title?.title[0]);
+>>>>>>> dev
       if (innerText)
         pageContents[result.id] = {
           title: innerText,

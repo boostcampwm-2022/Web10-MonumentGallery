@@ -3,8 +3,7 @@ import Plane from "./components/Plane";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
 
-export default function MySpace() {
-  console.log("rendered!");
+export default function Gallery() {
   return (
     <>
       <Light />

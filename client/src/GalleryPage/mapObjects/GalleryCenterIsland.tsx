@@ -1,4 +1,3 @@
-import { IGallaryPageData } from "../../@types/common";
 import Island from "./Island";
 
 export default function GalleryCenterIsland() {

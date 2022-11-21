@@ -59,29 +59,51 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
 }
 
 async function getDataFromPage(notion, pageId) {
-  const res = {
-    position: [],
-    node: [], // 페이지간 관계성 표현에 쓰임
-    subTitle: [],
-    keywords: {},
-    links: [],
-    imagePixel: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
-  };
-
-  const loading = Date.now();
+  //   const loading = Date.now();
   const content = await notion.blocks.children.list({
     block_id: pageId,
     page_size: 50,
   });
-  const paragraphs = [];
 
-  console.log(`페이지 컨텐츠 로딩 시간 : ${Date.now() - loading}`);
-  const processing = Date.now();
-  await content.results.forEach((val) => {
+  //   console.log(`페이지 컨텐츠 로딩 시간 : ${Date.now() - loading}`);
+  //   const processing = Date.now();
 
+  //paragraphs, title, sub-title은 자연어 처리 서버로
+  //   console.log(`페이지 컨텐츠 처리 시간 : ${Date.now() - processing}`);
+  const res = await processPageData(notion, content.results);
+
+  if (res.columnList.length > 0) {
+    for (let i = 0; i < res.columnList.length; i++) {
+      const columnList = await getColumnFromColumnList(notion, res.columnList[i]);
+      Object.keys(columnList).forEach((key) => {
+        res[key] = [...res[key], ...columnList[key]];
+      });
+    }
+    delete res.columnList;
+  }
+
+  return res;
+}
+
+async function processPageData(notion, data) {
+  const res = {
+    position: [],
+    childPages: [], // 자식 페이지들
+    heading_1: [],
+    heading_2: [],
+    heading_3: [],
+    links: [],
+    image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
+    texts: [],
+    columnList: [],
+  };
+
+  await data.forEach(async (val) => {
+    // console.log(val);
     switch (val.type) {
       case "child_page":
-        res.node.push({
+        console.log(val);
+        res.childPages.push({
           id: val.id,
           title: val.child_page.title,
           createdTime: val.created_time,
@@ -100,29 +122,22 @@ async function getDataFromPage(notion, pageId) {
           res.heading_3.push(getTextFromTextObject(val.heading_3?.rich_text));
         break;
       case "paragraph":
-        if (getTextFromTextObject(val.paragraph?.rich_text[0])) {
-          if (urlRegEx.test(getTextFromTextObject(val.paragraph?.rich_text[0]))) {
-            getTextFromTextObject(val.paragraph?.rich_text[0])
-              .match(urlRegEx)
-              .forEach((link) => res.links.push({ href: link, favicon: "" }));
-          } else {
-            paragraphs.push(getTextFromTextObject(val.paragraph?.rich_text[0]));
-          }
-        }
+        res.texts.push(getTextFromTextObject(val.paragraph?.rich_text));
+        break;
       case "column_list":
         res.columnList.push(val.id);
         break;
-      case "image":
-        //file말고 다른 타입도 있으려나
-        res.imagePixel.push({
-          url: val.image.file.url,
-        });
       default:
+        // console.log(val);
         break;
     }
   });
+
   //paragraphs, title, sub-title은 자연어 처리 서버로
-  console.log(`페이지 컨텐츠 처리 시간 : ${Date.now() - processing}`);
+
+  return res;
+}
+
 async function getColumnFromColumnList(notion, columnListId) {
   const columns = await notion.blocks.children.list({
     block_id: columnListId,

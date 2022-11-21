@@ -8,6 +8,10 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
   const notion = new Client({ auth: notionAccessToken });
 
   console.log(await getPages(notion, limitTime));
+
+  // database 처리 (root페이지가 database인 경우)
+
+  // 자연어 처리 서버 api 호출
   //   //토탈 키워드 추가 등등
 
   //   const res = {
@@ -60,7 +64,7 @@ async function getPages(notion, limitTime) {
 
   for (let i = 0; i < pageIds.length; i++) {
     const pageData = await getDataFromPage(notion, pageIds[i]);
-    pageContents[pageIds[i]] = await { ...pageContents[pageIds[i]], ...pageData };
+    pageContents[pageIds[i]] = { ...pageContents[pageIds[i]], ...pageData };
     // console.log(await getDataFromPage(notion, pageIds[i]));
   }
 
@@ -127,10 +131,10 @@ async function processPageData(notion, data) {
   };
 
   await data.forEach(async (val) => {
-    console.log(val);
+    // console.log(val);
     switch (val.type) {
       case "child_page":
-        console.log(val);
+        // console.log(val);
         res.childPages.push({
           id: val.id,
           title: val.child_page.title,
@@ -156,12 +160,10 @@ async function processPageData(notion, data) {
         res.columnList.push(val.id);
         break;
       default:
-        // console.log(val);
+        console.log(val.type);
         break;
     }
   });
-
-  //paragraphs, title, sub-title은 자연어 처리 서버로
 
   return res;
 }

@@ -1,6 +1,22 @@
 import "./style.scss";
-import React from "react";
+import { useState, useEffect } from "react";
 import LoadingImg from "../../../assets/loading.svg";
+
+function Ellipsis() {
+  const [ellipseCount, setCount] = useState<number>(1);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount((count) => {
+        if (count > 4) return 1;
+        return count + 1;
+      });
+    }, 250);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  return <span className="loading-text">{".".repeat(Math.min(ellipseCount, 3))}</span>;
+}
 
 export default function Loading() {
   return (
@@ -8,6 +24,7 @@ export default function Loading() {
       <div className="loading-wrapper">
         <div>
           <span className="loading-text">당신의 멋진 공간이 만들어지는 중입니다</span>
+          <Ellipsis />
         </div>
         <img width={200} src={LoadingImg} />
       </div>

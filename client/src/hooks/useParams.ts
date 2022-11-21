@@ -6,6 +6,6 @@ export function useParams(base = "", deps: React.DependencyList) {
   return useMemo(() => {
     const params = location.pathname.split("/");
     const baseIdx = params.findIndex((param) => param === base);
-    return params.slice(baseIdx + 1);
+    return params.map((param) => (param === "" ? undefined : param)).slice(baseIdx + 1);
   }, deps);
 }

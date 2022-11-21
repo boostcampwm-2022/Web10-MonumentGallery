@@ -18,7 +18,8 @@ export async function getContentsFromNotion(notionAccessToken, period, theme) {
     console.log(result);
     if (result.object === "page" && Date.parse(result.last_edited_time) > limitTime) {
       pageIds.push(result.id);
-      const innerText = getTextFromTextObject(result.properties.title.title[0]);
+      const innerText = getTitleFromProperties(result.properties);
+      console.log(innerText);
       if (innerText)
         pageContents[result.id] = {
           title: innerText,
@@ -113,6 +114,15 @@ async function getDataFromPage(notion, pageId) {
   //paragraphs, title, sub-title은 자연어 처리 서버로
   console.log(`페이지 컨텐츠 처리 시간 : ${Date.now() - processing}`);
   return res;
+}
+
+function getTitleFromProperties(properties) {
+  return Object.keys(properties).reduce((acc, cur) => {
+    if (properties[cur]?.type == "title" && properties[cur]?.title.length > 0) {
+      acc = properties[cur].title[0].plain_text;
+    }
+    return acc;
+  }, null);
 }
 
 function getTextFromTextObject(textObject) {

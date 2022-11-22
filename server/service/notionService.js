@@ -64,10 +64,11 @@ async function getPages(notion, limitTime) {
       result.parent.type === "workspace" &&
       Date.parse(result.last_edited_time) > limitTime
     ) {
+      const innerText = getTextFromTextObject(result?.title);
       pageIds.push(result.id);
       pageContents[result.id] = {
         type: "database",
-        title: getTextFromTextObject(result?.title),
+        title: innerText?.length > 0 ? innerText[0] : "-",
         createdTime: result.created_time,
         lastEditedTime: result.last_edited_time,
       };
@@ -134,21 +135,22 @@ async function getDataFromPage(notion, pageId) {
       //is_inline에 따라 다르게 처리
       if (!childDatabase.is_inline) {
         //인라인이 아닐 경우 -> 페이지로 간주
+        const innerText = getTextFromTextObject(childDatabase?.title);
         res.childPage.push({
           type: "database",
           id: res.childDatabase[i],
-          title: getTextFromTextObject(childDatabase?.title),
+          title: innerText?.length > 0 ? innerText[0] : "-",
           createdTime: childDatabase.created_time,
           lastEditedTime: childDatabase.last_edited_time,
         });
       } else {
-        //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> texts
-        res.heading_3.push(getTextFromTextObject(childDatabase?.title));
+        //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> paragraph
+        res.h3 = [...res.h3, ...getTextFromTextObject(childDatabase?.title)];
         const databaseData = await notion.databases.query({
           database_id: childDatabase.id,
         });
         databaseData.results.forEach((data) => {
-          res.texts.push(getTitleFromProperties(data.properties));
+          if (getTitleFromProperties(data.properties)) res.paragraph.push(getTitleFromProperties(data.properties));
         });
       }
     }
@@ -187,31 +189,82 @@ function processPageData(notion, data) {
         res.childDatabase.push(val.id);
         break;
       case "heading_1":
-        if (getTextFromTextObject(val.heading_1?.rich_text))
-          res.heading_1.push(getTextFromTextObject(val.heading_1?.rich_text));
+        if (getTextFromTextObject(val.heading_1?.rich_text).length > 0)
+          res.h1 = [...res.h1, ...getTextFromTextObject(val.heading_1?.rich_text)];
         break;
       case "heading_2":
-        if (getTextFromTextObject(val.heading_2?.rich_text))
-          res.heading_2.push(getTextFromTextObject(val.heading_2?.rich_text));
+        if (getTextFromTextObject(val.heading_2?.rich_text).length > 0)
+          res.h2 = [...res.h2, ...getTextFromTextObject(val.heading_2?.rich_text)];
         break;
       case "heading_3":
-        if (getTextFromTextObject(val.heading_3?.rich_text))
-          res.heading_3.push(getTextFromTextObject(val.heading_3?.rich_text));
+        if (getTextFromTextObject(val.heading_3?.rich_text).length > 0)
+          res.h3 = [...res.h3, ...getTextFromTextObject(val.heading_3?.rich_text)];
         break;
       case "paragraph":
-        if (getTextFromTextObject(val.paragraph?.rich_text))
-          if (urlRegEx.test(getTextFromTextObject(val.paragraph?.rich_text))) {
-            getTextFromTextObject(val.paragraph?.rich_text)
-              .match(urlRegEx)
-              .forEach((link) => res.links.push({ href: link, favicon: "" }));
-          } else {
-            res.texts.push(getTextFromTextObject(val.paragraph?.rich_text));
-          }
+        if (getTextFromTextObject(val.paragraph?.rich_text).length > 0) {
+          //   if (urlRegEx.test(getTextFromTextObject(val.paragraph?.rich_text))) {
+          //     getTextFromTextObject(val.paragraph?.rich_text)
+          //       .match(urlRegEx)
+          //       .forEach((link) => res.links.push({ href: link, favicon: "" }));
+          //   } else {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.paragraph?.rich_text)];
+          //   }
+        }
+        break;
+      case "callout":
+        if (getTextFromTextObject(val.callout?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.callout?.rich_text)];
+        }
+        break;
+      case "quote":
+        if (getTextFromTextObject(val.quote?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.quote?.rich_text)];
+        }
+        break;
+      case "bulleted_list_item":
+        if (getTextFromTextObject(val.bulleted_list_item?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.bulleted_list_item?.rich_text)];
+        }
+        break;
+      case "numbered_list_item":
+        if (getTextFromTextObject(val.numbered_list_item?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.numbered_list_item?.rich_text)];
+        }
+        break;
+      case "to_do":
+        if (getTextFromTextObject(val.to_do?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.to_do?.rich_text)];
+        }
+        break;
+      case "toggle":
+        if (getTextFromTextObject(val.toggle?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.toggle?.rich_text)];
+        }
+        break;
+      case "code":
+        if (val.code?.language) res.paragraph.push(val.code.language);
         break;
       case "column_list":
         res.columnList.push(val.id);
+        console.log("컬럼리스트: ", val.column_list);
         break;
+      case "image": //이미지, img.[external||file].url에 링크 존재
+        //이미지 내부 타입에 따라서 뒤에 오는 변수가 달라짐
+        console.log("이미지: ", val.image);
+        break;
+      case "embed": //외부 링크 임베드 embed.url에 링크 존재
+        console.log("임베드링크: ", val.embed);
+        break;
+      case "bookmark": //북마크, bookmark.url에 링크 존재
+        console.log("북마크: ", val.bookmark);
+        break;
+      case "link_preview": //링크, link_preview.url
+        console.log("링크 프리뷰: ", val.link_preview);
+        break;
+      case "table":
+      case "table_row":
       default:
+        // file, video, pdf, divider, equation, table_of_contents, breadcrumb, synced_block, link_to_page, template 등등..
         // console.log(val.type);
         break;
     }
@@ -234,8 +287,8 @@ async function getDataFromDatabase(notion, databaseId) {
   };
   const database = await notion.databases.retrieve({ database_id: databaseId });
 
-  //database.description 처리 필요
-
+  //database.description 처리 필요]
+  res.paragraph = [...getTextFromTextObject(database.description)];
   const databaseChildPage = await notion.databases.query({
     database_id: databaseId,
   });

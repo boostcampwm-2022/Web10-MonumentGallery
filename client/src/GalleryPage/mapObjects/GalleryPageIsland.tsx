@@ -10,15 +10,11 @@ import { generateRandomPastelColors } from "../../utils/random";
 import MemorialStone from "./MemorialStone";
 import { COLORS } from "../../@types/colors";
 
-interface AnimatedTitleProps {
-  position: [x: number, y: number, z: number];
-  text: string;
-}
-
 interface IStoneInfo {
   subtitle: IGalleryPageSubTitle;
   stonePosition: number[];
 }
+
 function calculateMemorialStonePosition(subtitles: IGalleryPageSubTitle[]) {
   const enalblePositions = [
     [0, 0],
@@ -72,6 +68,11 @@ function calculateMemorialStonePosition(subtitles: IGalleryPageSubTitle[]) {
     }
   }
   return stoneInfoList;
+}
+
+interface AnimatedTitleProps {
+  position: [x: number, y: number, z: number];
+  text: string;
 }
 
 function AnimatedTitle({ position, text }: AnimatedTitleProps) {

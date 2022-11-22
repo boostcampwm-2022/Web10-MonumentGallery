@@ -25,7 +25,7 @@ export default function GalleryPage() {
 function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   const [user, history] = useParams("gallery", []);
   const { setData } = galleryStore();
-  useResource(resource, { method: "get", url: `/test/gallery/${user}/${history}` }, (res) => setData(res));
+  // useResource(resource, { method: "get", url: `/test/gallery/${user}/${history}` }, (res) => setData(res));
 
   return <Gallery />;
 }

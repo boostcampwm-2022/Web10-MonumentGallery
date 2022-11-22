@@ -7,12 +7,13 @@ const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 interface BallonProps {
   position: [x: number, y: number, z: number];
   positionY: Interpolation<number, number>;
+  scale: Interpolation<number, number>;
   color: Interpolation<number, COLORS>;
 }
 
-export default function Balloon({ position, positionY, color }: BallonProps) {
+export default function Balloon({ position, positionY, scale, color }: BallonProps) {
   return (
-    <animated.mesh position={position} position-y={positionY}>
+    <animated.mesh position={position} position-y={positionY} scale={scale}>
       <sphereGeometry args={[1.5, 64, 32]} />
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}

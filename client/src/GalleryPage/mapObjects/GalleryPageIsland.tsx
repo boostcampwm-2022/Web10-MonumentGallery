@@ -18,7 +18,7 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
   const [active, setActive] = useState(0);
   const [action, setAction] = useState(false);
   const { camera } = useThree();
-  const meshRef = useRef<THREE.Group>(null);
+  const textGroupRef = useRef<THREE.Group>(null);
 
   const { spring } = useSpring({
     spring: active,
@@ -27,15 +27,16 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
     onRest: () => setAction(false),
   });
 
-  const scale: Interpolation<number, number> = spring.to([0, 1], [-2, 4]);
-  const balloonY: Interpolation<number, number> = spring.to([0, 1], [-2, 6]);
-
+  const textScale: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-2, 4]), []);
+  const balloonScale: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [0, 1]), []);
+  const textY: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-2, 6]), []);
+  const balloonY: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-2, 8]), []);
   const randomColors = useMemo(() => generateRandomPastelColors()[0], []);
   const color: Interpolation<number, COLORS> = spring.to([0, 1], [COLORS.SKY400, COLORS[randomColors]]);
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
   useFrame(() => {
-    if (!action) meshRef.current?.lookAt(camera.position);
+    if (!action) textGroupRef.current?.lookAt(camera.position);
     const { x, z: y } = camera.position;
 
     const distance = Math.abs(x - position[0]) + Math.abs(y - position[2]);
@@ -49,13 +50,13 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
 
   return (
     <>
-      <animated.group ref={meshRef} position={position} position-y={scale}>
-        <animated.mesh rotation-y={rotation} scale-z={scale} onClick={() => setActive(+!active)}>
+      <animated.group ref={textGroupRef} position={position} position-y={textY}>
+        <animated.mesh rotation-y={rotation} scale={textScale} onClick={() => setActive(+!active)}>
           <Text
             visible={!(!active && !action)}
             font={MapoFlowerIsland}
             color="black"
-            fontSize={0.4}
+            fontSize={0.1}
             anchorX="center"
             anchorY="middle"
           >
@@ -63,7 +64,7 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
           </Text>
         </animated.mesh>
       </animated.group>
-      <Balloon position={position} positionY={balloonY} color={color} />
+      <Balloon position={position} positionY={balloonY} scale={balloonScale} color={color} />
     </>
   );
 }

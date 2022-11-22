@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { IGalleryPageData, IGalleryPageSubTitle } from "../../@types/gallery";
 import Island from "./Island";
 import React, { useMemo, useRef, useState } from "react";
@@ -135,7 +134,7 @@ export default function GalleryPageIsland({ position, subtitle, title }: IGaller
   const stoneInfoList = useMemo(() => {
     return calculateMemorialStonePosition(subtitle);
   }, []);
-    
+
   return (
     <>
       <AnimatedTitle position={[x, 0, z]} text={title} />

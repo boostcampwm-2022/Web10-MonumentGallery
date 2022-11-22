@@ -1,6 +1,6 @@
 import { IGalleryPageData } from "../../@types/gallery";
 import Island from "./Island";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { a, Interpolation, useSpring } from "@react-spring/three";
 import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -26,7 +26,9 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
 
   const scale: Interpolation<number, number> = spring.to([0, 1], [-2, 4]);
   const balloonY: Interpolation<number, number> = spring.to([0, 1], [-2, 6]);
-  const color: Interpolation<number, string> = spring.to([0, 1], ["#6bcbcb", "#a797f4"]);
+
+  const randomColors = useMemo(() => generateRandomPastelColors()[0], []);
+  const color: Interpolation<number, COLORS> = spring.to([0, 1], [COLORS.SKY400, COLORS[randomColors]]);
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
   useFrame(() => {
@@ -35,7 +37,6 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
 
     const distance = Math.abs(x - position[0]) + Math.abs(y - position[2]);
 
-    // if (x > position[0] - 10 && x < position[0] + 10 && y > position[2] - 10 && y < position[2] + 10) {
     if (distance < 15) {
       if (!active) setActive(+!active);
     } else {
@@ -77,13 +78,15 @@ export default function GalleryPageIsland({ position, title }: IGalleryPageData)
 
 import { animated } from "@react-spring/three";
 import { MeshDistortMaterial } from "@react-three/drei";
+import { generateRandomPastelColors } from "../../utils/random";
+import { COLORS } from "../../@types/colors";
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
 interface BallonProps {
   position: [x: number, y: number, z: number];
   positionY: Interpolation<number, number>;
-  color: Interpolation<number, string>;
+  color: Interpolation<number, COLORS>;
 }
 
 const Balloon = ({ position, positionY, color }: BallonProps) => {

@@ -25,12 +25,16 @@ async function getKeywordFromFastAPI(rawContent) {
 }
 
 function sortKeywords(keywords) {
+  //상위 30개만 산출
   const totalKeywords = Object.keys(keywords).map((key) => [key, keywords[key]]);
-  return totalKeywords.sort((a, b) => {
-    if (a[1] < b[1]) return 1;
-    else if (a[1] > b[1]) return -1;
-    else return 0;
-  });
+  return totalKeywords
+    .sort((a, b) => {
+      if (a[1] < b[1]) return 1;
+      else if (a[1] > b[1]) return -1;
+      else return 0;
+    })
+    .slice(0, 30)
+    .map((val) => val[0]);
 }
 
 function getFastAPIFormData(rawContent) {

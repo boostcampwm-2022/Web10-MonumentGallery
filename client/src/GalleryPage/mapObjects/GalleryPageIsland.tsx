@@ -70,7 +70,8 @@ export default function GalleryPageIsland({ position, subtitle }: IGalleryPageDa
       <Island x={position[0]} z={position[1]} />
       {stoneInfoList.map((stoneInfo, i) => {
         const { subtitle, stonePosition } = stoneInfo;
-        return <MemorialStone subTitle={subtitle} parentPosition={position} position={stonePosition} key={i} />;
+        const key = `${subtitle}+${i}`;
+        return <MemorialStone subTitle={subtitle} position={position.map((e, i) => e + stonePosition[i])} key={key} />;
       })}
     </>
   );

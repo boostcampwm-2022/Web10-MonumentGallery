@@ -17,6 +17,10 @@ export default {
         { text: "이것은 h1타이틀", type: "h1" },
         { text: "이것도 h1타이틀", type: "h1" },
         { text: "쏜애플 사랑해요", type: "h2" },
+        {
+          text: "가나다라마바사아자차카타파하ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          type: "h2",
+        },
       ],
       keywords: {
         부스트캠프: 2,

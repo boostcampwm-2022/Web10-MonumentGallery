@@ -38,20 +38,23 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
   });
 
   return (
-    <a.group ref={meshRef} position={position} position-y={scale}>
-      <a.mesh rotation-y={rotation} scale-z={scale} onClick={() => setActive(+!active)}>
-        <Text
-          visible={!(!active && !action)}
-          font={MapoFlowerIsland}
-          color="black"
-          fontSize={0.4}
-          anchorX="center"
-          anchorY="middle"
-        >
-          {text}
-        </Text>
-      </a.mesh>
-    </a.group>
+    <>
+      <a.group ref={meshRef} position={position} position-y={scale}>
+        <a.mesh rotation-y={rotation} scale-z={scale} onClick={() => setActive(+!active)}>
+          <Text
+            visible={!(!active && !action)}
+            font={MapoFlowerIsland}
+            color="black"
+            fontSize={0.4}
+            anchorX="center"
+            anchorY="middle"
+          >
+            {text}
+          </Text>
+        </a.mesh>
+      </a.group>
+      <MyScene position={position} position-y={scale} />
+    </>
   );
 }
 
@@ -65,3 +68,25 @@ export default function GalleryPageIsland({ position, title }: IGalleryPageData)
     </>
   );
 }
+
+import { animated } from "@react-spring/three";
+import { MeshDistortMaterial } from "@react-three/drei";
+
+const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
+
+const MyScene = ({ position, ...args }: { position: [x: number, y: number, z: number] }) => {
+  const [clicked, setClicked] = useState(false);
+
+  const springs = useSpring({
+    color: clicked ? "#569AFF" : "#ff6d6d",
+  });
+
+  return (
+    <animated.mesh onClick={() => setClicked((s) => !s)} position={position} {...args}>
+      <sphereGeometry args={[1.5, 64, 32]} />
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/* @ts-ignore */}
+      <AnimatedMeshDistortMaterial speed={5} distort={0.5} color={springs.color} />
+    </animated.mesh>
+  );
+};

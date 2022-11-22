@@ -21,7 +21,7 @@ export default function GalleryWorld({ data }: GalleryWorldProps) {
 
   return (
     <>
-      <GalleryCenterIsland />
+      <GalleryCenterIsland keywords={totalKeywords} />
       {pages.map((pageData: IGalleryPageData, i: number) => {
         const id = `${pageData.title}__${i}`;
         return <GalleryPageIsland {...pageData} key={id} />;

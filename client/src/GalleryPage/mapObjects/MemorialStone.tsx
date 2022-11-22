@@ -1,6 +1,7 @@
 import { Billboard, Text } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Vector3 } from "three";
 import { IGalleryPageSubTitle } from "../../@types/gallery";
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 interface MemorialStoneProps {
@@ -24,12 +25,21 @@ function textPreProcessing(text: string) {
 export default function MemorialStone({ subTitle, position }: MemorialStoneProps) {
   const { text, type } = subTitle;
   const [pText, setPText] = useState("");
+  const { camera } = useThree();
+
   const { visibleLetters, invisibleLetters } = useMemo(() => {
     const { visibleLetters, invisibleLetters } = textPreProcessing(text);
     setPText(visibleLetters.join(" "));
     return { visibleLetters, invisibleLetters };
   }, []);
+
+  const subtitleMeshRef = useRef<THREE.Mesh>(null);
   const subtitleRef = useRef<any>();
+
+  useFrame(() => {
+    subtitleMeshRef.current?.lookAt(new Vector3(camera.position.x, 2, camera.position.z));
+  });
+
   useEffect(() => {
     const interval = setInterval(() => {
       subtitleRef.current.position.y -= 1;
@@ -63,7 +73,7 @@ export default function MemorialStone({ subTitle, position }: MemorialStoneProps
         <boxGeometry />
         <meshStandardMaterial color="#F2D6A2" />
       </mesh>
-      <Billboard position-x={position[0]} position-y={2} position-z={position[1]}>
+      <mesh ref={subtitleMeshRef} position-x={position[0]} position-y={2} position-z={position[1]}>
         <Text
           ref={subtitleRef}
           font={MapoFont}
@@ -75,7 +85,7 @@ export default function MemorialStone({ subTitle, position }: MemorialStoneProps
         >
           {pText}
         </Text>
-      </Billboard>
+      </mesh>
     </>
   );
 }

@@ -2,10 +2,15 @@ export interface IKeywordMap {
   [keyword: string]: number;
 }
 
+export interface IGalleryPageSubTitle {
+  text: string;
+  type: "h1" | "h2" | "h3";
+}
+
 export interface IGalleryPageData {
   position: number[];
   title: string;
-  subtitle: string[];
+  subtitle: IGalleryPageSubTitle[];
   keywords: IKeywordMap;
   links?: {
     href: string;

@@ -4,24 +4,12 @@ import { Client } from "@notionhq/client";
 const urlRegEx =
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim;
 
-export async function getContentsFromNotion(notionAccessToken, period, theme) {
+export async function getRawContentsFromNotion(notionAccessToken, period, theme) {
   const limitTime = getLimitTime(period);
   const notion = new Client({ auth: notionAccessToken });
 
-  console.log(await getPages(notion, limitTime));
+  return await getPages(notion, limitTime);
 
-  // 자연어 처리 서버 api 호출
-  // 토탈 키워드 추가 등등
-
-  //   const res = {
-  //     theme,
-  //     totalKeywords: {},
-  //     pages: pageContents,
-  //   };
-
-  // DB 저장
-
-  // return res;
 }
 
 async function getPages(notion, limitTime) {

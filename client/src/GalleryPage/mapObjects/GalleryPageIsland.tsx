@@ -1,7 +1,7 @@
 import { IGalleryPageData } from "../../@types/gallery";
 import Island from "./Island";
 import React, { useRef, useState } from "react";
-import { a, useSpring } from "@react-spring/three";
+import { a, Interpolation, useSpring } from "@react-spring/three";
 import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
@@ -24,13 +24,19 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
     onRest: () => setAction(false),
   });
 
-  const scale = spring.to([0, 1], [0, 4]);
+  const scale: Interpolation<number, number> = spring.to([0, 1], [-2, 4]);
+  const balloonY: Interpolation<number, number> = spring.to([0, 1], [-2, 6]);
+  const color: Interpolation<number, string> = spring.to([0, 1], ["#6bcbcb", "#a797f4"]);
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
   useFrame(() => {
     if (!action) meshRef.current?.lookAt(camera.position);
     const { x, z: y } = camera.position;
-    if (x > position[0] - 8 && x < position[0] + 8 && y > position[2] - 8 && y < position[2] + 8) {
+
+    const distance = Math.abs(x - position[0]) + Math.abs(y - position[2]);
+
+    // if (x > position[0] - 10 && x < position[0] + 10 && y > position[2] - 10 && y < position[2] + 10) {
+    if (distance < 15) {
       if (!active) setActive(+!active);
     } else {
       if (active) setActive(+!active);
@@ -53,7 +59,7 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
           </Text>
         </a.mesh>
       </a.group>
-      <MyScene position={position} position-y={scale} />
+      <Balloon position={position} positionY={balloonY} color={color} />
     </>
   );
 }
@@ -74,19 +80,19 @@ import { MeshDistortMaterial } from "@react-three/drei";
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
-const MyScene = ({ position, ...args }: { position: [x: number, y: number, z: number] }) => {
-  const [clicked, setClicked] = useState(false);
+interface BallonProps {
+  position: [x: number, y: number, z: number];
+  positionY: Interpolation<number, number>;
+  color: Interpolation<number, string>;
+}
 
-  const springs = useSpring({
-    color: clicked ? "#569AFF" : "#ff6d6d",
-  });
-
+const Balloon = ({ position, positionY, color }: BallonProps) => {
   return (
-    <animated.mesh onClick={() => setClicked((s) => !s)} position={position} {...args}>
+    <a.mesh position={position} position-y={positionY}>
       <sphereGeometry args={[1.5, 64, 32]} />
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}
-      <AnimatedMeshDistortMaterial speed={5} distort={0.5} color={springs.color} />
-    </animated.mesh>
+      <AnimatedMeshDistortMaterial speed={5} distort={0.3} color={color} />
+    </a.mesh>
   );
 };

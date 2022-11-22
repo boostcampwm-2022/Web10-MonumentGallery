@@ -55,38 +55,32 @@ function getGroups(keywords) {
   const sortedTotalKeywords = sortKeywords(keywords.totalKeywords);
   console.log(sortedTotalKeywords);
 
-  const firstKeyword = sortedTotalKeywords[0][0];
-  const secondKeyword = sortedTotalKeywords[1][0];
-  const thirdKeyword = sortedTotalKeywords[2][0];
+  if (sortedTotalKeywords.length < 3) return {};
+
   const res = {
     remains: [],
   };
-  res[firstKeyword] = [];
-  res[secondKeyword] = [];
-  res[thirdKeyword] = [];
+
+  const totalKeywordSize = sortedTotalKeywords.length > 3 ? 3 : sortedTotalKeywords.length;
+  for (let i = 0; i < totalKeywordSize; i++) {
+    res[sortedTotalKeywords[i]] = [];
+  }
 
   Object.keys(keywords.ppPages).forEach((key) => {
     const sortedPageKeywords = sortKeywords(keywords.ppPages[key].keywords);
     let isChoice = false;
     for (let i = 0; i < sortedPageKeywords.length; i++) {
-      if (sortedPageKeywords[i][0] === firstKeyword) {
-        res[firstKeyword].push(key);
-        isChoice = true;
-        break;
-      } else if (sortedPageKeywords[i][0] === secondKeyword) {
-        res[secondKeyword].push(key);
-        isChoice = true;
-        break;
-      } else if (sortedPageKeywords[i][0] === thirdKeyword) {
-        res[thirdKeyword].push(key);
-        isChoice = true;
-        break;
+      for (let j = 0; j < totalKeywordSize; j++) {
+        if (sortedTotalKeywords[j] === sortedPageKeywords[i]) {
+          res[sortedTotalKeywords[i]].push(key);
+          isChoice = true;
+          break;
+        }
       }
+      if (isChoice) break;
     }
     if (!isChoice) res.remains.push(key);
   });
 
   return res;
 }
-
-

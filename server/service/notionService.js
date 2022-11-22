@@ -234,20 +234,20 @@ function processPageData(notion, data) {
         break;
       case "column_list":
         res.columnList.push(val.id);
-        console.log("컬럼리스트: ", val.column_list);
+        // console.log("컬럼리스트: ", val.column_list);
         break;
       case "image": //이미지, img.[external||file].url에 링크 존재
         //이미지 내부 타입에 따라서 뒤에 오는 변수가 달라짐
-        console.log("이미지: ", val.image);
+        // console.log("이미지: ", val.image);
         break;
       case "embed": //외부 링크 임베드 embed.url에 링크 존재
-        console.log("임베드링크: ", val.embed);
+        // console.log("임베드링크: ", val.embed);
         break;
       case "bookmark": //북마크, bookmark.url에 링크 존재
-        console.log("북마크: ", val.bookmark);
+        // console.log("북마크: ", val.bookmark);
         break;
       case "link_preview": //링크, link_preview.url
-        console.log("링크 프리뷰: ", val.link_preview);
+        // console.log("링크 프리뷰: ", val.link_preview);
         break;
       case "table":
       case "table_row":

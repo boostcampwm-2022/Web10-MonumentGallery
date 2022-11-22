@@ -42,7 +42,9 @@ router.get("/getData", async (req, res) => {
   const { period = "all", theme = "dream" } = req.query;
 
   const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
+  console.log(notionRawContent);
   const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
+  console.log(processedNotionContent);
   res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });

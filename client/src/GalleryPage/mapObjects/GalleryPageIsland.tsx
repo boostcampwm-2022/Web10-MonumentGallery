@@ -1,10 +1,13 @@
 import { IGalleryPageData } from "../../@types/gallery";
 import Island from "./Island";
 import React, { useMemo, useRef, useState } from "react";
-import { a, Interpolation, useSpring } from "@react-spring/three";
+import { animated, Interpolation, useSpring } from "@react-spring/three";
 import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
+import Balloon from "./Balloon";
+import { generateRandomPastelColors } from "../../utils/random";
+import { COLORS } from "../../@types/colors";
 
 interface AnimatedTitleProps {
   position: [x: number, y: number, z: number];
@@ -46,8 +49,8 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
 
   return (
     <>
-      <a.group ref={meshRef} position={position} position-y={scale}>
-        <a.mesh rotation-y={rotation} scale-z={scale} onClick={() => setActive(+!active)}>
+      <animated.group ref={meshRef} position={position} position-y={scale}>
+        <animated.mesh rotation-y={rotation} scale-z={scale} onClick={() => setActive(+!active)}>
           <Text
             visible={!(!active && !action)}
             font={MapoFlowerIsland}
@@ -58,8 +61,8 @@ function AnimatedTitle({ position, text }: AnimatedTitleProps) {
           >
             {text}
           </Text>
-        </a.mesh>
-      </a.group>
+        </animated.mesh>
+      </animated.group>
       <Balloon position={position} positionY={balloonY} color={color} />
     </>
   );
@@ -75,27 +78,3 @@ export default function GalleryPageIsland({ position, title }: IGalleryPageData)
     </>
   );
 }
-
-import { animated } from "@react-spring/three";
-import { MeshDistortMaterial } from "@react-three/drei";
-import { generateRandomPastelColors } from "../../utils/random";
-import { COLORS } from "../../@types/colors";
-
-const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
-
-interface BallonProps {
-  position: [x: number, y: number, z: number];
-  positionY: Interpolation<number, number>;
-  color: Interpolation<number, COLORS>;
-}
-
-const Balloon = ({ position, positionY, color }: BallonProps) => {
-  return (
-    <a.mesh position={position} position-y={positionY}>
-      <sphereGeometry args={[1.5, 64, 32]} />
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
-      <AnimatedMeshDistortMaterial speed={5} distort={0.3} color={color} />
-    </a.mesh>
-  );
-};

@@ -54,9 +54,12 @@ router.get("/gallery/:user/:history", (req, res) => {
 // FastAPI 연결 확인 test
 router.get("/pytest", (req, res) => {
   const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
-  axios.post(fastapiEndpoint + "/preprocess", mockData).then((e) => {
-    res.send(e.data);
-  });
+  axios
+    .post(fastapiEndpoint + "/preprocess", mockData)
+    .then((e) => {
+      res.send(e.data);
+    })
+    .catch((err) => console.log(err));
 });
 
 router.get("/error", (req, res) => {

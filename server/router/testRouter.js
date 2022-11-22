@@ -3,8 +3,9 @@ import express from "express";
 import { Client } from "@notionhq/client";
 import axios from "axios";
 import TestModel from "../model/testSchema.js";
-import { getContentsFromNotion } from "../service/notionService.js";
+import { getRawContentsFromNotion } from "../service/notionService.js";
 import galleryMockData from "../model/galleryDummyData.js";
+import { processDataFromRawContent } from "../service/dataProcessService.js";
 
 const router = express.Router();
 
@@ -40,7 +41,11 @@ router.get("/getData", async (req, res) => {
   const nowTime = Date.now();
   const { period = "all", theme = "dream" } = req.query;
 
-  res.status(200).json(await getContentsFromNotion(notionAccessToken, period, theme));
+  const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
+  console.log(notionRawContent);
+  const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
+  console.log(processedNotionContent);
+  res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
 
@@ -54,9 +59,12 @@ router.get("/gallery/:user/:history", (req, res) => {
 // FastAPI 연결 확인 test
 router.get("/pytest", (req, res) => {
   const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
-  axios.post(fastapiEndpoint + "/preprocess", mockData).then((e) => {
-    res.send(e.data);
-  });
+  axios
+    .post(fastapiEndpoint + "/preprocess", mockData)
+    .then((e) => {
+      res.send(e.data);
+    })
+    .catch((err) => console.log(err));
 });
 
 router.get("/error", (req, res) => {

@@ -1,50 +1,31 @@
 import { Client } from "@notionhq/client";
 
+//url 탐지
 const urlRegEx =
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim;
 
-export async function getContentsFromNotion(notionAccessToken, period, theme) {
+export async function getRawContentsFromNotion(notionAccessToken, period) {
   const limitTime = getLimitTime(period);
   const notion = new Client({ auth: notionAccessToken });
 
-  console.log(await getPages(notion, limitTime));
+  return await getPages(notion, limitTime);
 
-  // database 처리 (root페이지가 database인 경우)
-
-  // 자연어 처리 서버 api 호출
-  //   //토탈 키워드 추가 등등
-
-  //   const res = {
-  //     theme,
-  //     totalKeywords: {},
-  //     pages: pageContents,
-  //   };
-
-  //   //DB 저장
-
-  //   return res;
 }
 
 async function getPages(notion, limitTime) {
   const pageContents = {};
   const pageIds = [];
-  //   const prev = Date.now();
 
+  //root page 처리
   const pageResponse = await notion.search({
     filter: { property: "object", value: "page" },
   });
 
-  //   console.log(`page list 불러오는 시간 ${Date.now() - prev}`);
   const next = Date.now();
-  pageResponse.results.forEach((result) => {
-    // console.log(result);
-    // console.log(result.properties);
-    // console.log(result.properties?.title);
-    // console.log(result.properties?.keyword?.rich_text);
-
+  pageResponse.results.forEach(async (result) => {
     if (
       result.object === "page" &&
-      result.parent.type !== "database_id" &&
+      result.parent.type === "workspace" &&
       Date.parse(result.last_edited_time) > limitTime
     ) {
       pageIds.push(result.id);
@@ -52,30 +33,55 @@ async function getPages(notion, limitTime) {
       console.log(innerText);
       if (innerText)
         pageContents[result.id] = {
+          type: "page",
           title: innerText,
           createdTime: result.created_time,
           lastEditedTime: result.last_edited_time,
         };
     }
   });
-  //   console.log(pageContents);
-  //   console.log(`page title 처리 시간 : ${Date.now() - next}`);
-  //   const next2 = Date.now();
 
+  //root 데이터베이스 처리
+  const databaseResponse = await notion.search({
+    filter: { property: "object", value: "database" },
+  });
+
+  databaseResponse.results.forEach(async (result) => {
+    if (
+      result.object === "database" &&
+      result.parent.type === "workspace" &&
+      Date.parse(result.last_edited_time) > limitTime
+    ) {
+      const innerText = getTextFromTextObject(result?.title);
+      pageIds.push(result.id);
+      pageContents[result.id] = {
+        type: "database",
+        title: innerText?.length > 0 ? innerText[0] : "-",
+        createdTime: result.created_time,
+        lastEditedTime: result.last_edited_time,
+      };
+    }
+  });
+
+  //rootPage들 정보 추가
   for (let i = 0; i < pageIds.length; i++) {
-    const pageData = await getDataFromPage(notion, pageIds[i]);
+    const pageData =
+      pageContents[pageIds[i]].type === "page"
+        ? await getDataFromPage(notion, pageIds[i])
+        : await getDataFromDatabase(notion, pageIds[i]);
     pageContents[pageIds[i]] = { ...pageContents[pageIds[i]], ...pageData };
-    // console.log(await getDataFromPage(notion, pageIds[i]));
   }
 
   console.log(pageContents);
+
+  //자식 페이지들 재귀탐색 (100개까지만 => 대략 1분 걸림)
   let cursor = -1;
 
   while (++cursor < pageIds.length && pageIds.length < 100) {
     console.log(cursor);
     const cursorId = pageIds[cursor];
-    for (let i = 0; i < pageContents[cursorId].childPages.length && pageIds.length < 100; i++) {
-      const nowPage = pageContents[cursorId].childPages[i];
+    for (let i = 0; i < pageContents[cursorId].childPage.length && pageIds.length < 100; i++) {
+      const nowPage = pageContents[cursorId].childPage[i];
       if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
       pageIds.push(nowPage.id);
       pageContents[nowPage.id] = {
@@ -91,22 +97,17 @@ async function getPages(notion, limitTime) {
 }
 
 async function getDataFromPage(notion, pageId) {
-  //   const loading = Date.now();
   const content = await notion.blocks.children.list({
     block_id: pageId,
     page_size: 50,
   });
 
-  //   console.log(`페이지 컨텐츠 로딩 시간 : ${Date.now() - loading}`);
-  //   const processing = Date.now();
+  const res = processPageData(notion, content.results);
 
-  //paragraphs, title, sub-title은 자연어 처리 서버로
-  //   console.log(`페이지 컨텐츠 처리 시간 : ${Date.now() - processing}`);
-  const res = await processPageData(notion, content.results);
-
+  //columnList 처리
   if (res.columnList.length > 0) {
     for (let i = 0; i < res.columnList.length; i++) {
-      const columnList = await getColumnFromColumnList(notion, res.columnList[i]);
+      const columnList = await getDataFromColumnList(notion, res.columnList[i]);
       Object.keys(columnList).forEach((key) => {
         res[key] = [...res[key], ...columnList[key]];
       });
@@ -114,61 +115,186 @@ async function getDataFromPage(notion, pageId) {
     delete res.columnList;
   }
 
+  //자식 데이터베이스 처리
+  if (res.childDatabase.length > 0) {
+    for (let i = 0; i < res.childDatabase.length; i++) {
+      const childDatabase = await notion.databases.retrieve({ database_id: res.childDatabase[i] });
+
+      //is_inline에 따라 다르게 처리
+      if (!childDatabase.is_inline) {
+        //인라인이 아닐 경우 -> 페이지로 간주
+        const innerText = getTextFromTextObject(childDatabase?.title);
+        res.childPage.push({
+          type: "database",
+          id: res.childDatabase[i],
+          title: innerText?.length > 0 ? innerText[0] : "-",
+          createdTime: childDatabase.created_time,
+          lastEditedTime: childDatabase.last_edited_time,
+        });
+      } else {
+        //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> paragraph
+        res.h3 = [...res.h3, ...getTextFromTextObject(childDatabase?.title)];
+        const databaseData = await notion.databases.query({
+          database_id: childDatabase.id,
+        });
+        databaseData.results.forEach((data) => {
+          if (getTitleFromProperties(data.properties)) res.paragraph.push(getTitleFromProperties(data.properties));
+        });
+      }
+    }
+  }
+
   return res;
 }
 
-async function processPageData(notion, data) {
+function processPageData(notion, data) {
+  // 다른 함수들과 res의 형식이 강결합돼있으므로 여기 수정 시 모두 수정해야함
   const res = {
     position: [],
-    childPages: [], // 자식 페이지들
-    heading_1: [],
-    heading_2: [],
-    heading_3: [],
+    childPage: [], // 자식 페이지들
+    h1: [],
+    h2: [],
+    h3: [],
     links: [],
     image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
-    texts: [],
+    paragraph: [], // paragraph, list, toggle등등
     columnList: [],
+    childDatabase: [],
   };
 
-  await data.forEach(async (val) => {
-    // console.log(val);
+  data.forEach((val) => {
     switch (val.type) {
       case "child_page":
-        // console.log(val);
-        res.childPages.push({
+        res.childPage.push({
+          type: "page",
           id: val.id,
           title: val.child_page.title,
           createdTime: val.created_time,
           lastEditedTime: val.last_edited_time,
         });
+        break;
+      case "child_database":
+        res.childDatabase.push(val.id);
+        break;
       case "heading_1":
-        if (getTextFromTextObject(val.heading_1?.rich_text))
-          res.heading_1.push(getTextFromTextObject(val.heading_1?.rich_text));
+        if (getTextFromTextObject(val.heading_1?.rich_text).length > 0)
+          res.h1 = [...res.h1, ...getTextFromTextObject(val.heading_1?.rich_text)];
         break;
       case "heading_2":
-        if (getTextFromTextObject(val.heading_2?.rich_text))
-          res.heading_2.push(getTextFromTextObject(val.heading_2?.rich_text));
+        if (getTextFromTextObject(val.heading_2?.rich_text).length > 0)
+          res.h2 = [...res.h2, ...getTextFromTextObject(val.heading_2?.rich_text)];
         break;
       case "heading_3":
-        if (getTextFromTextObject(val.heading_3?.rich_text))
-          res.heading_3.push(getTextFromTextObject(val.heading_3?.rich_text));
+        if (getTextFromTextObject(val.heading_3?.rich_text).length > 0)
+          res.h3 = [...res.h3, ...getTextFromTextObject(val.heading_3?.rich_text)];
         break;
       case "paragraph":
-        res.texts.push(getTextFromTextObject(val.paragraph?.rich_text));
+        if (getTextFromTextObject(val.paragraph?.rich_text).length > 0) {
+          //   if (urlRegEx.test(getTextFromTextObject(val.paragraph?.rich_text))) {
+          //     getTextFromTextObject(val.paragraph?.rich_text)
+          //       .match(urlRegEx)
+          //       .forEach((link) => res.links.push({ href: link, favicon: "" }));
+          //   } else {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.paragraph?.rich_text)];
+          //   }
+        }
+        break;
+      case "callout":
+        if (getTextFromTextObject(val.callout?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.callout?.rich_text)];
+        }
+        break;
+      case "quote":
+        if (getTextFromTextObject(val.quote?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.quote?.rich_text)];
+        }
+        break;
+      case "bulleted_list_item":
+        if (getTextFromTextObject(val.bulleted_list_item?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.bulleted_list_item?.rich_text)];
+        }
+        break;
+      case "numbered_list_item":
+        if (getTextFromTextObject(val.numbered_list_item?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.numbered_list_item?.rich_text)];
+        }
+        break;
+      case "to_do":
+        if (getTextFromTextObject(val.to_do?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.to_do?.rich_text)];
+        }
+        break;
+      case "toggle":
+        if (getTextFromTextObject(val.toggle?.rich_text).length > 0) {
+          res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.toggle?.rich_text)];
+        }
+        break;
+      case "code":
+        if (val.code?.language) res.paragraph.push(val.code.language);
         break;
       case "column_list":
         res.columnList.push(val.id);
+        // console.log("컬럼리스트: ", val.column_list);
         break;
+      case "image": //이미지, img.[external||file].url에 링크 존재
+        //이미지 내부 타입에 따라서 뒤에 오는 변수가 달라짐
+        // console.log("이미지: ", val.image);
+        break;
+      case "embed": //외부 링크 임베드 embed.url에 링크 존재
+        // console.log("임베드링크: ", val.embed);
+        break;
+      case "bookmark": //북마크, bookmark.url에 링크 존재
+        // console.log("북마크: ", val.bookmark);
+        break;
+      case "link_preview": //링크, link_preview.url
+        // console.log("링크 프리뷰: ", val.link_preview);
+        break;
+      case "table":
+      case "table_row":
       default:
-        console.log(val.type);
+        // file, video, pdf, divider, equation, table_of_contents, breadcrumb, synced_block, link_to_page, template 등등..
+        // console.log(val.type);
         break;
     }
   });
 
   return res;
 }
+async function getDataFromDatabase(notion, databaseId) {
+  const res = {
+    position: [],
+    childPage: [], // 자식 페이지들
+    h1: [],
+    h2: [],
+    h3: [],
+    links: [],
+    image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
+    paragraph: [],
+    columnList: [],
+    childDatabase: [],
+  };
+  const database = await notion.databases.retrieve({ database_id: databaseId });
 
-async function getColumnFromColumnList(notion, columnListId) {
+  //database.description 처리 필요]
+  res.paragraph = [...getTextFromTextObject(database.description)];
+  const databaseChildPage = await notion.databases.query({
+    database_id: databaseId,
+  });
+  databaseChildPage.results.forEach((data) => {
+    res.childPage.push({
+      type: "page",
+      id: data.id,
+      title: getTitleFromProperties(data.properties),
+      createdTime: data.created_time,
+      lastEditedTime: data.last_edited_time,
+    });
+  });
+
+  return res;
+}
+
+async function getDataFromColumnList(notion, columnListId) {
+  // 컬럼 리스트 처리, 정보 접근하려면 블럭 요소를 탐색해야 해서 processPageData 사용
   const columns = await notion.blocks.children.list({
     block_id: columnListId,
     page_size: 50,
@@ -176,14 +302,15 @@ async function getColumnFromColumnList(notion, columnListId) {
 
   const res = {
     position: [],
-    childPages: [], // 자식 페이지들
-    heading_1: [],
-    heading_2: [],
-    heading_3: [],
+    childPage: [], // 자식 페이지들
+    h1: [],
+    h2: [],
+    h3: [],
     links: [],
     image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
-    texts: [],
+    paragraph: [],
     columnList: [],
+    childDatabase: [],
   };
 
   for (let i = 0; i < columns.results.length; i++) {
@@ -191,7 +318,7 @@ async function getColumnFromColumnList(notion, columnListId) {
       block_id: columns.results[i].id,
       page_size: 50,
     });
-    const processedData = await processPageData(notion, columnData.results);
+    const processedData = processPageData(notion, columnData.results);
 
     Object.keys(processedData).forEach((key) => {
       res[key] = [...res[key], ...processedData[key]];
@@ -202,6 +329,7 @@ async function getColumnFromColumnList(notion, columnListId) {
 }
 
 function getTitleFromProperties(properties) {
+  //properties에서 title 타입을 찾아서 plain_text반환
   return Object.keys(properties).reduce((acc, cur) => {
     if (properties[cur]?.type == "title" && properties[cur]?.title.length > 0) {
       acc = properties[cur].title[0].plain_text;
@@ -211,11 +339,15 @@ function getTitleFromProperties(properties) {
 }
 
 function getTextFromTextObject(textObject) {
-  if (!textObject?.length || textObject?.length <= 0) return "";
-  return textObject[0].plain_text;
+  //text요소에서 plain_text 찾아서 반환
+  if (!textObject?.length || textObject?.length <= 0) return [];
+  const res = textObject.map((val) => (val.plain_text ? val.plain_text : ""));
+  //   console.log(res);
+  return res;
 }
 
 function getLimitTime(period) {
+  //제한시간
   const twoWeeks = 1209600033;
   if (!period) return 0;
   switch (period) {

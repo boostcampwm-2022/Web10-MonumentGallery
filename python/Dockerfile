@@ -6,5 +6,7 @@ RUN apt-get upgrade -y
 RUN mkdir /usr/app
 WORKDIR /usr/app
 ADD . /usr/app
+RUN apt-get install openjdk-11-jdk -y
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 ENTRYPOINT uvicorn main:app --reload --host=0.0.0.0 --port=8000

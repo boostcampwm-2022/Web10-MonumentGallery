@@ -298,9 +298,11 @@ function getTitleFromProperties(properties) {
 }
 
 function getTextFromTextObject(textObject) {
-  //text요소에서 plain_text 찾아서 반환, 데이터베이스의 descriptions 때문에 추후 배열형태로 읽어들일 필요가 있을지도..
-  if (!textObject?.length || textObject?.length <= 0) return "";
-  return textObject[0].plain_text;
+  //text요소에서 plain_text 찾아서 반환
+  if (!textObject?.length || textObject?.length <= 0) return [];
+  const res = textObject.map((val) => (val.plain_text ? val.plain_text : ""));
+  //   console.log(res);
+  return res;
 }
 
 function getLimitTime(period) {

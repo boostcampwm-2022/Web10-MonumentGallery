@@ -118,7 +118,7 @@ async function getDataFromPage(notion, pageId) {
   //columnList 처리
   if (res.columnList.length > 0) {
     for (let i = 0; i < res.columnList.length; i++) {
-      const columnList = await getColumnFromColumnList(notion, res.columnList[i]);
+      const columnList = await getDataFromColumnList(notion, res.columnList[i]);
       Object.keys(columnList).forEach((key) => {
         res[key] = [...res[key], ...columnList[key]];
       });
@@ -162,12 +162,12 @@ function processPageData(notion, data) {
   const res = {
     position: [],
     childPage: [], // 자식 페이지들
-    heading_1: [],
-    heading_2: [],
-    heading_3: [],
+    h1: [],
+    h2: [],
+    h3: [],
     links: [],
     image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
-    texts: [], // paragraph, list, toggle등등 raw한 텍스트는 모두 여기서 처리
+    paragraph: [], // paragraph, list, toggle등등
     columnList: [],
     childDatabase: [],
   };
@@ -223,12 +223,12 @@ async function getDataFromDatabase(notion, databaseId) {
   const res = {
     position: [],
     childPage: [], // 자식 페이지들
-    heading_1: [],
-    heading_2: [],
-    heading_3: [],
+    h1: [],
+    h2: [],
+    h3: [],
     links: [],
     image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
-    texts: [],
+    paragraph: [],
     columnList: [],
     childDatabase: [],
   };
@@ -252,7 +252,7 @@ async function getDataFromDatabase(notion, databaseId) {
   return res;
 }
 
-async function getColumnFromColumnList(notion, columnListId) {
+async function getDataFromColumnList(notion, columnListId) {
   // 컬럼 리스트 처리, 정보 접근하려면 블럭 요소를 탐색해야 해서 processPageData 사용
   const columns = await notion.blocks.children.list({
     block_id: columnListId,
@@ -262,12 +262,12 @@ async function getColumnFromColumnList(notion, columnListId) {
   const res = {
     position: [],
     childPage: [], // 자식 페이지들
-    heading_1: [],
-    heading_2: [],
-    heading_3: [],
+    h1: [],
+    h2: [],
+    h3: [],
     links: [],
     image: [], // 첫번째로 나오는 이미지, 2개이상 [Optional]
-    texts: [],
+    paragraph: [],
     columnList: [],
     childDatabase: [],
   };

@@ -1,7 +1,9 @@
-import { useMemo } from "react";
-import { Text, Billboard } from "@react-three/drei";
-import { Vector3, Quaternion } from "three";
+import { useRef, useMemo } from "react";
+import { useFrame, GroupProps } from "@react-three/fiber";
+import { Text } from "@react-three/drei";
+import { Vector3, Quaternion, Group } from "three";
 
+import { useBillboard } from "../../hooks/useBillboard";
 import { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
@@ -27,7 +29,7 @@ interface WordHelixProps {
   orbitData: IOrbitData;
 }
 
-interface MainWordCloudProps {
+interface MainWordCloudProps extends GroupProps {
   keywords: IKeywordMap;
 }
 
@@ -110,12 +112,19 @@ function getDistributeIndex(index: number) {
 
 function WordObject({ data, position }: WordObjectProps) {
   const { text, fontSize } = data;
+  const objectRef = useBillboard();
   return (
-    <Billboard position={position}>
-      <Text font={MapoFont} fontSize={fontSize} color="black" anchorX="center" anchorY="middle">
-        {text}
-      </Text>
-    </Billboard>
+    <Text
+      font={MapoFont}
+      fontSize={fontSize}
+      color="black"
+      anchorX="center"
+      anchorY="middle"
+      position={position}
+      ref={objectRef}
+    >
+      {text}
+    </Text>
   );
 }
 
@@ -146,14 +155,22 @@ function WordHelix({ orbitData }: WordHelixProps) {
 }
 
 export default function MainWordCloud({ keywords, ...props }: MainWordCloudProps) {
+  const objectRef = useRef<Group>();
+
   const [firstOrbit, ...helixOrbits] = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
     return seperateWordToOrbits(wordData);
   }, []);
 
-  if (firstOrbit == null) return <group {...props} />;
+  useFrame((_, delta) => {
+    if (!objectRef.current) return;
+    objectRef.current.rotation.y += 0.2 * delta;
+    objectRef.current.rotation.x += 0.1 * delta;
+  });
+
+  if (firstOrbit == null) return <group rotation-order="YXZ" {...props} />;
   return (
-    <group {...props}>
+    <group rotation-order="YXZ" {...props} ref={objectRef}>
       <WordObject data={firstOrbit.children[0]} position={[0, 0, 0]} />
       {helixOrbits.map((orbit: IOrbitData, i: number) => (
         <WordHelix orbitData={orbit} key={`orbit_${i}`} />

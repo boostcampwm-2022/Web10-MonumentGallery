@@ -1,11 +1,53 @@
 import axios from "axios";
 //Fastapi 서버에 요청을 날려 키워드 분석 및 그룹화
 
-export async function processDataFromRawContent(rawContent, theme){
-    const keywordData = getKeywordFromFastAPI(rawContent);
-    const grouppedPage = getGroups(keywordData);
+export async function processDataFromRawContent(rawContent, theme) {
+  const keywordData = await getKeywordFromFastAPI(rawContent);
+  const grouppedPage = getGroups(keywordData);
 
+  console.log("keywords : ", keywordData);
+  console.log("groupPage : ", grouppedPage);
 
+  return attachAllData(rawContent, keywordData, theme);
+}
+
+function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
+  return {
+    theme: theme,
+    totalKeywords: sortKeywords(notionKeyword.totalKeywords).reduce((acc, cur) => {
+      acc[cur] = notionKeyword.totalKeywords[cur];
+      return acc;
+    }, {}),
+    pages: Object.keys(rawContent).map((key) => {
+      return {
+        // position: positions[key],
+        keywords: notionKeyword.ppPages[key].keywords,
+        title: rawContent[key].title,
+        subTitle: [
+          ...notionKeyword.ppPages[key].h1_keywords.map((keyword) => {
+            return {
+              type: "h1",
+              text: keyword,
+            };
+          }),
+          ...notionKeyword.ppPages[key].h2_keywords.map((keyword) => {
+            return {
+              type: "h2",
+              text: keyword,
+            };
+          }),
+          ...notionKeyword.ppPages[key].h3_keywords.map((keyword) => {
+            return {
+              type: "h3",
+              text: keyword,
+            };
+          }),
+        ],
+        links: rawContent[key].links,
+      };
+    }),
+    // nodes: nodes,
+  };
 }
 
 async function getKeywordFromFastAPI(rawContent) {

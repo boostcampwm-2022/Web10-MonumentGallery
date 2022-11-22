@@ -1,10 +1,11 @@
 import axios from "axios";
 //Fastapi 서버에 요청을 날려 키워드 분석 및 그룹화
 
-export async function getGroupFromKeyword(rawContent){
+export async function processDataFromRawContent(rawContent, theme){
     const keywordData = getKeywordFromFastAPI(rawContent);
+    const grouppedPage = getGroups(keywordData);
 
-    const grouppedPage = getGroups()
+
 }
 
 async function getKeywordFromFastAPI(rawContent) {

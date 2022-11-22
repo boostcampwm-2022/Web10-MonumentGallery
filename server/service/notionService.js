@@ -4,7 +4,7 @@ import { Client } from "@notionhq/client";
 const urlRegEx =
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim;
 
-export async function getRawContentsFromNotion(notionAccessToken, period, theme) {
+export async function getRawContentsFromNotion(notionAccessToken, period) {
   const limitTime = getLimitTime(period);
   const notion = new Client({ auth: notionAccessToken });
 

@@ -5,6 +5,7 @@ import axios from "axios";
 import TestModel from "../model/testSchema.js";
 import { getRawContentsFromNotion } from "../service/notionService.js";
 import galleryMockData from "../model/galleryDummyData.js";
+import { processDataFromRawContent } from "../service/dataProcessService.js";
 
 const router = express.Router();
 
@@ -40,7 +41,9 @@ router.get("/getData", async (req, res) => {
   const nowTime = Date.now();
   const { period = "all", theme = "dream" } = req.query;
 
-  res.status(200).json(await getRawContentsFromNotion(notionAccessToken, period, theme));
+  const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
+  const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
+  res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
 

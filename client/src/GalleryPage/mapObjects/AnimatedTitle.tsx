@@ -1,9 +1,10 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { animated, Interpolation, useSpring } from "@react-spring/three";
 
 import Balloon from "./Balloon";
+import { useBillboard } from "../../hooks/useBillboard";
 
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 import { generateRandomPastelColors } from "../../utils/random";
@@ -18,7 +19,7 @@ export default function AnimatedTitle({ position, text }: AnimatedTitleProps) {
   const [active, setActive] = useState(0);
   const [action, setAction] = useState(false);
   const { camera } = useThree();
-  const textGroupRef = useRef<THREE.Group>(null);
+  const textGroupRef = useBillboard({ follow: !action });
 
   const { spring } = useSpring({
     spring: active,
@@ -36,7 +37,6 @@ export default function AnimatedTitle({ position, text }: AnimatedTitleProps) {
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
   useFrame(() => {
-    if (!action) textGroupRef.current?.lookAt(camera.position);
     const { x, z: y } = camera.position;
 
     const distance = Math.abs(x - position[0]) + Math.abs(y - position[2]);

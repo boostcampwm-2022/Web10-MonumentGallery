@@ -4,6 +4,7 @@ import { Object3D, Matrix4, Quaternion, Euler } from "three";
 
 interface LockConfig {
   lockElevation?: boolean;
+  follow?: boolean;
 }
 
 const _matrix = new Matrix4();
@@ -24,12 +25,12 @@ function getAzimuth(quaternion) {
   else return Math.atan2(-m31, m11);
 }
 
-export function useBillboard({ lockElevation = false }: LockConfig = {}) {
+export function useBillboard({ lockElevation = false, follow = true }: LockConfig = {}) {
   const objectRef = useRef<Object3D>();
   const { camera } = useThree();
 
   useFrame(() => {
-    if (!objectRef.current) return;
+    if (!follow || !objectRef.current) return;
     const object = objectRef.current;
 
     _quaternion.copy(camera.quaternion);

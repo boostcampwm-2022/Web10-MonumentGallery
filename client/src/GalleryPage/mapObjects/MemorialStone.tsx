@@ -3,6 +3,7 @@ import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Mesh, Vector3 } from "three";
 
+import { useBillboard } from "../../hooks/useBillboard";
 import { IGalleryPageSubTitle } from "../../@types/gallery";
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
@@ -100,12 +101,8 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
     return { visibleLetters, invisibleLetters };
   }, []);
 
-  const subtitleMeshRef = useRef<Mesh>(null);
+  const subtitleMeshRef = useBillboard({ lockElevation: true });
   const subtitleRef = useRef<any>();
-
-  useFrame(() => {
-    subtitleMeshRef.current?.lookAt(new Vector3(camera.position.x, 2, camera.position.z));
-  });
 
   useEffect(() => {
     const interval = setInterval(() => {

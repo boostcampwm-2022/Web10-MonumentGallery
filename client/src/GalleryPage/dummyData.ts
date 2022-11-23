@@ -1,5 +1,7 @@
+import { IGalleryMapData } from "../@types/gallery";
+
 // dummy data
-export default {
+const dummyData: IGalleryMapData = {
   uuid: "#24adaf",
   totalKeywords: {
     부스트캠프: 2,
@@ -23,9 +25,31 @@ export default {
         },
       ],
       keywords: {
-        부스트캠프: 2,
-        쏜애플: 3,
-        사랑해요: 1,
+        three: 5,
+        javascript: 4,
+        data: 4,
+        awesome: 3,
+        blitz: 3,
+        thornapple: 3,
+        nova: 2,
+        lybell: 8,
+        stardew: 4,
+        valley: 4,
+        starlight: 2,
+        micro: 1,
+        architecture: 1,
+        holy: 1,
+        hey: 5,
+        harvard: 4,
+        help: 4,
+        me: 3,
+        threejs: 3,
+        reactThreeFiber: 3,
+        merri: 2,
+        core: 4,
+        keeper: 4,
+        devOps: 2,
+        helloWorld: 1,
       },
       links: {
         href: "https://www.naver.com",
@@ -99,3 +123,5 @@ export default {
     [0, 4],
   ],
 };
+
+export default dummyData;

@@ -1,7 +1,7 @@
 import { useRef, useMemo } from "react";
 import { Vector3, Quaternion, Group } from "three";
 import { useFrame, GroupProps } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { Text, Float } from "@react-three/drei";
 
 import { useBillboard } from "../../hooks/useBillboard";
 import { IWordPointData, makeWordsPointData, getDistributeIndex } from "../../utils/wordCloudUtils";
@@ -81,17 +81,19 @@ function WordObject({ data, position }: WordObjectProps) {
   const { text, fontSize } = data;
   const objectRef = useBillboard();
   return (
-    <Text
-      font={MapoFont}
-      fontSize={fontSize}
-      color="black"
-      anchorX="center"
-      anchorY="middle"
-      position={position}
-      ref={objectRef}
-    >
-      {text}
-    </Text>
+    <Float speed={3}>
+      <Text
+        font={MapoFont}
+        fontSize={fontSize}
+        color="black"
+        anchorX="center"
+        anchorY="middle"
+        position={position}
+        ref={objectRef}
+      >
+        {text}
+      </Text>
+    </Float>
   );
 }
 
@@ -126,6 +128,9 @@ export default function MainWordCloud({ keywords, ...props }: MainWordCloudProps
 
   const [firstOrbit, ...helixOrbits] = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
+    wordData.forEach((word) => {
+      word.size *= 5;
+    });
     return seperateWordToOrbits(wordData);
   }, [keywords]);
 

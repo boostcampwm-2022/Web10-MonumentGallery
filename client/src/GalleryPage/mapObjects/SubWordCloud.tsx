@@ -8,9 +8,10 @@ import { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
-interface WordObjectProps extends PrimitiveProps {
+interface WordObjectProps {
   data: IWordPointData;
   position: Vector3 | [x: number, y: number, z: number];
+  quaternion: Quaternion;
 }
 
 interface IOrbitData {

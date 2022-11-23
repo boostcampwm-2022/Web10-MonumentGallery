@@ -13,7 +13,7 @@ export default function GalleryPageIsland({ position, subtitle, title, keywords 
       <AnimatedTitle position={[x, 0, z]} text={title} />
       <Island x={x} z={z} />
       <MemorialStones position={[x, z]} subtitles={subtitle} />
-      <SubWordCloud keywords={keywords} position={[x, 2, z]} radius={5} />
+      <SubWordCloud keywords={keywords} position={[x, 2, z]} radius={5} scale={0.8} />
     </>
   );
 }

@@ -12,7 +12,7 @@ export default function GalleryCenterIsland({ keywords }: GalleryCenterIslandPro
     <group>
       <Island islandScale={8} color={0xaaffff} />
       <Monolith />
-      <MainWordCloud keywords={keywords} position={[0, 7, 0]} scale={0.8} />
+      <MainWordCloud keywords={keywords} />
     </group>
   );
 }

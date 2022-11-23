@@ -16,14 +16,13 @@ export default function GalleryPageIsland({ position, subtitle, title, keywords,
   const springs = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
 
   return (
-    <RigidBody
-      type="fixed"
-      colliders={false}
-      position={[x, 0, z]}
-      onCollisionEnter={() => setCollision(true)}
-      onCollisionExit={() => setCollision(false)}
-    >
-      <BallCollider args={[10]} />
+    <RigidBody type="fixed" colliders={false} position={[x, 0, z]}>
+      <BallCollider
+        args={[10]}
+        sensor
+        onIntersectionEnter={() => setCollision(true)}
+        onIntersectionExit={() => setCollision(false)}
+      />
       <AnimatedTitle text={title} animator={springs} />
       <Island />
       <MemorialStones subtitles={subtitle} />

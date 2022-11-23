@@ -124,19 +124,19 @@ function WordObject({ data, ...props }: WordObjectProps) {
 function WordHelix({ orbitData, radius }: WordHelixProps) {
   const { children, y, height } = orbitData;
 
-  const toRenderChildren = useMemo<IWordRenderChildData[]>(() => {
+  const toRenderChildren = useMemo<WordObjectProps[]>(() => {
     const _children = children
       .map((value, index) => ({ value, index }))
       .sort((a, b) => getCircluarDistributeIndex(b.index) - getCircluarDistributeIndex(a.index))
       .map(({ value }) => value);
     const particians = makeChildrenPartician(_children);
-    return _children.map((child, i) => {
+    return _children.map((data, i) => {
       const partician = particians[i];
       const yZitter = (Math.random() - 0.5) * height;
       const position = getCylinderPosition(radius, partician, y + yZitter);
       const quaternion = getTextRotation(position);
 
-      return { data: child, position, quaternion };
+      return { data, position, quaternion };
     });
   }, [children]);
 

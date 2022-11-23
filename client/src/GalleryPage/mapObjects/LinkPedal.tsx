@@ -1,16 +1,32 @@
 import "./styles/Linkpedal.style.scss";
 import { Html } from "@react-three/drei";
-import React, { useEffect, useState } from "react";
-import { CollisionObject } from "../components/CollisionObject";
+import React, { useEffect, useMemo, useState } from "react";
 import { IGalleryPageLink } from "../../@types/gallery";
 import { RigidBody } from "@react-three/rapier";
+import { generateRandomPosition } from "../../utils/random";
+
+interface LinkPedalsProps {
+  links: IGalleryPageLink[];
+  position: [x: number, y: number, z: number];
+}
+
+export default function LinkPedals({ links, position }: LinkPedalsProps) {
+  const positions = useMemo(() => generateRandomPosition(links.length), []);
+  return (
+    <>
+      {links.map((link, i) => (
+        <LinkPedal key={i} link={link} position={[position[0] + positions[i][0], 0, position[2] + positions[i][1]]} />
+      ))}
+    </>
+  );
+}
 
 interface LinkPedalProps {
   link: IGalleryPageLink;
-  position: THREE.Vector3 | [x: number, y: number, z: number];
+  position: [x: number, y: number, z: number];
 }
 
-export default function LinkPedal({ link, position }: LinkPedalProps) {
+function LinkPedal({ link, position }: LinkPedalProps) {
   const [collision, setCollision] = useState(false);
 
   useEffect(() => {

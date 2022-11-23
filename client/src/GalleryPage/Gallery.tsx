@@ -1,6 +1,5 @@
 import { Canvas } from "@react-three/fiber";
 import { IGalleryMapData } from "../@types/gallery";
-
 import GalleryWorld from "./GalleryWorld";
 import Light from "./mapObjects/Light";
 import MovementController from "./components/MovementController";
@@ -8,7 +7,6 @@ import ViewRotateController from "./components/ViewRotateController";
 import dummyData from "./dummyData";
 import { Physics } from "@react-three/rapier";
 import CollisionPlayerBody from "./mapObjects/CollisionPlayerBody";
-import { Cube } from "./mapObjects/Cube";
 
 export default function Gallery() {
   return (
@@ -16,7 +14,6 @@ export default function Gallery() {
       <Physics gravity={[0, -30, 0]}>
         <Light />
         <CollisionPlayerBody />
-        <Cube />
         <MovementController speed={5} />
         <ViewRotateController />
         <GalleryWorld data={dummyData as IGalleryMapData} />

@@ -1,0 +1,16 @@
+.pedal-html {
+  color: black;
+  text-align: center;
+  width: 300px;
+  font-size: 23px;
+  a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    &:hover {
+      font-weight: 900;
+      color: #0d7a79;
+    }
+  }
+}

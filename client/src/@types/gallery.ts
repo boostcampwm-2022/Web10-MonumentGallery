@@ -7,15 +7,17 @@ export interface IGalleryPageSubTitle {
   type: "h1" | "h2" | "h3";
 }
 
+export interface IGalleryPageLink {
+  href: string;
+  favicon?: string;
+}
+
 export interface IGalleryPageData {
   position: number[];
   title: string;
   subtitle: IGalleryPageSubTitle[];
   keywords: IKeywordMap;
-  links?: {
-    href: string;
-    favicon?: string;
-  };
+  links?: IGalleryPageLink[];
   imagePixel?: number[][];
 }
 

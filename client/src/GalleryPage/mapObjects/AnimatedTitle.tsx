@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { animated, Interpolation, useSpring } from "@react-spring/three";
 
 import Balloon from "./Balloon";
 import { useBillboard } from "../../hooks/useBillboard";
+import { useDistanceEvent } from "../../hooks/useDistanceEvent";
 
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 import { generateRandomPastelColors } from "../../utils/random";
@@ -18,7 +18,6 @@ interface AnimatedTitleProps {
 export default function AnimatedTitle({ position, text }: AnimatedTitleProps) {
   const [active, setActive] = useState(0);
   const [action, setAction] = useState(false);
-  const { camera } = useThree();
   const textGroupRef = useBillboard<THREE.Group>({ follow: !action });
 
   const { spring } = useSpring({
@@ -36,16 +35,10 @@ export default function AnimatedTitle({ position, text }: AnimatedTitleProps) {
   const color: Interpolation<number, COLORS> = spring.to([0, 1], [COLORS.SKY400, COLORS[randomColors]]);
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
-  useFrame(() => {
-    const { x, z: y } = camera.position;
-
-    const distance = Math.abs(x - position[0]) + Math.abs(y - position[2]);
-
-    if (distance < 15) {
-      if (!active) setActive(+!active);
-    } else {
-      if (active) setActive(+!active);
-    }
+  useDistanceEvent({
+    area: { type: "circle", x: position[0], z: position[2], radius: 15 },
+    enterEvent: () => setActive(1),
+    exitEvent: () => setActive(0),
   });
 
   return (

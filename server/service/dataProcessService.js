@@ -118,7 +118,7 @@ function getGroups(keywords) {
     for (let i = 0; i < sortedPageKeywords.length; i++) {
       for (let j = 0; j < totalKeywordSize; j++) {
         if (sortedTotalKeywords[j] === sortedPageKeywords[i]) {
-          res[sortedTotalKeywords[i]].push(key);
+          res[sortedTotalKeywords[j]].push(key);
           isChoice = true;
           break;
         }

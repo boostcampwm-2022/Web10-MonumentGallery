@@ -9,7 +9,6 @@ export async function getRawContentsFromNotion(notionAccessToken, period) {
   const notion = new Client({ auth: notionAccessToken });
 
   return await getPages(notion, limitTime);
-
 }
 
 async function getPages(notion, limitTime) {
@@ -225,6 +224,7 @@ function processPageData(notion, data) {
         }
         break;
       case "toggle":
+        //토글 내부를 못 읽는 듯 함
         if (getTextFromTextObject(val.toggle?.rich_text).length > 0) {
           res.paragraph = [...res.paragraph, ...getTextFromTextObject(val.toggle?.rich_text)];
         }
@@ -238,16 +238,39 @@ function processPageData(notion, data) {
         break;
       case "image": //이미지, img.[external||file].url에 링크 존재
         //이미지 내부 타입에 따라서 뒤에 오는 변수가 달라짐
+        if (val.image.type === "external" && val.image.external?.url) {
+          res.image.push(val.image.external.url);
+        } else if (val.image.type === "file" && val.image.file?.url) {
+          res.image.push(val.image.file.url);
+        }
         // console.log("이미지: ", val.image);
         break;
       case "embed": //외부 링크 임베드 embed.url에 링크 존재
         // console.log("임베드링크: ", val.embed);
+        if (val.embed?.url) {
+          res.links.push({
+            href: val.embed.link,
+            favicon: "",
+          });
+        }
         break;
       case "bookmark": //북마크, bookmark.url에 링크 존재
         // console.log("북마크: ", val.bookmark);
+        if (val.bookmark?.url) {
+          res.links.push({
+            href: val.bookmark.url,
+            favicon: "",
+          });
+        }
         break;
       case "link_preview": //링크, link_preview.url
         // console.log("링크 프리뷰: ", val.link_preview);
+        if (val.link_preview?.url) {
+          res.links.push({
+            href: val.link_preview.url,
+            favicon: "",
+          });
+        }
         break;
       case "table":
       case "table_row":

@@ -10,12 +10,12 @@ export default function GalleryPageIsland({ position, subtitle, title, keywords,
   const [x, z] = position;
 
   return (
-    <>
-      <AnimatedTitle position={[x, 0, z]} text={title} />
-      <Island x={x} z={z} />
-      <MemorialStones position={[x, z]} subtitles={subtitle} />
-      <SubWordCloud keywords={keywords} position={[x, 2, z]} radius={5} scale={0.8} />
-      {links && <LinkPedals links={links} position={[x, 0, z]} />}
-    </>
+    <group position={[x, 0, z]}>
+      <AnimatedTitle text={title} />
+      <Island />
+      <MemorialStones subtitles={subtitle} />
+      <SubWordCloud keywords={keywords} position-y={2} radius={5} scale={0.8} />
+      {links && <LinkPedals links={links} />}
+    </group>
   );
 }

@@ -11,7 +11,6 @@ import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
 interface MemorialStonesProps {
   subtitles: IGalleryPageSubTitle[];
-  position: number[];
 }
 
 interface MemorialStoneProps {
@@ -175,7 +174,7 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
   );
 }
 
-export default function MemorialStones({ subtitles, position }: MemorialStonesProps) {
+export default function MemorialStones({ subtitles }: MemorialStonesProps) {
   const stoneInfoList = useMemo(() => {
     return calculateMemorialStonePosition(subtitles);
   }, []);
@@ -184,13 +183,7 @@ export default function MemorialStones({ subtitles, position }: MemorialStonesPr
       {stoneInfoList.map((stoneInfo, i) => {
         const { subtitle, stonePosition } = stoneInfo;
         const key = `${subtitle}+${i}`;
-        return (
-          <MemorialStone
-            subTitle={subtitle}
-            position={position.map((e: number, i: number) => e + stonePosition[i])}
-            key={key}
-          />
-        );
+        return <MemorialStone subTitle={subtitle} position={stonePosition} key={key} />;
       })}
     </>
   );

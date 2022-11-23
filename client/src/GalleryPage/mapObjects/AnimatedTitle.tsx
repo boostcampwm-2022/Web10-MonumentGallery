@@ -9,15 +9,13 @@ import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 import { generateRandomPastelColors } from "../../utils/random";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 
-import { Vector3Arr } from "../../@types/common";
 import { COLORS } from "../../@types/colors";
 
 interface AnimatedTitleProps {
-  position: Vector3Arr;
   text: string;
 }
 
-export default function AnimatedTitle({ position, text }: AnimatedTitleProps) {
+export default function AnimatedTitle({ text }: AnimatedTitleProps) {
   const [collision, setCollision] = useState(false);
   const { spring, playing } = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
   const textGroupRef = useBillboard<THREE.Group>({ follow: !playing });
@@ -34,7 +32,6 @@ export default function AnimatedTitle({ position, text }: AnimatedTitleProps) {
     <RigidBody
       type="fixed"
       colliders={false}
-      position={position}
       onCollisionEnter={() => setCollision(true)}
       onCollisionExit={() => setCollision(false)}
     >

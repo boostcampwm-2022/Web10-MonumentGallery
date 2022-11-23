@@ -1,11 +1,12 @@
 import { animated, Interpolation } from "@react-spring/three";
 import { MeshDistortMaterial } from "@react-three/drei";
+import { Vector3Arr } from "../../@types/common";
 import { COLORS } from "../../@types/colors";
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
 interface BallonProps {
-  position?: [x: number, y: number, z: number];
+  position?: Vector3Arr;
   positionY: Interpolation<number, number>;
   scale: Interpolation<number, number>;
   color: Interpolation<number, COLORS>;

@@ -1,9 +1,10 @@
 import { useRef, useEffect } from "react";
 import { DirectionalLight } from "three";
 import { useThree, useFrame, DirectionalLightProps } from "@react-three/fiber";
+import { Vector3Arr } from "../../@types/common";
 
 interface ShadowLightProps extends DirectionalLightProps {
-  position: [x: number, y: number, z: number];
+  position: Vector3Arr;
 }
 
 function ShadowLight({ position, ...props }: ShadowLightProps) {

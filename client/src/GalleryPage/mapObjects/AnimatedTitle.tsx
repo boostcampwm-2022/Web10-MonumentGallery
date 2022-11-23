@@ -1,16 +1,19 @@
 import { useMemo, useState } from "react";
 import { Text } from "@react-three/drei";
 import { animated, Interpolation } from "@react-spring/three";
-import Balloon from "./Balloon";
-import { useBillboard } from "../../hooks/useBillboard";
-import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
-import { generateRandomPastelColors } from "../../utils/random";
-import { COLORS } from "../../@types/colors";
-import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 
+import Balloon from "./Balloon";
+import { useBillboard } from "../../hooks/useBillboard";
+import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import { generateRandomPastelColors } from "../../utils/random";
+import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
+
+import { Vector3Arr } from "../../@types/common";
+import { COLORS } from "../../@types/colors";
+
 interface AnimatedTitleProps {
-  position: [x: number, y: number, z: number];
+  position: Vector3Arr;
   text: string;
 }
 

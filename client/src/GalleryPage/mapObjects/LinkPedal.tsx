@@ -1,17 +1,21 @@
 import "./styles/Linkpedal.style.scss";
-import { Html } from "@react-three/drei";
-import React, { useEffect, useMemo, useState } from "react";
-import { IGalleryPageLink } from "../../@types/gallery";
-import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import { generateRandomPosition } from "../../utils/random";
-import Stone from "./Stone";
+
+import { useEffect, useMemo, useState } from "react";
 import { Euler } from "@react-three/fiber";
-import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import { Html } from "@react-three/drei";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { animated, Interpolation } from "@react-spring/three";
+
+import Stone from "./Stone";
+import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import { generateRandomPosition } from "../../utils/random";
+
+import { Vector3Arr } from "../../@types/common";
+import { IGalleryPageLink } from "../../@types/gallery";
 
 interface LinkPedalsProps {
   links: IGalleryPageLink[];
-  position: [x: number, y: number, z: number];
+  position: Vector3Arr;
 }
 
 export default function LinkPedals({ links, position }: LinkPedalsProps) {
@@ -27,7 +31,7 @@ export default function LinkPedals({ links, position }: LinkPedalsProps) {
 
 interface LinkPedalProps {
   link: IGalleryPageLink;
-  position: [x: number, y: number, z: number];
+  position: Vector3Arr;
 }
 
 function LinkPedal({ link, position }: LinkPedalProps) {

@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Text } from "@react-three/drei";
-import { useBillboard } from "../../hooks/useBillboard";
-import { IGalleryPageSubTitle } from "../../@types/gallery";
-import MapoFont from "../../assets/MapoFlowerIsland.otf";
 import { Object3D } from "three";
+import { Text } from "@react-three/drei";
+
+import { useBillboard } from "../../hooks/useBillboard";
+
+import { IGalleryPageSubTitle } from "../../@types/gallery";
 import { COLORS } from "../../@types/colors";
+import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
 interface MemorialStonesProps {
   subtitles: IGalleryPageSubTitle[];

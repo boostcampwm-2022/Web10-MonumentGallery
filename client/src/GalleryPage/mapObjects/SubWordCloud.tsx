@@ -4,13 +4,15 @@ import { useFrame, GroupProps } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 
 import { IWordPointData, makeWordsPointData, getCircluarDistributeIndex } from "../../utils/wordCloudUtils";
+
+import { Vector3Arr } from "../../@types/common";
 import { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
 interface WordObjectProps {
   data: IWordPointData;
-  position: Vector3 | [x: number, y: number, z: number];
+  position: Vector3 | Vector3Arr;
   quaternion: Quaternion;
 }
 

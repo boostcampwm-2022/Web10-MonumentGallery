@@ -5,3 +5,5 @@ export interface IToast {
   backgroundColor: string;
   icon: string;
 }
+
+export type Vector3Arr = [x: number, y: number, z: number];

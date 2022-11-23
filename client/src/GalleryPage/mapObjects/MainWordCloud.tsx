@@ -5,13 +5,15 @@ import { Text, Float } from "@react-three/drei";
 
 import { useBillboard } from "../../hooks/useBillboard";
 import { IWordPointData, makeWordsPointData, getDistributeIndex } from "../../utils/wordCloudUtils";
+
+import { Vector3Arr } from "../../@types/common";
 import { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
 interface WordObjectProps {
   data: IWordPointData;
-  position: Vector3 | [x: number, y: number, z: number];
+  position: Vector3 | Vector3Arr;
 }
 
 interface IOrbitData {

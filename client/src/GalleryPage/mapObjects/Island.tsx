@@ -18,9 +18,9 @@ interface IslandProps {
 
 export default function Island({ x, z, islandScale = 5, color = 0x24adaf }: IslandProps) {
   return (
-    <mesh position={[x, 0, z]}>
+    <mesh receiveShadow position={[x, 0, z]}>
       <islandGeometry args={[islandScale]} />
-      <meshStandardMaterial color={color} flatShading={true} />
+      <meshLambertMaterial color={color} flatShading={true} />
     </mesh>
   );
 }

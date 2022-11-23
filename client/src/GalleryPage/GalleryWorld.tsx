@@ -11,7 +11,6 @@ type Vector3Arr = [x: number, y: number, z: number];
 
 export default function GalleryWorld({ data }: GalleryWorldProps) {
   const { totalKeywords, pages, nodes } = data;
-  console.log(data);
 
   const pageIslandPosition = pages.map(({ position }: IGalleryPageData): Vector3Arr => [position[0], 0, position[1]]);
   const getIslandPosition = (i: number): Vector3Arr => {

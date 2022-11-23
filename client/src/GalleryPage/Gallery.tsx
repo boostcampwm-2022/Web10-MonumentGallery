@@ -9,7 +9,7 @@ import dummyData from "./dummyData";
 
 export default function Gallery() {
   return (
-    <Canvas className="canvas-inner" camera={{ fov: 75, near: 0.1, far: 100, position: [0, 1.5, 2] }}>
+    <Canvas shadows className="canvas-inner" camera={{ fov: 75, near: 0.1, far: 100, position: [0, 1.5, 4] }}>
       <Light />
       <MovementController speed={5} />
       <ViewRotateController />

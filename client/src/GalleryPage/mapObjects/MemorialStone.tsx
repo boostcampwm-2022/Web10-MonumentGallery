@@ -131,10 +131,6 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
   }, []);
   return (
     <>
-      <mesh position={[position[0], 0, position[1]]} scale-y={1}>
-        <boxGeometry />
-        <meshStandardMaterial color="#F2D6A2" />
-      </mesh>
       <mesh ref={subtitleMeshRef} position-x={position[0]} position-y={2} position-z={position[1]}>
         <Text
           ref={subtitleRef}
@@ -147,6 +143,10 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
         >
           {pText}
         </Text>
+      </mesh>
+      <mesh castShadow position={[position[0], 0, position[1]]} scale-y={1}>
+        <boxGeometry />
+        <meshLambertMaterial color="#F2D6A2" />
       </mesh>
     </>
   );

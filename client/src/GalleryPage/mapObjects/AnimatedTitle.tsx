@@ -19,7 +19,7 @@ export default function AnimatedTitle({ position, text }: AnimatedTitleProps) {
   const [active, setActive] = useState(0);
   const [action, setAction] = useState(false);
   const { camera } = useThree();
-  const textGroupRef = useBillboard({ follow: !action });
+  const textGroupRef = useBillboard<THREE.Group>({ follow: !action });
 
   const { spring } = useSpring({
     spring: active,

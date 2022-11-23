@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
-import { Object3D, Matrix4, Quaternion, Euler } from "three";
+import { Matrix4, Quaternion, Euler, Object3D } from "three";
 
 interface LockConfig {
   lockElevation?: boolean;
@@ -11,7 +11,7 @@ const _matrix = new Matrix4();
 const _euler = new Euler(0, 0, 0, "YXZ");
 const _quaternion = new Quaternion();
 
-function getAzimuth(quaternion) {
+function getAzimuth(quaternion: Quaternion) {
   _matrix.makeRotationFromQuaternion(quaternion);
   const elem = _matrix.elements;
   const m11 = elem[0],
@@ -25,8 +25,8 @@ function getAzimuth(quaternion) {
   else return Math.atan2(-m31, m11);
 }
 
-export function useBillboard({ lockElevation = false, follow = true }: LockConfig = {}) {
-  const objectRef = useRef<Object3D>();
+export function useBillboard<T>({ lockElevation = false, follow = true }: LockConfig = {}) {
+  const objectRef = useRef<T>(null) as React.RefObject<Object3D<Event>>;
   const { camera } = useThree();
 
   useFrame(() => {
@@ -47,5 +47,5 @@ export function useBillboard({ lockElevation = false, follow = true }: LockConfi
     }
   });
 
-  return objectRef;
+  return objectRef as React.RefObject<T>;
 }

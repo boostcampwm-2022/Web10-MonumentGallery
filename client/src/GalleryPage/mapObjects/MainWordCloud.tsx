@@ -155,7 +155,7 @@ function WordHelix({ orbitData }: WordHelixProps) {
 }
 
 export default function MainWordCloud({ keywords, ...props }: MainWordCloudProps) {
-  const objectRef = useRef<Group>();
+  const objectRef = useRef<Group>(null);
 
   const [firstOrbit, ...helixOrbits] = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);

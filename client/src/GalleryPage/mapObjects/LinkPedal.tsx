@@ -1,6 +1,7 @@
 import "./styles/Linkpedal.style.scss";
 import { Html } from "@react-three/drei";
 import React, { useEffect, useState } from "react";
+import { CollisionObject } from "../components/CollisionObject";
 import { IGalleryPageLink } from "../../@types/gallery";
 import { RigidBody } from "@react-three/rapier";
 
@@ -25,7 +26,7 @@ export default function LinkPedal({ link, position }: LinkPedalProps) {
 
   return (
     <RigidBody
-      type="dynamic"
+      type="fixed"
       colliders="cuboid"
       position={position}
       onCollisionEnter={() => {

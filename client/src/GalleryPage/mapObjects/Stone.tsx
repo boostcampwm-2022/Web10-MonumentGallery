@@ -1,4 +1,5 @@
 import { useGLTF } from "@react-three/drei";
+import { GroupProps } from "@react-three/fiber";
 import { GLTF } from "three-stdlib";
 
 type GLTFResult = GLTF & {
@@ -10,7 +11,7 @@ type GLTFResult = GLTF & {
   };
 };
 
-export default function Stone(props: JSX.IntrinsicElements["group"]) {
+export default function Stone(props: GroupProps) {
   const { nodes, materials } = useGLTF("/hyperlink-stone.glb") as unknown as GLTFResult;
   return (
     <group {...props} dispose={null}>

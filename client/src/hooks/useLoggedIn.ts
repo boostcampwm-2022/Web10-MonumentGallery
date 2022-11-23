@@ -25,9 +25,11 @@ interface ICheck {
   id: string;
 }
 
-export function CheckLoggedIn({ resource }: { resource: Resource }) {
+export function CheckLoggedIn({ resource }: { resource: Resource<ICheck> }) {
   const { setUser, clearUser } = userStore();
-  const { logined, id: user } = useMemo(() => resource.read({ method: "get", url: "/auth/check" }) as ICheck, []);
+  const res = useMemo(() => resource.read({ method: "get", url: "/auth/check" }), []);
+  if (!res.data || res.error) return null;
+  const { logined, id: user } = res.data;
 
   useEffect(() => {
     if (logined) {

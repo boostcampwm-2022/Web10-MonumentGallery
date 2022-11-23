@@ -51,7 +51,8 @@ export default function SpaceCreater({ resource, onSubmit }: SpaceCreaterProps) 
 }
 
 function Data({ resource }: { resource: Resource | null }) {
-  resource?.read({ method: "get", url: "/test/getData" });
+  const res = resource?.read({ method: "get", url: "/test/getData" });
+  if (!res || res?.error) return <>에러가 발생했습니다.</>;
   window.location.href = `/gallery/${v4()}/${v4()}`;
   return null;
 }

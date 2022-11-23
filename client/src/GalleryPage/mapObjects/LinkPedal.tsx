@@ -6,6 +6,8 @@ import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { generateRandomPosition } from "../../utils/random";
 import Stone from "./Stone";
 import { Euler } from "@react-three/fiber";
+import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import { animated, Interpolation } from "@react-spring/three";
 
 interface LinkPedalsProps {
   links: IGalleryPageLink[];
@@ -30,8 +32,10 @@ interface LinkPedalProps {
 
 function LinkPedal({ link, position }: LinkPedalProps) {
   const [collision, setCollision] = useState(false);
+  const { spring } = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
+  const scale = useMemo(() => Math.random() * 0.2, []);
+  const animatedScale: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [scale + 0.2, scale + 0.5]), []);
   const rotated = useMemo<Euler>(() => [0, Math.random() * 180, 0], []);
-  const scale = useMemo(() => Math.random() * 0.2 + 0.2, []);
 
   useEffect(() => {
     if (!collision) return;
@@ -47,8 +51,8 @@ function LinkPedal({ link, position }: LinkPedalProps) {
   return (
     <RigidBody
       type="fixed"
-      colliders={false}
       position={position}
+      colliders={false}
       onCollisionEnter={() => {
         setCollision(true);
       }}
@@ -56,10 +60,10 @@ function LinkPedal({ link, position }: LinkPedalProps) {
         setCollision(false);
       }}
     >
-      <mesh>
-        <Stone rotation={rotated} scale={scale} />
-        <CuboidCollider args={[1 * scale, 1, 1 * scale]} />
-      </mesh>
+      <animated.mesh scale={animatedScale}>
+        <Stone rotation={rotated} />
+      </animated.mesh>
+      <CuboidCollider args={[1 * scale, 1, 1 * scale]} />
       {collision && (
         <Html center className="pedal-html">
           <div>

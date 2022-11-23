@@ -4,11 +4,13 @@ import axios from "axios";
 export async function processDataFromRawContent(rawContent, theme) {
   const keywordData = await getKeywordFromFastAPI(rawContent);
   const grouppedPage = getGroups(keywordData);
-
   console.log("keywords : ", keywordData);
   console.log("groupPage : ", grouppedPage);
+  const positionData = getPositions(grouppedPage);
+  console.log(positionData.pages);
+  console.log(positionData.nodes);
 
-  return attachAllData(rawContent, keywordData, theme);
+  return attachAllData(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
 }
 
 function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
@@ -18,35 +20,35 @@ function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
       acc[cur] = notionKeyword.totalKeywords[cur];
       return acc;
     }, {}),
-    pages: Object.keys(rawContent).map((key) => {
+    pages: positions.map((page) => {
       return {
-        // position: positions[key],
-        keywords: notionKeyword.ppPages[key].keywords,
-        title: rawContent[key].title,
+        position: page.position,
+        keywords: sortKeywords(notionKeyword.ppPages[page.id].keywords),
+        title: rawContent[page.id].title,
         subTitle: [
-          ...notionKeyword.ppPages[key].h1_keywords.map((keyword) => {
+          ...notionKeyword.ppPages[page.id].h1_keywords.map((keyword) => {
             return {
               type: "h1",
               text: keyword,
             };
           }),
-          ...notionKeyword.ppPages[key].h2_keywords.map((keyword) => {
+          ...notionKeyword.ppPages[page.id].h2_keywords.map((keyword) => {
             return {
               type: "h2",
               text: keyword,
             };
           }),
-          ...notionKeyword.ppPages[key].h3_keywords.map((keyword) => {
+          ...notionKeyword.ppPages[page.id].h3_keywords.map((keyword) => {
             return {
               type: "h3",
               text: keyword,
             };
           }),
         ],
-        links: rawContent[key].links,
+        links: rawContent[page.id].links,
       };
     }),
-    // nodes: nodes,
+    nodes,
   };
 }
 
@@ -129,4 +131,87 @@ function getGroups(keywords) {
   });
 
   return res;
+}
+
+function getPositions(groups) {
+  //중심 좌표 (0,0)
+  let pages = [];
+  let nodes = [];
+
+  Object.keys(groups).forEach((keyword, idx) => {
+    const nowPositionData = getSquarePositions(groups[keyword], idx, pages.length);
+    console.log(nowPositionData.pages, nowPositionData.nodes);
+    pages = [...pages, ...nowPositionData.pages];
+    nodes = [...nodes, ...nowPositionData.nodes];
+  });
+
+  return {
+    pages,
+    nodes,
+  };
+}
+
+function getSquarePositions(group, direction, startNode) {
+  //배열을 받아들여서 이를 마름모 형태로 배치
+  //direction에 따라 어떤 좌표를 증가시킬 지 결정됨 0 - 위, 1 - 오른, 2- 아래, 3 - 왼
+  //startNode를 기준으로 페이지에 노드 부여
+  const distance = 5;
+  const dir = [
+    [distance, 0],
+    [0, distance],
+    [-1 * distance, 0],
+    [0, -1 * distance],
+  ]; // y, x
+  const pages = [];
+  const nodes = [];
+  if (group.length > 0) nodes.push([-1, startNode]);
+  let height = 1;
+  let y = 0;
+  let x = 0;
+  let nowNode = 0;
+  //node 연결을 위한 정보
+  let prevStart = -1;
+  let prevEnd = -2;
+  while (nowNode < group.length) {
+    let nowStart = nowNode;
+    y += dir[direction][0];
+    x += dir[direction][1];
+
+    pages.push({
+      position: [y, x],
+      id: group[nowNode++], //페이지 id 들어갈 예정
+    });
+
+    for (let i = 1; i <= height / 2 && nowNode < group.length; i++) {
+      pages.push({
+        position: [
+          y + dir[direction - 1 >= 0 ? direction - 1 : dir.length - 1][0] * i,
+          x + dir[direction - 1 >= 0 ? direction - 1 : dir.length - 1][1] * i,
+        ],
+        id: group[nowNode++],
+      });
+
+      if (nowNode >= group.length) break;
+
+      pages.push({
+        position: [y + dir[(direction + 1) % dir.length][0] * i, x + dir[(direction + 1) % dir.length][1] * i],
+        id: group[nowNode++],
+      });
+    }
+
+    for (let i = 1; i < nowNode - nowStart; i++) {
+      nodes.push([startNode + nowStart + i - 1, startNode + nowStart + i]);
+    }
+    for (let i = 0; i < prevEnd - prevStart && nowStart + i < nowNode; i++) {
+      nodes.push([startNode + prevStart + i, startNode + nowStart + i]);
+    }
+    prevStart = nowStart;
+    prevEnd = nowNode;
+    if (group.length - nowNode > height) height += 2;
+    else height -= 2;
+  }
+  return {
+    pages,
+    nodes,
+  };
 }

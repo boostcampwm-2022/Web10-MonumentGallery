@@ -3,7 +3,7 @@ import express from "express";
 import { Client } from "@notionhq/client";
 import axios from "axios";
 import TestModel from "../model/testSchema.js";
-import { getRawContentsFromNotion } from "../service/notionService.js";
+import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 
@@ -45,6 +45,7 @@ router.get("/getData", async (req, res) => {
   console.log(notionRawContent);
   const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
   console.log(processedNotionContent);
+  console.log(processedNotionContent.pages);
   res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });

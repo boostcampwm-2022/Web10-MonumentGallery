@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from konlpy.tag import Kkma
 import nltk
 import re
-from model import NotionData,preprocessedNotionData,preprocessedPage
+from PIL import Image
+from urllib import request
+import io
+import base64
+from model import NotionData,preprocessedNotionData,preprocessedPage,ImageURLData
 
 kkma = Kkma()
 nltk.download("book")
@@ -63,11 +67,8 @@ def extract_keywords(type,page_id,page,ppData):
                 ppData.ppPages[page_id].keywords[keyword]+=1
                 ppData.ppPages[page_id].p_keywords.append(keyword)
 
-@app.post("/preprocess")
-def root(notionData:NotionData):
-    test = sentence_filtering_eng("react1를 사용한 프로젝트2😀")
-    test2 = sentence_filtering_kor("react1를 사용한 프로젝트2😀")
-    print(test,test2)
+@app.post("/preprocess/text")
+def preprocess_text(notionData:NotionData):
     ppData = preprocessedNotionData()
     for page_id,page in notionData.pages.items():
         ppData.ppPages[page_id] = preprocessedPage()
@@ -76,3 +77,16 @@ def root(notionData:NotionData):
         extract_keywords("h3",page_id,page,ppData)
         extract_keywords("paragraph",page_id,page,ppData)
     return ppData
+
+@app.post("/preprocess/image")
+def preprocess_image(imgUrlData:ImageURLData):    
+    img = Image.open(io.BytesIO(request.urlopen(imgUrlData.url).read()))
+    resized_img = img.resize((10, 10))
+    converted_img = resized_img.convert("RGB")
+    pixels = list(converted_img.getdata())
+    return pixels
+
+# def convert_img_to_base64(img):
+#     buffered = io.BytesIO()
+#     img.save(buffered, format="PNG")
+#     return base64.b64encode(buffered.getvalue())

@@ -57,10 +57,19 @@ router.get("/gallery/:user/:history", (req, res) => {
 });
 
 // FastAPI 연결 확인 test
-router.get("/pytest", (req, res) => {
+router.get("/pytest/text", (req, res) => {
   const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
   axios
-    .post(fastapiEndpoint + "/preprocess", mockData)
+    .post(fastapiEndpoint + "/preprocess/text", mockData)
+    .then((e) => {
+      res.send(e.data);
+    })
+    .catch((err) => console.log(err));
+});
+router.get("/pytest/image", (req, res) => {
+  const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
+  axios
+    .post(fastapiEndpoint + "/preprocess/image", mockImageUrlData)
     .then((e) => {
       res.send(e.data);
     })
@@ -162,4 +171,8 @@ const mockData = {
       ],
     },
   },
+};
+
+const mockImageUrlData = {
+  url: "https://grigostore.shop/file_data/grigostore/2021/09/22/29a2131b07160b2413021277862c2259.png",
 };

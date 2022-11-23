@@ -18,6 +18,8 @@ export default function Gallery() {
         <ViewRotateController />
         <GalleryWorld data={dummyData as IGalleryMapData} />
       </Physics>
+      {/* <gridHelper args={[100, 100]} />
+      <axesHelper /> */}
     </Canvas>
   );
 }

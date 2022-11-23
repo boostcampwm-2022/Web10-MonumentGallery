@@ -2,8 +2,10 @@ import "./styles/Linkpedal.style.scss";
 import { Html } from "@react-three/drei";
 import React, { useEffect, useMemo, useState } from "react";
 import { IGalleryPageLink } from "../../@types/gallery";
-import { RigidBody } from "@react-three/rapier";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { generateRandomPosition } from "../../utils/random";
+import Stone from "./Stone";
+import { Euler } from "@react-three/fiber";
 
 interface LinkPedalsProps {
   links: IGalleryPageLink[];
@@ -28,6 +30,8 @@ interface LinkPedalProps {
 
 function LinkPedal({ link, position }: LinkPedalProps) {
   const [collision, setCollision] = useState(false);
+  const rotated = useMemo<Euler>(() => [0, Math.random() * 180, 0], []);
+  const scale = useMemo(() => Math.random() * 0.2 + 0.2, []);
 
   useEffect(() => {
     if (!collision) return;
@@ -43,7 +47,7 @@ function LinkPedal({ link, position }: LinkPedalProps) {
   return (
     <RigidBody
       type="fixed"
-      colliders="cuboid"
+      colliders={false}
       position={position}
       onCollisionEnter={() => {
         setCollision(true);
@@ -53,7 +57,8 @@ function LinkPedal({ link, position }: LinkPedalProps) {
       }}
     >
       <mesh>
-        <boxGeometry args={[1, 0.3, 1]} />
+        <Stone rotation={rotated} scale={scale} />
+        <CuboidCollider args={[1 * scale, 1, 1 * scale]} />
       </mesh>
       {collision && (
         <Html center className="pedal-html">

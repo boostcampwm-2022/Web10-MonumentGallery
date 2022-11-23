@@ -27,9 +27,12 @@ export default {
         쏜애플: 3,
         사랑해요: 1,
       },
-      links: {
-        href: "https://www.naver.com",
-      },
+      links: [
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+      ],
       imagePixel: [
         [0xff0000, 0xff2200, 0xff4400, 0xff6600, 0xff8800, 0xffaa00, 0xffcc00, 0xffff00],
         [0xcc0000, 0xcc2200, 0xcc4400, 0xcc6600, 0xcc8800, 0xccaa00, 0xcccc00, 0xccff00],
@@ -80,6 +83,14 @@ export default {
         쏜애플: 3,
         사랑해요: 1,
       },
+      links: [
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+        { href: "https://www.naver.com" },
+      ],
     },
     {
       position: [40, 0],

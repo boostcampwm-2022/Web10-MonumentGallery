@@ -78,13 +78,20 @@ def preprocess_text(notionData:NotionData):
         extract_keywords("paragraph",page_id,page,ppData)
     return ppData
 
+
 @app.post("/preprocess/image")
 def preprocess_image(imgUrlData:ImageURLData):    
     img = Image.open(io.BytesIO(request.urlopen(imgUrlData.url).read()))
     resized_img = img.resize((10, 10))
     converted_img = resized_img.convert("RGB")
     pixels = list(converted_img.getdata())
-    return pixels
+    hex_pixels = [ rgb_to_hex(pixel) for pixel in pixels ] 
+    return hex_pixels
+
+def rgb_to_hex(rgb):
+    hex_string = '%02x%02x%02x' % rgb
+    hex_value = hex(int(hex_string,16))
+    return hex_value
 
 # def convert_img_to_base64(img):
 #     buffered = io.BytesIO()

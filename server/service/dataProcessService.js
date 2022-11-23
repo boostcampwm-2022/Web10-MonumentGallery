@@ -57,7 +57,7 @@ async function getKeywordFromFastAPI(rawContent) {
     const fastapiData = getFastAPIFormData(rawContent);
     // console.log(fastapiData);
     // console.log(fastapiData.pages);
-    const fastapiResponse = await axios.post(fastapiEndpoint + "/preprocess", fastapiData);
+    const fastapiResponse = await axios.post(fastapiEndpoint + "/preprocess/text", fastapiData);
     return fastapiResponse.data;
   } catch (err) {
     //에러 처리 부분은 고민해봐야할듯

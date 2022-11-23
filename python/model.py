@@ -22,6 +22,10 @@ class preprocessedNotionData(BaseModel):
     totalKeywords: Dict[str,int]
     pages: Dict[str,preprocessedPage]
 
+class ImageURLData(BaseModel):
+    url: str
+
+
 
 # 객체 생성용 클래스
 class preprocessedPage:

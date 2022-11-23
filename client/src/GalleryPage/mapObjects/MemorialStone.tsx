@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Object3D } from "three";
 import { Text } from "@react-three/drei";
 
+import Pedestal from "./Pedestal";
 import { useBillboard } from "../../hooks/useBillboard";
 
 import { IGalleryPageSubTitle } from "../../@types/gallery";
@@ -155,16 +156,13 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
     };
   }, []);
   return (
-    <>
-      <mesh castShadow position={[position[0], 0, position[1]]} scale-y={1}>
-        <boxGeometry />
-        <meshStandardMaterial color={stoneColor} />
-      </mesh>
-      <mesh ref={subtitleMeshRef} position-x={position[0]} position-y={2} position-z={position[1]}>
+    <group position={[position[0], 0, position[1]]} scale={textSize}>
+      <Pedestal scale={0.5} color={stoneColor} />
+      <mesh ref={subtitleMeshRef} position-y={2}>
         <Text
           ref={subtitleRef}
           font={MapoFont}
-          fontSize={textSize}
+          fontSize={textSize * 0.7}
           color={"black"}
           maxWidth={0.1}
           textAlign={"center"}
@@ -173,7 +171,7 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
           {pText}
         </Text>
       </mesh>
-    </>
+    </group>
   );
 }
 

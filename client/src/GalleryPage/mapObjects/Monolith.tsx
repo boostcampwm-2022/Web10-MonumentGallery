@@ -1,8 +1,8 @@
 import { useLoader, GroupProps } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import { OBJLoader } from "three/examples/jsm/loaders/ObjLoader";
+import Pedestal from "./Pedestal";
 import MonolithObj from "../../assets/models/monolith.obj?url";
-import PedestalObj from "../../assets/models/monolith-pedestal.obj?url";
 
 function useOBJ(asset: string) {
   const group = useLoader(OBJLoader, asset);
@@ -13,7 +13,6 @@ function useOBJ(asset: string) {
 
 export default function Monolith(props: GroupProps) {
   const monolith = useOBJ(MonolithObj);
-  const pedestal = useOBJ(PedestalObj);
   return (
     <group {...props}>
       <Float rotationIntensity={0} speed={5}>
@@ -21,9 +20,9 @@ export default function Monolith(props: GroupProps) {
           <meshLambertMaterial color="#ff4b00" />
         </mesh>
       </Float>
-      <mesh castShadow receiveShadow geometry={pedestal}>
-        <meshLambertMaterial color="#ff7b00" />
-      </mesh>
+      <Pedestal color="#ff7b00" />
     </group>
   );
 }
+
+useLoader.preload(OBJLoader, MonolithObj);

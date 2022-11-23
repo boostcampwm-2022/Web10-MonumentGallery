@@ -207,7 +207,7 @@ function getSquarePositions(group, direction, startNode) {
     }
     prevStart = nowStart;
     prevEnd = nowNode;
-    if (group.length - nowNode > height) height += 2;
+    if (group.length - nowNode > nowNode) height += 2;
     else height -= 2;
   }
   return {

@@ -1,6 +1,6 @@
 import { useRef, useMemo } from "react";
 import { Vector3, Quaternion, Euler, Group } from "three";
-import { useFrame, GroupProps, PrimitiveProps } from "@react-three/fiber";
+import { useFrame, GroupProps } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 
 import { IWordPointData, makeWordsPointData, getCircluarDistributeIndex } from "../../utils/wordCloudUtils";

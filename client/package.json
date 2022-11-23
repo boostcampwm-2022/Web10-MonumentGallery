@@ -16,6 +16,7 @@
     "@react-three/cannon": "^6.5.0",
     "@react-three/drei": "9.32",
     "@react-three/fiber": "8.8",
+    "@react-three/rapier": "^0.11.0",
     "axios": "^1.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -5,7 +5,7 @@ import { COLORS } from "../../@types/colors";
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
 interface BallonProps {
-  position: [x: number, y: number, z: number];
+  position?: [x: number, y: number, z: number];
   positionY: Interpolation<number, number>;
   scale: Interpolation<number, number>;
   color: Interpolation<number, COLORS>;

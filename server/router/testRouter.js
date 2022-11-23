@@ -3,7 +3,7 @@ import express from "express";
 import { Client } from "@notionhq/client";
 import axios from "axios";
 import TestModel from "../model/testSchema.js";
-import { getRawContentsFromNotion } from "../service/notionService.js";
+import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 
@@ -45,6 +45,7 @@ router.get("/getData", async (req, res) => {
   console.log(notionRawContent);
   const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
   console.log(processedNotionContent);
+  console.log(processedNotionContent.pages);
   res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
@@ -57,10 +58,19 @@ router.get("/gallery/:user/:history", (req, res) => {
 });
 
 // FastAPI 연결 확인 test
-router.get("/pytest", (req, res) => {
+router.get("/pytest/text", (req, res) => {
   const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
   axios
-    .post(fastapiEndpoint + "/preprocess", mockData)
+    .post(fastapiEndpoint + "/preprocess/text", mockData)
+    .then((e) => {
+      res.send(e.data);
+    })
+    .catch((err) => console.log(err));
+});
+router.get("/pytest/image", (req, res) => {
+  const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
+  axios
+    .post(fastapiEndpoint + "/preprocess/image", mockImageUrlData)
     .then((e) => {
       res.send(e.data);
     })
@@ -162,4 +172,8 @@ const mockData = {
       ],
     },
   },
+};
+
+const mockImageUrlData = {
+  url: "https://grigostore.shop/file_data/grigostore/2021/09/22/29a2131b07160b2413021277862c2259.png",
 };

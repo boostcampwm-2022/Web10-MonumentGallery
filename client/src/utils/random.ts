@@ -1,4 +1,5 @@
 import { COLORS } from "../@types/colors";
+import POSITION from "./randomPosition.json";
 
 export function generateRandomPastelColors(count = 1) {
   const colors = Object.keys(COLORS);
@@ -12,5 +13,20 @@ export function generateRandomPastelColors(count = 1) {
   };
   picker();
 
+  return picked;
+}
+
+const position = POSITION.position as [number, number][];
+
+export function generateRandomPosition(count = 1) {
+  const picked: [number, number][] = [];
+
+  const picker = () => {
+    if (picked.length === count) return;
+    const randomPosition: [number, number] = position[Math.floor(Math.random() * position.length)];
+    if (!picked.find((p) => p === randomPosition)) picked.push(randomPosition);
+    picker();
+  };
+  picker();
   return picked;
 }

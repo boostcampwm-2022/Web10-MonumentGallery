@@ -4,6 +4,7 @@ import { useBillboard } from "../../hooks/useBillboard";
 import { IGalleryPageSubTitle } from "../../@types/gallery";
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 import { Object3D } from "three";
+import { COLORS } from "../../@types/colors";
 
 interface MemorialStonesProps {
   subtitles: IGalleryPageSubTitle[];
@@ -87,9 +88,31 @@ function textPreProcessing(text: string) {
   }
   return { visibleLetters, invisibleLetters };
 }
+function getStyleByTitleType(type: string) {
+  let textSize = 0;
+  let stoneColor = "";
+  switch (type) {
+    case "h1":
+      textSize = 1;
+      stoneColor = COLORS.BROWN200;
+      break;
+    case "h2":
+      textSize = 0.7;
+      stoneColor = COLORS.BROWN100;
+      break;
+    case "h3":
+      textSize = 0.5;
+      stoneColor = COLORS.BROWN50;
+      break;
+    default:
+      break;
+  }
+  return { textSize, stoneColor };
+}
 
 function MemorialStone({ subTitle, position }: MemorialStoneProps) {
-  const { text } = subTitle;
+  const { text, type } = subTitle;
+  const { textSize, stoneColor } = getStyleByTitleType(type);
   const [pText, setPText] = useState("");
 
   const { visibleLetters, invisibleLetters } = useMemo(() => {
@@ -131,11 +154,15 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
   }, []);
   return (
     <>
+      <mesh castShadow position={[position[0], 0, position[1]]} scale-y={1}>
+        <boxGeometry />
+        <meshStandardMaterial color={stoneColor} />
+      </mesh>
       <mesh ref={subtitleMeshRef} position-x={position[0]} position-y={2} position-z={position[1]}>
         <Text
           ref={subtitleRef}
           font={MapoFont}
-          fontSize={0.5}
+          fontSize={textSize}
           color={"black"}
           maxWidth={0.1}
           textAlign={"center"}
@@ -143,10 +170,6 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
         >
           {pText}
         </Text>
-      </mesh>
-      <mesh castShadow position={[position[0], 0, position[1]]} scale-y={1}>
-        <boxGeometry />
-        <meshLambertMaterial color="#F2D6A2" />
       </mesh>
     </>
   );

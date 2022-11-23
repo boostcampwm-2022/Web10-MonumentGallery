@@ -1,3 +1,5 @@
+import type { SpringValue } from "@react-spring/three";
+
 export interface IToast {
   id: number;
   type: string;
@@ -7,3 +9,9 @@ export interface IToast {
 }
 
 export type Vector3Arr = [x: number, y: number, z: number];
+
+export interface ITriggeredSpringState {
+  spring: SpringValue;
+  ready: number;
+  playing: boolean;
+}

@@ -2,11 +2,12 @@ import { useRef, useMemo } from "react";
 import { Vector3, Quaternion, Euler, Group } from "three";
 import { useFrame, GroupProps } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
+import { animated, Interpolation } from "@react-spring/three";
 
 import { IWordPointData, makeWordsPointData, getCircluarDistributeIndex } from "../../utils/wordCloudUtils";
 
-import { Vector3Arr } from "../../@types/common";
-import { IKeywordMap } from "../../@types/gallery";
+import type { Vector3Arr, ITriggeredSpringState } from "../../@types/common";
+import type { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
@@ -30,6 +31,7 @@ interface WordHelixProps {
 interface SubWordCloudProps extends GroupProps {
   keywords: IKeywordMap;
   radius: number;
+  animator: ITriggeredSpringState;
 }
 
 // temporary buffer
@@ -122,38 +124,44 @@ function WordObject({ data, ...props }: WordObjectProps) {
 function WordHelix({ orbitData, radius }: WordHelixProps) {
   const { children, y, height } = orbitData;
 
-  const toRenderChildren = useMemo<IWordPointData[]>(
-    () =>
-      children
-        .map((value, index) => ({ value, index }))
-        .sort((a, b) => getCircluarDistributeIndex(b.index) - getCircluarDistributeIndex(a.index))
-        .map(({ value }) => value),
-    [children],
-  );
-  const particians = useMemo<number[]>(() => makeChildrenPartician(toRenderChildren), [toRenderChildren]);
+  const toRenderChildren = useMemo<IWordRenderChildData[]>(() => {
+    const _children = children
+      .map((value, index) => ({ value, index }))
+      .sort((a, b) => getCircluarDistributeIndex(b.index) - getCircluarDistributeIndex(a.index))
+      .map(({ value }) => value);
+    const particians = makeChildrenPartician(_children);
+    return _children.map((child, i) => {
+      const partician = particians[i];
+      const yZitter = (Math.random() - 0.5) * height;
+      const position = getCylinderPosition(radius, partician, y + yZitter);
+      const quaternion = getTextRotation(position);
+
+      return { data: child, position, quaternion };
+    });
+  }, [children]);
 
   return (
     <group>
-      {toRenderChildren.map((child: IWordPointData, i: number) => {
-        const partician = particians[i];
-        const yZitter = (Math.random() - 0.5) * height;
-        const position = getCylinderPosition(radius, partician, y + yZitter);
-        const quaternion = getTextRotation(position);
-
-        return <WordObject data={child} position={position} quaternion={quaternion} key={`${child.text}_${i}`} />;
+      {toRenderChildren.map(({ data, position, quaternion }: WordObjectProps, i: number) => {
+        const key = `${data.text}_${i}`;
+        return <WordObject data={data} position={position} quaternion={quaternion} key={key} />;
       })}
     </group>
   );
 }
 
 // 원통형 워드클라우드 컴포넌트입니다.
-export default function SubWordCloud({ keywords, radius, ...props }: SubWordCloudProps) {
+export default function SubWordCloud({ keywords, radius, animator, ...props }: SubWordCloudProps) {
   const objectRef = useRef<Group>(null);
+  const { spring } = animator;
 
   const orbits = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
     return seperateWordToOrbits(wordData, radius);
   }, [keywords]);
+
+  const yPosition: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-1, 2]), []);
+  const scale: Interpolation<number, number> = useMemo(() => spring.to([0, 0.5, 1], [0, 0, 0.8]), []);
 
   useFrame((_, delta) => {
     if (!objectRef.current) return;
@@ -161,10 +169,10 @@ export default function SubWordCloud({ keywords, radius, ...props }: SubWordClou
   });
 
   return (
-    <group rotation-order="YXZ" {...props} ref={objectRef}>
+    <animated.group rotation-order="YXZ" {...props} position-y={yPosition} scale={scale} ref={objectRef}>
       {orbits.map((orbit: IOrbitData, i: number) => (
         <WordHelix orbitData={orbit} radius={radius} key={`orbit_${i}`} />
       ))}
-    </group>
+    </animated.group>
   );
 }

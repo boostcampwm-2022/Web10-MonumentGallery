@@ -73,10 +73,10 @@ async function getPages(notion, limitTime) {
 
   console.log(pageContents);
 
-  //자식 페이지들 재귀탐색 (100개까지만 => 대략 1분 걸림)
+  //자식 페이지들 재귀탐색 (85개까지만 => 대략 1분 걸림)
   let cursor = -1;
 
-  while (++cursor < pageIds.length && pageIds.length < 100) {
+  while (++cursor < pageIds.length && pageIds.length <= 85) {
     console.log(cursor);
     const cursorId = pageIds[cursor];
     for (let i = 0; i < pageContents[cursorId].childPage.length && pageIds.length < 100; i++) {

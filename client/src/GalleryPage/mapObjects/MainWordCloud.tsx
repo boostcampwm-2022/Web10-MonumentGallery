@@ -1,17 +1,17 @@
 import { useRef, useMemo } from "react";
+import { Vector3, Quaternion, Group } from "three";
 import { useFrame, GroupProps } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
-import { Vector3, Quaternion, Group } from "three";
 
 import { useBillboard } from "../../hooks/useBillboard";
+import { IWordPointData, makeWordsPointData, getDistributeIndex } from "../../utils/wordCloudUtils";
 import { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
-interface IWordPointData {
-  text: string;
-  size: number;
-  fontSize: number;
+interface WordObjectProps {
+  data: IWordPointData;
+  position: Vector3 | [x: number, y: number, z: number];
 }
 
 interface IOrbitData {
@@ -20,31 +20,12 @@ interface IOrbitData {
   spiralCount: number;
 }
 
-interface WordObjectProps {
-  data: IWordPointData;
-  position: Vector3 | [x: number, y: number, z: number];
-}
-
 interface WordHelixProps {
   orbitData: IOrbitData;
 }
 
 interface MainWordCloudProps extends GroupProps {
   keywords: IKeywordMap;
-}
-
-function makeWordsPointData(words: IKeywordMap): IWordPointData[] {
-  const entries = Object.entries(words);
-  const biggestFrequency = entries.reduce((max, [, value]) => Math.max(max, value), 0);
-  const biggestfontSize = 1;
-  const result = [];
-  for (const [text, freq] of entries) {
-    const fontSize = (biggestfontSize * freq) / biggestFrequency;
-    const size = (text.length * freq) / 8;
-    result.push({ text, size, fontSize });
-  }
-  result.sort((a, b) => b.size - a.size);
-  return result.slice(0, 30);
 }
 
 function seperateWordToOrbits(wordData: IWordPointData[]): IOrbitData[] {
@@ -94,20 +75,6 @@ function getHelicalPosition(radius: number, index: number, spiralCount: number) 
   const y = Math.cos(theta);
   const z = Math.sin(theta) * Math.sin(phi);
   return new Vector3(x, y, z).multiplyScalar(radius);
-}
-
-function getDistributeIndex(index: number) {
-  if (index === 0) return 0;
-  if (index === 1) return 1;
-  if (index === 2) return 0.5;
-  const _index = index - 1;
-  const logIndex = Math.floor(Math.log2(_index));
-  const min2PowIndex = 2 ** logIndex;
-
-  const result = (_index - min2PowIndex) / min2PowIndex + 1 / (min2PowIndex * 2);
-
-  if (logIndex % 2) return result;
-  return 1 - result;
 }
 
 function WordObject({ data, position }: WordObjectProps) {
@@ -160,7 +127,7 @@ export default function MainWordCloud({ keywords, ...props }: MainWordCloudProps
   const [firstOrbit, ...helixOrbits] = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
     return seperateWordToOrbits(wordData);
-  }, []);
+  }, [keywords]);
 
   useFrame((_, delta) => {
     if (!objectRef.current) return;

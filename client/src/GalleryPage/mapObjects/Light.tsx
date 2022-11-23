@@ -8,13 +8,14 @@ interface ShadowLightProps extends DirectionalLightProps {
 
 function ShadowLight({ position, ...props }: ShadowLightProps) {
   const [camX, camY, camZ] = position;
-  const lightRef = useRef<DirectionalLight>();
+  const lightRef = useRef<DirectionalLight>(null);
   const { scene } = useThree();
 
   useEffect(() => {
-    if (!lightRef.current) return;
+    if (lightRef.current == null) return;
     scene.add(lightRef.current.target);
     return () => {
+      if (lightRef.current == null) return;
       scene.remove(lightRef.current.target);
     };
   }, []);

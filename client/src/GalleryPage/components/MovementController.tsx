@@ -30,6 +30,10 @@ function mapMovementKey(code: string) {
     case "ArrowRight":
     case "KeyD":
       return "Right";
+    case "Space":
+      return "Up";
+    case "ShiftLeft":
+      return "Down";
     default:
       return null;
   }
@@ -107,6 +111,12 @@ function MovementController({ camera, speed = 1 }: MovementControllerProps) {
     }
     if (isPressed("Left")) {
       moveVector.addScaledVector(right, -1);
+    }
+    if (isPressed("Up")) {
+      moveVector.y += 1;
+    }
+    if (isPressed("Down")) {
+      moveVector.y -= 1;
     }
     moveVector.normalize();
     targetCamera.position.addScaledVector(moveVector, speed * delta);

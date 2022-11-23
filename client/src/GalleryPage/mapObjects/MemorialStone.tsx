@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Text } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Mesh, Vector3 } from "three";
-
 import { useBillboard } from "../../hooks/useBillboard";
 import { IGalleryPageSubTitle } from "../../@types/gallery";
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
+import { Object3D } from "three";
 
 interface MemorialStonesProps {
   subtitles: IGalleryPageSubTitle[];
@@ -91,9 +89,8 @@ function textPreProcessing(text: string) {
 }
 
 function MemorialStone({ subTitle, position }: MemorialStoneProps) {
-  const { text, type } = subTitle;
+  const { text } = subTitle;
   const [pText, setPText] = useState("");
-  const { camera } = useThree();
 
   const { visibleLetters, invisibleLetters } = useMemo(() => {
     const { visibleLetters, invisibleLetters } = textPreProcessing(text);
@@ -101,11 +98,12 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
     return { visibleLetters, invisibleLetters };
   }, []);
 
-  const subtitleMeshRef = useBillboard({ lockElevation: true });
-  const subtitleRef = useRef<any>();
+  const subtitleMeshRef = useBillboard<THREE.Mesh>({ lockElevation: true });
+  const subtitleRef = useRef<Object3D>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if (!subtitleRef.current) return;
       subtitleRef.current.position.y -= 1;
       if (subtitleRef.current.position.y < 0) {
         if (invisibleLetters.length > 0) {

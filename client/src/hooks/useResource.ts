@@ -9,7 +9,8 @@ export default function useResource<T>(
 ) {
   const data = useMemo(() => {
     const res = resource.read(options);
-    callback(res);
+    if (!res.data || res.error) return res;
+    callback(res.data);
     return res;
   }, []);
 

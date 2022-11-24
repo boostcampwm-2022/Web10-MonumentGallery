@@ -5,6 +5,12 @@ import { processDataFromRawContent } from "../service/dataProcessService.js";
 
 const router = express.Router();
 
+router.get("/gallery", (req, res) => {
+  setTimeout(() => {
+    res.send("");
+  }, 500);
+});
+
 router.post("/gallery", async (req, res) => {
   //duration= 2w||1m||3m||1y
   const notionAccessToken = req.accessToken;

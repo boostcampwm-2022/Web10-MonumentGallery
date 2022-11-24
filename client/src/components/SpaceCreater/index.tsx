@@ -2,7 +2,6 @@ import useSelectorComponent from "../Selector";
 import SuspenseButton from "../buttons/SuspenseButton";
 import styles from "./style.module.scss";
 import { Resource } from "../../utils/suspender";
-import { v4 } from "uuid";
 import { THEME } from "../../@types/gallery";
 import themeStore from "../../store/theme.store";
 

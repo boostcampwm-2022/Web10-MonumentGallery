@@ -58,7 +58,7 @@ router.get("/getData", async (req, res) => {
 
   const allData = await Gallery.find();
   console.log(allData);
-  
+
   res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });

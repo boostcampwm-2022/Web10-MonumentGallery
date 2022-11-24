@@ -39,7 +39,7 @@ async function loadShareStatus(userID) {
 }
 
 async function saveGallery(userID, galleryData) {
-	cosnt session = await startSession();
+	const session = await startSession();
 	try {
 		session.startTransaction();
 		const { _id } = await Gallery.create(galleryData);

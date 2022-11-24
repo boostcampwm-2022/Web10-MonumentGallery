@@ -8,25 +8,29 @@ async function loadGalleryHistory(userID) {
 		const data = await User.findOne({userID});
 		return data.history;
 	}
-	return {};
+	return new Map();
 }
 
-async function updateUserGallery(userID, galleryID) {
+async function updateUserGallery(userID, galleryID, session) {
 	const isExists = await User.exists({userID});
 	const now = Date.now();
 
+	console.log("이건 갤러리 id ...", galleryID);
+
 	if(isExists) {
 		const history = await loadGalleryHistory(userID);
-		history[galleryID] = now;
-		return User.findOneAndUpdate({userID}, {history});
+		history.set(galleryID, now);
+		return User.findOneAndUpdate({userID}, {history}).session(session);
 	}
-	return User.create({
+	const history = {[galleryID]: now};
+	console.log("이건 history...", history);
+	return User.create([{
 		userID,
 		isShared: false,
 		lastShareModified: now,
 		lastModified: now,
-		history: {galleryID: now}
-	});
+		history,
+	}], {session});
 }
 
 async function loadShareStatus(userID) {
@@ -42,15 +46,16 @@ async function saveGallery(userID, galleryData) {
 	const session = await startSession();
 	try {
 		session.startTransaction();
-		const { _id } = await Gallery.create(galleryData);
-		const galleryID = _id.valueOf()
-		await updateUserGallery(userID, galleryID);
+		const [createdData] = await Gallery.create([galleryData], {session});
+		const galleryID = createdData._id.valueOf();
+		await updateUserGallery(userID, galleryID, session);
 		await session.commitTransaction();
 		session.endSession();
 		return galleryID;
 	} catch (err) {
 		await session.abortTransaction();
 		session.endSession();
+		console.log(err);
 		return null;
 	}
 }
@@ -72,7 +77,7 @@ async function loadGallery(userID, galleryID) {
 
 async function loadLastGalleryID(userID) {
 	const history = await loadGalleryHistory(userID);
-	const [result] = Object.entries(history).reduce( ([rescentID, rescentDate], [galleryID, date])=>{
+	const [result] = [...history].reduce( ([rescentID, rescentDate], [galleryID, date])=>{
 		if(rescentDate > date) return [galleryID, date];
 		return [rescentID, rescentDate];
 	}, [null, 0] );

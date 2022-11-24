@@ -5,7 +5,7 @@ import {
   loadLastGalleryID as loadLastGalleryIDFromDB,
   loadUserGalleryList as loadUserGalleryListFromDB,
 } from "../model/galleryModel.js";
-import { BadRequestError, NotFoundError } from "../utils/httpError.js";
+import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
@@ -15,6 +15,8 @@ function validateGalleryID(galleryID) {
 }
 
 export async function saveGallery(userID, galleryData) {
+  console.log("으악!!!");
+  console.log(galleryData);
   const id = await saveGalleryFromDB(userID, galleryData);
   if (id === null) throw new InternalServerError("DB 저장 실패");
   return id;
@@ -35,8 +37,8 @@ export async function loadLastGallery(userID) {
   return result;
 }
 
-export function getGalleryHistory(userID) {
-  return loadUserGalleryList(userID);
+export async function getGalleryHistory(userID) {
+  return Object.fromEntries( [...loadUserGalleryList(userID)] );
 }
 
 export function getLastGalleryID(userID) {

@@ -56,6 +56,7 @@ export default function SpaceCreater({ resource, onSubmit, onLoad }: SpaceCreate
 
 function Data({ resource, onLoad }: { resource: Resource | null; onLoad: IOnLoadFunction }) {
   const res = resource?.read({});
+  console.log(res);
   if (!res || res?.error) return <>에러가 발생했습니다.</>;
   onLoad(res.data);
   return null;

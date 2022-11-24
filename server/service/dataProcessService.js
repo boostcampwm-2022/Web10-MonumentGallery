@@ -60,12 +60,15 @@ async function getKeywordFromFastAPI(rawContent) {
     return fastapiResponse.data;
   } catch (err) {
     //에러 처리 부분은 고민해봐야할듯
-    console.log(err);
+    console.log("자연어처리 실패함 암튼 실패함");
+    console.log(err.message);
     return {};
   }
 }
 
 function sortKeywords(keywords) {
+  if (keywords === null || keywords === undefined) return [];
+
   //상위 30개만 산출
   const totalKeywords = Object.keys(keywords).map((key) => [key, keywords[key]]);
   return totalKeywords

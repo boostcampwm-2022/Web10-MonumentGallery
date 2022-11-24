@@ -24,11 +24,12 @@ router.post(
 
     const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
     const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
-    const galleryID = await saveGallery(processedNotionContent);
+    const galleryID = await saveGallery(userID, processedNotionContent);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
     res.status(200).json({ page: `/gallery/${userID}/${galleryID}` });
-});
+  }),
+);
 
 router.get(
   "/gallery/history/:id",

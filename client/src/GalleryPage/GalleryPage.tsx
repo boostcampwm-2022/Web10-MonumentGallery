@@ -53,7 +53,7 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   }, [useSampleData]);
 
   useEffect(() => {
-    if (!useSampleData) return;
+    if (data || useSampleData) return;
     if (remainTime <= 0) {
       window.location.href = "/";
     }

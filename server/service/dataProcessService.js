@@ -162,7 +162,7 @@ function getSquarePositions(group, direction, startNode) {
   //배열을 받아들여서 이를 마름모 형태로 배치
   //direction에 따라 어떤 좌표를 증가시킬 지 결정됨 0 - 위, 1 - 오른, 2- 아래, 3 - 왼
   //startNode를 기준으로 페이지에 노드 부여
-  const distance = 5;
+  const distance = 20;
   const dir = [
     [distance, 0],
     [0, distance],

@@ -11,4 +11,4 @@ const userSchema = new Schema({
   },
 });
 
-export default model("monument_user_dev_lybell", gallerySchema);
+export default model("monument_user_dev_lybell", userSchema);

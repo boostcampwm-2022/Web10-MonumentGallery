@@ -43,10 +43,11 @@ async function saveGallery(userID, galleryData) {
 	try {
 		session.startTransaction();
 		const { _id } = await Gallery.create(galleryData);
-		await updateUserGallery(userID, _id);
+		const galleryID = _id.valueOf()
+		await updateUserGallery(userID, galleryID);
 		await session.commitTransaction();
 		session.endSession();
-		return _id;
+		return galleryID;
 	} catch (err) {
 		await session.abortTransaction();
 		session.endSession();
@@ -86,7 +87,7 @@ async function loadLastGallery(userID) {
 }
 
 export { 
-	getShareStatus, 
+	loadShareStatus, 
 	saveGallery, 
 	loadGallery, 
 	loadLastGallery, 

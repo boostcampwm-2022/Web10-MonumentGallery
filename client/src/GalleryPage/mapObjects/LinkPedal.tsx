@@ -1,33 +1,36 @@
 import "./styles/Linkpedal.style.scss";
+
+import { useEffect, useMemo, useState } from "react";
+import { Euler, GroupProps } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
-import React, { useEffect, useMemo, useState } from "react";
-import { IGalleryPageLink } from "../../@types/gallery";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import { generateRandomPosition } from "../../utils/random";
-import Stone from "./Stone";
-import { Euler } from "@react-three/fiber";
-import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 import { animated, Interpolation } from "@react-spring/three";
 
-interface LinkPedalsProps {
+import Stone from "./Stone";
+import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import { generateRandomPosition } from "../../utils/random";
+
+import { Vector3Arr } from "../../@types/common";
+import { IGalleryPageLink } from "../../@types/gallery";
+
+interface LinkPedalsProps extends GroupProps {
   links: IGalleryPageLink[];
-  position: [x: number, y: number, z: number];
 }
 
-export default function LinkPedals({ links, position }: LinkPedalsProps) {
+export default function LinkPedals({ links, ...props }: LinkPedalsProps) {
   const positions = useMemo(() => generateRandomPosition(links.length), []);
   return (
-    <>
+    <group {...props}>
       {links.map((link, i) => (
-        <LinkPedal key={i} link={link} position={[position[0] + positions[i][0], 0, position[2] + positions[i][1]]} />
+        <LinkPedal key={i} link={link} position={[positions[i][0], 0, positions[i][1]]} />
       ))}
-    </>
+    </group>
   );
 }
 
 interface LinkPedalProps {
   link: IGalleryPageLink;
-  position: [x: number, y: number, z: number];
+  position: Vector3Arr;
 }
 
 function LinkPedal({ link, position }: LinkPedalProps) {

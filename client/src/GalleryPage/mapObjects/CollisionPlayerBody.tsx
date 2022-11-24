@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import { Vector3 } from "three";
 import { useRef } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { CapsuleCollider, RigidBody, RigidBodyApi } from "@react-three/rapier";
@@ -8,7 +8,7 @@ export default function CollisionPlayerBody() {
   const { camera } = useThree();
   useFrame(() => {
     if (!ref.current) return;
-    ref.current.setTranslation(new THREE.Vector3(camera.position.x, 1, camera.position.z));
+    ref.current.setTranslation(new Vector3(camera.position.x, 1, camera.position.z));
   });
   return (
     <RigidBody

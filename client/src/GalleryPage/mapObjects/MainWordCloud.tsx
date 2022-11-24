@@ -1,17 +1,22 @@
-import { useRef, useMemo } from "react";
-import { useFrame, GroupProps } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { useState, useRef, useMemo } from "react";
 import { Vector3, Quaternion, Group } from "three";
+import { useFrame } from "@react-three/fiber";
+import { Text, Float } from "@react-three/drei";
+import { BallCollider, RigidBody, RigidBodyProps } from "@react-three/rapier";
+import { animated, Interpolation } from "@react-spring/three";
 
 import { useBillboard } from "../../hooks/useBillboard";
+import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import { IWordPointData, makeWordsPointData, getDistributeIndex } from "../../utils/wordCloudUtils";
+
+import { Vector3Arr } from "../../@types/common";
 import { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
-interface IWordPointData {
-  text: string;
-  size: number;
-  fontSize: number;
+interface WordObjectProps {
+  data: IWordPointData;
+  position: Vector3 | Vector3Arr;
 }
 
 interface IOrbitData {
@@ -20,31 +25,12 @@ interface IOrbitData {
   spiralCount: number;
 }
 
-interface WordObjectProps {
-  data: IWordPointData;
-  position: Vector3 | [x: number, y: number, z: number];
-}
-
 interface WordHelixProps {
   orbitData: IOrbitData;
 }
 
-interface MainWordCloudProps extends GroupProps {
+interface MainWordCloudProps extends RigidBodyProps {
   keywords: IKeywordMap;
-}
-
-function makeWordsPointData(words: IKeywordMap): IWordPointData[] {
-  const entries = Object.entries(words);
-  const biggestFrequency = entries.reduce((max, [, value]) => Math.max(max, value), 0);
-  const biggestfontSize = 1;
-  const result = [];
-  for (const [text, freq] of entries) {
-    const fontSize = (biggestfontSize * freq) / biggestFrequency;
-    const size = (text.length * freq) / 8;
-    result.push({ text, size, fontSize });
-  }
-  result.sort((a, b) => b.size - a.size);
-  return result.slice(0, 30);
 }
 
 function seperateWordToOrbits(wordData: IWordPointData[]): IOrbitData[] {
@@ -96,35 +82,23 @@ function getHelicalPosition(radius: number, index: number, spiralCount: number) 
   return new Vector3(x, y, z).multiplyScalar(radius);
 }
 
-function getDistributeIndex(index: number) {
-  if (index === 0) return 0;
-  if (index === 1) return 1;
-  if (index === 2) return 0.5;
-  const _index = index - 1;
-  const logIndex = Math.floor(Math.log2(_index));
-  const min2PowIndex = 2 ** logIndex;
-
-  const result = (_index - min2PowIndex) / min2PowIndex + 1 / (min2PowIndex * 2);
-
-  if (logIndex % 2) return result;
-  return 1 - result;
-}
-
 function WordObject({ data, position }: WordObjectProps) {
   const { text, fontSize } = data;
   const objectRef = useBillboard();
   return (
-    <Text
-      font={MapoFont}
-      fontSize={fontSize}
-      color="black"
-      anchorX="center"
-      anchorY="middle"
-      position={position}
-      ref={objectRef}
-    >
-      {text}
-    </Text>
+    <Float speed={3}>
+      <Text
+        font={MapoFont}
+        fontSize={fontSize}
+        color="black"
+        anchorX="center"
+        anchorY="middle"
+        position={position}
+        ref={objectRef}
+      >
+        {text}
+      </Text>
+    </Float>
   );
 }
 
@@ -132,23 +106,24 @@ function WordHelix({ orbitData }: WordHelixProps) {
   const { children, radius, spiralCount } = orbitData;
   const rotation = new Quaternion().random();
 
-  const toRenderChildren = useMemo<IWordPointData[]>(
-    () =>
-      children
-        .map((value, index) => ({ value, index }))
-        .sort((a, b) => getDistributeIndex(b.index) - getDistributeIndex(a.index))
-        .map(({ value }) => value),
-    [children],
-  );
+  const toRenderChildren = useMemo<WordObjectProps[]>(() => {
+    const getPartician = (i: number) => (children.length < 2 ? 0 : i / (children.length - 1));
+
+    return children
+      .map((data, index) => ({ data, index }))
+      .sort((a, b) => getDistributeIndex(b.index) - getDistributeIndex(a.index))
+      .map(({ data }, i) => {
+        const position = getHelicalPosition(radius, getPartician(i), spiralCount);
+        position.add(new Vector3().randomDirection().multiplyScalar(0.5));
+        position.applyQuaternion(rotation);
+        return { data, position };
+      });
+  }, [children]);
 
   return (
     <>
-      {toRenderChildren.map((child: IWordPointData, i: number) => {
-        const partician = toRenderChildren.length < 2 ? 0 : i / (toRenderChildren.length - 1);
-        const position = getHelicalPosition(radius, partician, spiralCount);
-        position.add(new Vector3().randomDirection().multiplyScalar(0.5));
-        position.applyQuaternion(rotation);
-        return <WordObject data={child} position={position} key={`${child.text}_${i}`} />;
+      {toRenderChildren.map(({ data, position }: WordObjectProps, i: number) => {
+        return <WordObject data={data} position={position} key={`${data.text}_${i}`} />;
       })}
     </>
   );
@@ -159,8 +134,11 @@ export default function MainWordCloud({ keywords, ...props }: MainWordCloudProps
 
   const [firstOrbit, ...helixOrbits] = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
+    wordData.forEach((word) => {
+      word.size *= 5;
+    });
     return seperateWordToOrbits(wordData);
-  }, []);
+  }, [keywords]);
 
   useFrame((_, delta) => {
     if (!objectRef.current) return;
@@ -168,13 +146,26 @@ export default function MainWordCloud({ keywords, ...props }: MainWordCloudProps
     objectRef.current.rotation.x += 0.1 * delta;
   });
 
-  if (firstOrbit == null) return <group rotation-order="YXZ" {...props} />;
+  const [collision, setCollision] = useState(false);
+  const { spring } = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
+  const scale: Interpolation<number, number> = useMemo(() => spring.to([0, 0.5, 1], [0, 0.25, 0.8]), []);
+  const yPosition: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [4, 8]), []);
+
+  if (firstOrbit == null) return null;
   return (
-    <group rotation-order="YXZ" {...props} ref={objectRef}>
-      <WordObject data={firstOrbit.children[0]} position={[0, 0, 0]} />
-      {helixOrbits.map((orbit: IOrbitData, i: number) => (
-        <WordHelix orbitData={orbit} key={`orbit_${i}`} />
-      ))}
-    </group>
+    <RigidBody type="fixed" colliders={false} {...props}>
+      <BallCollider
+        args={[9]}
+        sensor
+        onIntersectionEnter={() => setCollision(true)}
+        onIntersectionExit={() => setCollision(false)}
+      />
+      <animated.group rotation-order="YXZ" scale={scale} position-y={yPosition} ref={objectRef}>
+        <WordObject data={firstOrbit.children[0]} position={[0, 0, 0]} />
+        {helixOrbits.map((orbit: IOrbitData, i: number) => (
+          <WordHelix orbitData={orbit} key={`orbit_${i}`} />
+        ))}
+      </animated.group>
+    </RigidBody>
   );
 }

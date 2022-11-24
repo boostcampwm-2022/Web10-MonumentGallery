@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Text } from "@react-three/drei";
-import { useBillboard } from "../../hooks/useBillboard";
-import { IGalleryPageSubTitle } from "../../@types/gallery";
-import MapoFont from "../../assets/MapoFlowerIsland.otf";
 import { Object3D } from "three";
+import { Text } from "@react-three/drei";
+
+import Pedestal from "./Pedestal";
+import { useBillboard } from "../../hooks/useBillboard";
+
+import { IGalleryPageSubTitle } from "../../@types/gallery";
 import { COLORS } from "../../@types/colors";
+import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
 interface MemorialStonesProps {
   subtitles: IGalleryPageSubTitle[];
-  position: number[];
 }
 
 interface MemorialStoneProps {
@@ -153,16 +155,13 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
     };
   }, []);
   return (
-    <>
-      <mesh position={[position[0], 0, position[1]]} scale-y={1}>
-        <boxGeometry />
-        <meshStandardMaterial color={stoneColor} />
-      </mesh>
-      <mesh ref={subtitleMeshRef} position-x={position[0]} position-y={2} position-z={position[1]}>
+    <group position={[position[0], 0, position[1]]} scale={textSize}>
+      <Pedestal scale={0.5} color={stoneColor} />
+      <mesh ref={subtitleMeshRef} position-y={2}>
         <Text
           ref={subtitleRef}
           font={MapoFont}
-          fontSize={textSize}
+          fontSize={textSize * 0.7}
           color={"black"}
           maxWidth={0.1}
           textAlign={"center"}
@@ -171,11 +170,11 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
           {pText}
         </Text>
       </mesh>
-    </>
+    </group>
   );
 }
 
-export default function MemorialStones({ subtitles, position }: MemorialStonesProps) {
+export default function MemorialStones({ subtitles }: MemorialStonesProps) {
   const stoneInfoList = useMemo(() => {
     return calculateMemorialStonePosition(subtitles);
   }, []);
@@ -184,13 +183,7 @@ export default function MemorialStones({ subtitles, position }: MemorialStonesPr
       {stoneInfoList.map((stoneInfo, i) => {
         const { subtitle, stonePosition } = stoneInfo;
         const key = `${subtitle}+${i}`;
-        return (
-          <MemorialStone
-            subTitle={subtitle}
-            position={position.map((e: number, i: number) => e + stonePosition[i])}
-            key={key}
-          />
-        );
+        return <MemorialStone subTitle={subtitle} position={stonePosition} key={key} />;
       })}
     </>
   );

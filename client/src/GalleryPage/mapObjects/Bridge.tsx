@@ -1,7 +1,6 @@
 import { Vector3, Quaternion } from "three";
+import { Vector3Arr } from "../../@types/common";
 import { Color } from "@react-three/fiber";
-
-type Vector3Arr = [x: number, y: number, z: number];
 
 interface BridgeProps {
   start: Vector3Arr;

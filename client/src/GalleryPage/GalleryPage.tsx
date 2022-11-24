@@ -8,6 +8,7 @@ import galleryStore from "../store/gallery.store";
 import useResource from "../hooks/useResource";
 import { useParams } from "../hooks/useParams";
 import { IGalleryMapData } from "../@types/gallery";
+import themeStore from "../store/theme.store";
 import dummyData from "./dummyData";
 import toastStore from "../store/toast.store";
 import TOAST from "../components/Toast/ToastList";
@@ -29,6 +30,12 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   const [remainTime, setRemainTime] = useState(5);
   const [useSampleData, setUseSampleData] = useState(false);
   const { setData } = galleryStore();
+  const { setTheme } = themeStore();
+  useResource(resource, { method: "get", url: `/test/gallery/${user}/${history}` }, (res) => {
+    setData(res);
+    setTheme(res.theme);
+  });
+  return <Gallery />;
   const { addToast } = toastStore();
 
   function setRequestParams() {

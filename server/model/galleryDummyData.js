@@ -1,6 +1,7 @@
 // dummy data
 export default {
   uuid: "#24adaf",
+  theme: "DREAM",
   totalKeywords: {
     부스트캠프: 2,
     쏜애플: 3,

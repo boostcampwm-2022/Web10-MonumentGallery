@@ -1,5 +1,5 @@
 import create from "zustand";
-import { IGalleryMapData } from "../@types/gallery";
+import { IGalleryMapData, THEME } from "../@types/gallery";
 
 interface GalleryStore {
   data: IGalleryMapData;
@@ -12,6 +12,7 @@ const galleryStore = create<GalleryStore>((set) => ({
     nodes: [[]],
     pages: [],
     totalKeywords: {},
+    theme: THEME.DREAM,
   },
   setData: (data) => set(() => ({ data })),
 }));

@@ -153,7 +153,7 @@ function WordHelix({ orbitData, radius }: WordHelixProps) {
 // 원통형 워드클라우드 컴포넌트입니다.
 export default function SubWordCloud({ keywords, radius, animator, ...props }: SubWordCloudProps) {
   const objectRef = useRef<Group>(null);
-  const { spring } = animator;
+  const { spring, ready, playing } = animator;
 
   const orbits = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
@@ -168,11 +168,13 @@ export default function SubWordCloud({ keywords, radius, animator, ...props }: S
     objectRef.current.rotation.y += 0.2 * delta;
   });
 
-  return (
-    <animated.group rotation-order="YXZ" {...props} position-y={yPosition} scale={scale} ref={objectRef}>
-      {orbits.map((orbit: IOrbitData, i: number) => (
-        <WordHelix orbitData={orbit} radius={radius} key={`orbit_${i}`} />
-      ))}
-    </animated.group>
-  );
+  if (ready || playing)
+    return (
+      <animated.group rotation-order="YXZ" {...props} position-y={yPosition} scale={scale} ref={objectRef}>
+        {orbits.map((orbit: IOrbitData, i: number) => (
+          <WordHelix orbitData={orbit} radius={radius} key={`orbit_${i}`} />
+        ))}
+      </animated.group>
+    );
+  return null;
 }

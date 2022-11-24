@@ -6,6 +6,7 @@ import {
   loadUserGalleryList as loadUserGalleryListFromDB,
 } from "../model/galleryModel.js";
 import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
+//DB에서 데이터를 불러오는 로직
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {

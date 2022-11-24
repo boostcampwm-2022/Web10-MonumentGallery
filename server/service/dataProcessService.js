@@ -1,5 +1,5 @@
 import axios from "axios";
-//Fastapi 서버에 요청을 날려 키워드 분석 및 그룹화
+//Fastapi 서버에 요청을 날려 키워드 분석 및 그룹화, DB에 저장될 데이터로 가공
 
 export async function processDataFromRawContent(rawContent, theme) {
   const keywordData = await getKeywordFromFastAPI(rawContent);
@@ -9,11 +9,29 @@ export async function processDataFromRawContent(rawContent, theme) {
   const positionData = getPositions(grouppedPage);
   console.log(positionData.pages);
   console.log(positionData.nodes);
+  const res = attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
 
-  return attachAllData(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
+  return attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
 }
 
-function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
+export function processDataForClient(galleryContent) {
+  return {
+    theme: galleryContent.theme,
+    totalKeywords: getKeywordsAsDictionary(galleryContent.totalKeywords),
+    pages: galleryContent.pages.map((page) => {
+      return {
+        position: page.position,
+        keywords: getKeywordsAsDictionary(page.keywords),
+        title: page.title,
+        subtitle: page.subtitle,
+        links: page.links,
+      };
+    }),
+    nodes: galleryContent.nodes,
+  };
+}
+
+function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes) {
   return {
     theme: theme,
     totalKeywords: getTop30Keywords(notionKeyword.totalKeywords),
@@ -82,8 +100,17 @@ function sortKeywords(keywords) {
 }
 
 function getTop30Keywords(keywords) {
-  return sortKeywords(keywords).reduce((acc, cur) => {
-    acc[cur] = keywords[cur];
+  return sortKeywords(keywords).map((keyword) => {
+    return {
+      keyword: keyword,
+      howMany: keywords[keyword],
+    };
+  });
+}
+
+function getKeywordsAsDictionary(keywords) {
+  return keywords.reduce((acc, cur) => {
+    acc[cur.keyword] = cur.howMany;
     return acc;
   }, {});
 }

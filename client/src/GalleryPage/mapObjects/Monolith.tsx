@@ -1,6 +1,6 @@
 import { useLoader, GroupProps } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
-import { OBJLoader } from "three/examples/jsm/loaders/ObjLoader";
+import { OBJLoader } from "three-stdlib";
 import Pedestal from "./Pedestal";
 import MonolithObj from "../../assets/models/monolith.obj?url";
 

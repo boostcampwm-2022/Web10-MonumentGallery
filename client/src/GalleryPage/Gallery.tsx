@@ -6,9 +6,11 @@ import Light from "./mapObjects/Light";
 import CollisionPlayerBody from "./mapObjects/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
-import dummyData from "./dummyData";
+import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
+  const { data } = galleryStore();
+
   return (
     <Canvas
       shadows
@@ -20,7 +22,7 @@ export default function Gallery() {
         <CollisionPlayerBody />
         <MovementController speed={5} />
         <ViewRotateController />
-        <GalleryWorld data={dummyData} />
+        <GalleryWorld data={data} />
       </Physics>
     </Canvas>
   );

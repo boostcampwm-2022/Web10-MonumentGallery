@@ -5,6 +5,7 @@ interface ToastStore {
   toastList: IToast[];
   addToast: (toast: IToast) => void;
   removeToast: (toast: IToast) => void;
+  removeAllToast: () => void;
 }
 
 const toastStore = create<ToastStore>((set) => ({
@@ -22,6 +23,7 @@ const toastStore = create<ToastStore>((set) => ({
         toastList: newToastList,
       };
     }),
+  removeAllToast: () => set(() => ({ toastList: [] })),
 }));
 
 export default toastStore;

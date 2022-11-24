@@ -49,17 +49,22 @@ Toast.defaultProps = {
 };
 
 export function Toast({ position, autoDelete, autoDeleteTime }: ToastProps) {
-  const { toastList } = toastStore();
+  const { toastList, removeAllToast } = toastStore();
 
   return (
     <div className={`notification-container ${position}`}>
+      {!!toastList.length && (
+        <button onClick={() => removeAllToast()} className="notification toast-deleteall-button">
+          모두 지우기
+        </button>
+      )}
       {toastList.map((toast: IToast) => (
         <ToastItem
           key={toast.id}
           toast={toast}
           position={position}
           autoDelete={autoDelete}
-          autoDeleteTime={autoDeleteTime}
+          autoDeleteTime={toast.autoDeleteTime || autoDeleteTime}
         />
       ))}
     </div>

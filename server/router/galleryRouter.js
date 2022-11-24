@@ -28,8 +28,7 @@ router.post(
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
     res.status(200).json({ page: `/gallery/${userID}/${galleryID}` });
-  }),
-);
+});
 
 router.get(
   "/gallery/history/:id",

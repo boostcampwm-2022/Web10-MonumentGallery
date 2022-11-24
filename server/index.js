@@ -37,8 +37,8 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 // auth middleware
-app.use(["/test/getData", "/create", "/auth/check"], authMiddleware);
-app.use(["/test/getData"], catchAuthError);
+app.use(["/test/getData", "/create", "/auth/check", "/api/*"], authMiddleware);
+app.use(["/test/getData", "/api/*"], catchAuthError);
 
 // api routing
 app.use("/auth", authRouter);
@@ -66,6 +66,7 @@ if (process.env.NODE_ENV === "production") {
 // error handler
 app.use((err, req, res, next) => {
   if (err instanceof HttpError) {
+    console.log(err.message);
     res.status(err.statusCode).json({ reason: err.message });
   } else {
     console.log(err.stack);

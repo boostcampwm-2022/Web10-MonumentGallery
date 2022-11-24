@@ -7,12 +7,25 @@ import Header from "../components/Header";
 import SpaceCreater, { PeriodType, ThemeType } from "../components/SpaceCreater";
 import { createResource, Resource } from "../utils/suspender";
 
+interface IPostGalleryResponse {
+  page: string;
+}
+
+interface IOnLoadFunction {
+  <T>(a: T): void;
+}
+
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
   const [resource, setResource] = useState<Resource | null>(null);
 
   function showModal() {
     setShow(true);
+  }
+
+  // refactor plz... da*n typescript
+  function onLoad({ page }: IPostGalleryResponse): void {
+    window.location.href = page;
   }
 
   return (
@@ -33,8 +46,9 @@ export default function CreatePage() {
           resource={resource}
           onSubmit={(period: PeriodType | null, theme: ThemeType | null) => {
             console.log({ period, theme });
-            setResource(createResource({ params: { period, theme } }));
+            setResource(createResource({ method: "post", url: "/api/gallery", params: { period, theme } }));
           }}
+          onLoad={onLoad as IOnLoadFunction}
         />
       </FullScreenModal>
     </>

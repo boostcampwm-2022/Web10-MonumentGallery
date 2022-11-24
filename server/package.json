@@ -10,7 +10,8 @@
     "client": "cd ../client && npm run dev",
     "dev": "concurrently \"npm run server-dev\" \"npm run client\"",
     "prod": "cd ../client && npm run build && cd ../server && npm run server",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "",

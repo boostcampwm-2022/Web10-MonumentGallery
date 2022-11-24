@@ -1,5 +1,5 @@
 import { useLoader, MeshProps, Color } from "@react-three/fiber";
-import { OBJLoader } from "three/examples/jsm/loaders/ObjLoader";
+import { OBJLoader } from "three-stdlib";
 import PedestalObj from "../../assets/models/monolith-pedestal.obj?url";
 
 interface PedestalProps extends MeshProps {

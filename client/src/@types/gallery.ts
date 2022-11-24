@@ -4,7 +4,7 @@ export interface IKeywordMap {
 
 export interface IGalleryPageSubTitle {
   text: string;
-  type: "h1" | "h2" | "h3";
+  hType: "h1" | "h2" | "h3";
 }
 
 export interface IGalleryPageLink {

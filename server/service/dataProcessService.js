@@ -25,19 +25,19 @@ function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
         subtitle: [
           ...notionKeyword.ppPages[page.id].h1_keywords.map((keyword) => {
             return {
-              type: "h1",
+              hType: "h1",
               text: keyword,
             };
           }),
           ...notionKeyword.ppPages[page.id].h2_keywords.map((keyword) => {
             return {
-              type: "h2",
+              hType: "h2",
               text: keyword,
             };
           }),
           ...notionKeyword.ppPages[page.id].h3_keywords.map((keyword) => {
             return {
-              type: "h3",
+              hType: "h3",
               text: keyword,
             };
           }),

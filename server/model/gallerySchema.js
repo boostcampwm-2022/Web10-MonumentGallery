@@ -10,8 +10,8 @@ const gallerySchema = new Schema({
   pages: [
     {
       position: [Number],
-      keywords: { type: Map, of: Number, default: "-" },
-      title: { type: String, required: true },
+      keywords: { type: Map, of: Number, required: true },
+      title: { type: String, default: "-" },
       subTitle: [
         {
           hType: String,

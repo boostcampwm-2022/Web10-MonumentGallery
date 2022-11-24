@@ -103,14 +103,14 @@ function getTop30Keywords(keywords) {
   return sortKeywords(keywords).map((keyword) => {
     return {
       keyword: keyword,
-      howMany: keywords[keyword],
+      freq: keywords[keyword],
     };
   });
 }
 
 function getKeywordsAsDictionary(keywords) {
   return keywords.reduce((acc, cur) => {
-    acc[cur.keyword] = cur.howMany;
+    acc[cur.keyword] = cur.freq;
     return acc;
   }, {});
 }

@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const keywordScheama = new Schema({
   keyword: { type: String, required: true },
-  howMany: { type: Number, required: true },
+  freq: { type: Number, required: true },
 });
 
 const gallerySchema = new Schema({

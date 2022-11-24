@@ -66,6 +66,7 @@ if (process.env.NODE_ENV === "production") {
 // error handler
 app.use((err, req, res, next) => {
   if (err instanceof HttpError) {
+    console.log(err.message);
     res.status(err.statusCode).json({ reason: err.message });
   } else {
     console.log(err.stack);

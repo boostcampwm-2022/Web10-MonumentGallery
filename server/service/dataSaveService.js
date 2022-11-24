@@ -15,8 +15,6 @@ function validateGalleryID(galleryID) {
 }
 
 export async function saveGallery(userID, galleryData) {
-  console.log("으악!!!");
-  console.log(galleryData);
   const id = await saveGalleryFromDB(userID, galleryData);
   if (id === null) throw new InternalServerError("DB 저장 실패");
   return id;
@@ -27,8 +25,8 @@ export async function loadGallery(userID, galleryID = null) {
   if (!validateGalleryID(galleryID)) throw new BadRequestError("올바른 갤러리 ID가 아닙니다!");
   const result = await loadGalleryFromDB(userID, galleryID);
   if (result.success) return result.data;
-  if (result.err === "not_found") throw new NotFoundError("갤러리를 찾을 수 없습니다!");
-  throw new BadRequestError("올바른 갤러리 ID가 아닙니다!");
+  if (result.err === "bad_request") throw new BadRequestError("갤러리를 찾을 수 없습니다!");
+  throw new NotFoundError(result.err);
 }
 
 export async function loadLastGallery(userID) {

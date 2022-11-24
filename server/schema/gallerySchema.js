@@ -12,7 +12,7 @@ const gallerySchema = new Schema({
       position: [Number],
       keywords: { type: Map, of: Number, default: "-" },
       title: { type: String, required: true },
-      subTitle: [
+      subtitle: [
         {
           hType: String,
           text: String,

@@ -45,6 +45,7 @@ router.get(
   "/gallery/:targetUserID/:galleryID",
   asyncHandler(async (req, res) => {
     // const userID = req.userid;
+    console.log(req.params);
     const { targetUserID, galleryID } = req.params;
 
     const result = await loadGallery(targetUserID, galleryID);

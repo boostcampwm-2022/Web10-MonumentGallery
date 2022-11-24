@@ -22,7 +22,7 @@ function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
         position: page.position,
         keywords: getTop30Keywords(notionKeyword.ppPages[page.id].keywords),
         title: rawContent[page.id].title ? rawContent[page.id].title : "-",
-        subTitle: [
+        subtitle: [
           ...notionKeyword.ppPages[page.id].h1_keywords.map((keyword) => {
             return {
               type: "h1",

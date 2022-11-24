@@ -15,15 +15,12 @@ async function updateUserGallery(userID, galleryID, session) {
 	const isExists = await User.exists({userID});
 	const now = Date.now();
 
-	console.log("이건 갤러리 id ...", galleryID);
-
 	if(isExists) {
 		const history = await loadGalleryHistory(userID);
 		history.set(galleryID, now);
 		return User.findOneAndUpdate({userID}, {history}).session(session);
 	}
 	const history = {[galleryID]: now};
-	console.log("이건 history...", history);
 	return User.create([{
 		userID,
 		isShared: false,
@@ -64,13 +61,13 @@ async function loadGallery(userID, galleryID) {
 	if(typeof galleryID !== "string" || galleryID.length !== 24) {
 		return { success: false, err: "bad_request" };
 	}
-	if (await User.exists({userID}) === false) return { success: false, err: "not_found" };
+	if (await User.exists({userID}) === false) return { success: false, err: "no user" };
 
 	const { history } = await User.findOne({userID});
-	if ( history[galleryID] === undefined ) return { success: false, err: "not_found" };
+	if ( !history.has(galleryID) ) return { success: false, err: "don't have gallery" };
 
 	const galleryData = await Gallery.findById(galleryID);
-	if (galleryData === null) return { success: false, err: "not_found" };
+	if (galleryData === null) return { success: false, err: "no gallery" };
 
 	return { success: true, data: galleryData };
 }

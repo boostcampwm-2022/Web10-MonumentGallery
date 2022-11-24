@@ -36,6 +36,7 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
     return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
   }
   const { data } = useResource(resource, { method: "get", url: setRequestParams() });
+  console.log(data);
 
   useEffect(() => {
     if (data) {
@@ -52,13 +53,16 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   }, [useSampleData]);
 
   useEffect(() => {
-    if (useSampleData) return;
+    if (!useSampleData) return;
     if (remainTime <= 0) {
       window.location.href = "/";
     }
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setRemainTime(remainTime - 1);
     }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [remainTime, useSampleData]);
 
   if (!data && !useSampleData) {

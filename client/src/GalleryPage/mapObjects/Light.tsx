@@ -13,10 +13,10 @@ function ShadowLight({ position, ...props }: ShadowLightProps) {
   const { scene } = useThree();
 
   useEffect(() => {
-    if (lightRef.current == null) return;
+    if (lightRef.current === null) return;
     scene.add(lightRef.current.target);
     return () => {
-      if (lightRef.current == null) return;
+      if (lightRef.current === null) return;
       scene.remove(lightRef.current.target);
     };
   }, []);

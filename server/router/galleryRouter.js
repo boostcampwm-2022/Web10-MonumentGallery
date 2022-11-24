@@ -2,7 +2,7 @@ import express from "express";
 import axios from "axios";
 import { asyncHandler } from "../utils/utils.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
-import { processDataFromRawContent } from "../service/dataProcessService.js";
+import { processDataFromRawContent, processDataForClient } from "../service/dataProcessService.js";
 import {
   saveGallery,
   loadGallery,
@@ -49,7 +49,7 @@ router.get(
     const { targetUserID, galleryID } = req.params;
 
     const result = await loadGallery(targetUserID, galleryID);
-    res.status(200).json(result);
+    res.status(200).json(processDataForClient(result));
   }),
 );
 
@@ -70,7 +70,7 @@ router.get(
     const userID = req.userid;
 
     const result = await getLastGalleryID(userID);
-    res.status(200).json({result});
+    res.status(200).json({ result });
   }),
 );
 

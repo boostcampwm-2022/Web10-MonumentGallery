@@ -4,7 +4,7 @@ import TestModel from "../model/testSchema.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
-import Gallery from "../model/gallerySchema.js";
+import Gallery from "../schema/gallerySchema.js";
 
 const router = express.Router();
 

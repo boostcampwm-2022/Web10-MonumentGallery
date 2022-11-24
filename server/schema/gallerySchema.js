@@ -1,16 +1,17 @@
 import { model, Schema } from "mongoose";
 
+const keywordScheama = new Schema({
+  keyword: { type: String, required: true },
+  freq: { type: Number, required: true },
+});
+
 const gallerySchema = new Schema({
   theme: { type: String, required: true },
-  totalKeywords: {
-    type: Map,
-    of: Number,
-    required: true,
-  },
+  totalKeywords: [keywordScheama],
   pages: [
     {
       position: [Number],
-      keywords: { type: Map, of: Number, required: true },
+      keywords: [keywordScheama],
       title: { type: String, default: "-" },
       subtitle: [
         {

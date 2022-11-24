@@ -90,10 +90,6 @@ router.get("/pytest/image", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.get("/error", (req, res) => {
-  throw new Error("holy shit");
-});
-
 export default router;
 
 const mockData = {

@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 
 const userSchema = new Schema({
-  userID: { type: String, required: true },
+  userID: { type: String, required: true, unique: true },
   isShared: { type: Boolean, default: false },
   lastShareModified: { type: Date, default: new Date() },
   lastModified: { type: Date, default: new Date() },

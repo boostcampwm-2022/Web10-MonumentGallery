@@ -1,7 +1,7 @@
 name: Deploy
 on:
   push:
-    branches: ["main", "demo"]
+    branches: ["main"]
   pull_request:
     branches: ["main", "demo"]
 jobs:

@@ -1,11 +1,10 @@
-import { v4 } from "uuid";
 import express from "express";
-import { Client } from "@notionhq/client";
 import axios from "axios";
 import TestModel from "../model/testSchema.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
+import Gallery from "../model/gallerySchema.js";
 
 const router = express.Router();
 
@@ -46,6 +45,19 @@ router.get("/getData", async (req, res) => {
   const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
   console.log(processedNotionContent);
   console.log(processedNotionContent.pages);
+
+  await Gallery.create(processedNotionContent)
+    .then((e) => {
+      console.log("success");
+    })
+    .catch((err) => {
+      console.log(err);
+      console.log("failed");
+    });
+
+  const allData = await Gallery.find();
+  console.log(allData);
+  
   res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });

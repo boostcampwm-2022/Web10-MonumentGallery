@@ -9,6 +9,7 @@ import authRouter from "./router/authRouter.js";
 import redirectRouter from "./router/redirectRouter.js";
 import pageRouter from "./router/pageRouter.js";
 import testRouter from "./router/testRouter.js";
+import galleryRouter from "./router/galleryRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
 import { startRedis } from "./model/accessTokenStore.js";
@@ -42,6 +43,7 @@ app.use(["/test/getData"], catchAuthError);
 // api routing
 app.use("/auth", authRouter);
 app.use("/test", testRouter);
+app.use("/api", galleryRouter);
 app.use("/", redirectRouter);
 
 // page routing

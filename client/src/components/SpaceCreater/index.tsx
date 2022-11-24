@@ -8,12 +8,17 @@ import themeStore from "../../store/theme.store";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
 
-interface SpaceCreaterProps {
-  resource: Resource | null;
-  onSubmit: (period: PeriodType | null, theme: THEME | null) => void;
+interface IOnLoadFunction {
+  <T>(a: T): void;
 }
 
-export default function SpaceCreater({ resource, onSubmit }: SpaceCreaterProps) {
+interface SpaceCreaterProps {
+  resource: Resource | null;
+  onSubmit: (period: PeriodType | null, theme: ThemeType | null) => void;
+  onLoad: IOnLoadFunction;
+}
+
+export default function SpaceCreater({ resource, onSubmit, onLoad }: SpaceCreaterProps) {
   const [period, PeriodSelectorWrapper, PeriodSelectorItem] = useSelectorComponent<PeriodType>("all");
   const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent<THEME>(THEME.DREAM);
   const { setTheme } = themeStore();
@@ -59,9 +64,10 @@ export default function SpaceCreater({ resource, onSubmit }: SpaceCreaterProps) 
   );
 }
 
-function Data({ resource }: { resource: Resource | null }) {
-  const res = resource?.read({ method: "get", url: "/test/getData" });
+function Data({ resource, onLoad }: { resource: Resource | null; onLoad: IOnLoadFunction }) {
+  const res = resource?.read({});
+  console.log(res);
   if (!res || res?.error) return <>에러가 발생했습니다.</>;
-  window.location.href = `/gallery/${v4()}/${v4()}`;
+  onLoad(res.data);
   return null;
 }

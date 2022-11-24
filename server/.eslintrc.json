@@ -3,6 +3,7 @@
     "browser": true,
     "es2021": true
   },
+  "ignorePatterns": ["dist/", "node_modules/"],
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -18,9 +19,11 @@
         "code": 120,
         "ignoreComments": true,
         "ignoreUrls": true,
-        "ignoreStrings": true
+        "ignoreStrings": true,
+        "ignoreRegExpLiterals": true
       }
     ],
-    "no-undef": 0
+    "no-undef": 0,
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
   }
 }

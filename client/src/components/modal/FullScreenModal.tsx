@@ -6,7 +6,7 @@ interface FullScreenModalProps {
   width: string;
   height: string;
   show: boolean;
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setShow?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function FullScreenModal({ children, width, height, show, setShow }: FullScreenModalProps) {
@@ -17,7 +17,7 @@ export default function FullScreenModal({ children, width, height, show, setShow
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setShow(false);
+          if (setShow) setShow(false);
         }}
       />
       <div className="fullscreen-modal" style={{ width, height }}>

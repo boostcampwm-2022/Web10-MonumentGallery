@@ -11,6 +11,8 @@ import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 import { IGalleryPageData, THEME } from "../../@types/gallery";
 import { ISLAND_COLORS } from "../../@types/colors";
 import themeStore from "../../store/theme.store";
+import { IGalleryPageData } from "../../@types/gallery";
+import SkyCloud from "./SkyCloud";
 
 export default function GalleryPageIsland({ position, subtitle, title, keywords, links }: IGalleryPageData) {
   const [x, z] = position;
@@ -28,6 +30,7 @@ export default function GalleryPageIsland({ position, subtitle, title, keywords,
       />
       <AnimatedTitle text={title} animator={springs} />
       <Island color={(theme && ISLAND_COLORS[theme]) || THEME.DREAM} />
+      <SkyCloud animator={springs} />
       <MemorialStones subtitles={subtitle} />
       <SubWordCloud keywords={keywords} radius={5} scale={0.8} animator={springs} />
       {links && <LinkPedals links={links} />}

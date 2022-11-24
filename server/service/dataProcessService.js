@@ -22,7 +22,7 @@ function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
         position: page.position,
         keywords: getTop30Keywords(notionKeyword.ppPages[page.id].keywords),
         title: rawContent[page.id].title ? rawContent[page.id].title : "-",
-        subTitle: [
+        subtitle: [
           ...notionKeyword.ppPages[page.id].h1_keywords.map((keyword) => {
             return {
               type: "h1",
@@ -60,12 +60,15 @@ async function getKeywordFromFastAPI(rawContent) {
     return fastapiResponse.data;
   } catch (err) {
     //에러 처리 부분은 고민해봐야할듯
-    console.log(err);
+    console.log("자연어처리 실패함 암튼 실패함");
+    console.log(err.message);
     return {};
   }
 }
 
 function sortKeywords(keywords) {
+  if (keywords === null || keywords === undefined) return [];
+
   //상위 30개만 산출
   const totalKeywords = Object.keys(keywords).map((key) => [key, keywords[key]]);
   return totalKeywords
@@ -159,7 +162,7 @@ function getSquarePositions(group, direction, startNode) {
   //배열을 받아들여서 이를 마름모 형태로 배치
   //direction에 따라 어떤 좌표를 증가시킬 지 결정됨 0 - 위, 1 - 오른, 2- 아래, 3 - 왼
   //startNode를 기준으로 페이지에 노드 부여
-  const distance = 5;
+  const distance = 20;
   const dir = [
     [distance, 0],
     [0, distance],

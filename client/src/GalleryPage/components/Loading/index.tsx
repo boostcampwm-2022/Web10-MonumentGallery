@@ -18,12 +18,12 @@ function Ellipsis() {
   return <span className="loading-text">{".".repeat(Math.min(ellipseCount, 3))}</span>;
 }
 
-export default function Loading() {
+export default function Loading({ text = "당신의 멋진 공간이 만들어지는 중입니다" }) {
   return (
     <div className="gallery-loading">
       <div className="loading-wrapper">
         <div>
-          <span className="loading-text">당신의 멋진 공간이 만들어지는 중입니다</span>
+          <span className="loading-text">{text}</span>
           <Ellipsis />
         </div>
         <img width={200} src={LoadingImg} />

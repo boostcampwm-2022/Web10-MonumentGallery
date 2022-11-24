@@ -10,10 +10,15 @@ import dummyData from "./dummyData";
 import themeStore from "../store/theme.store";
 import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
+import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
   const { theme } = themeStore();
-  return (
+  
+export default function Gallery() {
+  const { data } = galleryStore();
+
+return (
     <Canvas
       shadows
       className="canvas-inner"
@@ -25,7 +30,7 @@ export default function Gallery() {
         <CollisionPlayerBody />
         <MovementController speed={5} />
         <ViewRotateController />
-        <GalleryWorld data={dummyData} />
+        <GalleryWorld data={data} />
       </Physics>
     </Canvas>
   );

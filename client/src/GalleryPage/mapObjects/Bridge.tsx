@@ -10,14 +10,13 @@ interface BridgeProps {
   end: Vector3Arr;
   width?: number;
   height?: number;
-  color?: Color;
 }
 
 function propToVector3(valueToApply: Vector3Arr) {
   return new Vector3(...valueToApply);
 }
 
-export default function Bridge({ start, end, width = 1.5, height = 0.4, color = 0xffffff }: BridgeProps) {
+export default function Bridge({ start, end, width = 1.5, height = 0.4 }: BridgeProps) {
   const startPosition = propToVector3(start);
   const endPosition = propToVector3(end);
   const distance = startPosition.distanceTo(endPosition);

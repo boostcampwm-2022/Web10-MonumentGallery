@@ -11,7 +11,6 @@ import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 import { IGalleryPageData, THEME } from "../../@types/gallery";
 import { ISLAND_COLORS } from "../../@types/colors";
 import themeStore from "../../store/theme.store";
-import { IGalleryPageData } from "../../@types/gallery";
 import SkyCloud from "./SkyCloud";
 
 export default function GalleryPageIsland({ position, subtitle, title, keywords, links }: IGalleryPageData) {

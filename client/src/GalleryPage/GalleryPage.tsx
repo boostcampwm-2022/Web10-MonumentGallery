@@ -31,11 +31,6 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   const [useSampleData, setUseSampleData] = useState(false);
   const { setData } = galleryStore();
   const { setTheme } = themeStore();
-  useResource(resource, { method: "get", url: `/test/gallery/${user}/${history}` }, (res) => {
-    setData(res);
-    setTheme(res.theme);
-  });
-  return <Gallery />;
   const { addToast } = toastStore();
 
   function setRequestParams() {
@@ -48,6 +43,7 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   useEffect(() => {
     if (data) {
       setData(data);
+      setTheme(data.theme);
       return;
     }
     if (useSampleData) {

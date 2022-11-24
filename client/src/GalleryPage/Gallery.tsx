@@ -6,19 +6,16 @@ import Light from "./mapObjects/Light";
 import CollisionPlayerBody from "./mapObjects/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
-import dummyData from "./dummyData";
 import themeStore from "../store/theme.store";
 import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
 import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
-  const { theme } = themeStore();
-  
-export default function Gallery() {
   const { data } = galleryStore();
+  const { theme } = themeStore();
 
-return (
+  return (
     <Canvas
       shadows
       className="canvas-inner"

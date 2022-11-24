@@ -17,12 +17,12 @@ const dummyData: IGalleryMapData = {
       position: [20, 0],
       title: "이것은 타이틀이다",
       subtitle: [
-        { text: "이것은 h1타이틀", type: "h1" },
-        { text: "이것도 h1타이틀", type: "h1" },
-        { text: "쏜애플 사랑해요", type: "h2" },
+        { text: "이것은 h1타이틀", hType: "h1" },
+        { text: "이것도 h1타이틀", hType: "h1" },
+        { text: "쏜애플 사랑해요", hType: "h2" },
         {
           text: "가나다라마바사아자차카타파하ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-          type: "h2",
+          hType: "h2",
         },
       ],
       keywords: {
@@ -71,9 +71,9 @@ const dummyData: IGalleryMapData = {
       position: [0, 20],
       title: "이것은 2번째 타이틀이다",
       subtitle: [
-        { text: "이것은 h1타이틀", type: "h1" },
-        { text: "이것도 h1타이틀", type: "h1" },
-        { text: "쏜애플 사랑해요", type: "h2" },
+        { text: "이것은 h1타이틀", hType: "h1" },
+        { text: "이것도 h1타이틀", hType: "h1" },
+        { text: "쏜애플 사랑해요", hType: "h2" },
       ],
       keywords: {
         부스트캠프: 2,
@@ -85,9 +85,9 @@ const dummyData: IGalleryMapData = {
       position: [-20, 0],
       title: "이것은 3번째 타이틀이다",
       subtitle: [
-        { text: "이것은 h1타이틀", type: "h1" },
-        { text: "이것도 h1타이틀", type: "h1" },
-        { text: "쏜애플 사랑해요", type: "h2" },
+        { text: "이것은 h1타이틀", hType: "h1" },
+        { text: "이것도 h1타이틀", hType: "h1" },
+        { text: "쏜애플 사랑해요", hType: "h2" },
       ],
       keywords: {
         부스트캠프: 2,
@@ -99,9 +99,9 @@ const dummyData: IGalleryMapData = {
       position: [0, -20],
       title: "이것은 4번째 타이틀이다",
       subtitle: [
-        { text: "이것은 h1타이틀", type: "h1" },
-        { text: "이거는 h2타이틀", type: "h2" },
-        { text: "쏜애플 사랑해요", type: "h2" },
+        { text: "이것은 h1타이틀", hType: "h1" },
+        { text: "이거는 h2타이틀", hType: "h2" },
+        { text: "쏜애플 사랑해요", hType: "h2" },
       ],
       keywords: {
         부스트캠프: 2,
@@ -120,7 +120,7 @@ const dummyData: IGalleryMapData = {
     {
       position: [40, 0],
       title: "이것은 첫번쨰랑 이어진 타이틀이다",
-      subtitle: [{ text: "부스트캠프 사랑해요", type: "h2" }],
+      subtitle: [{ text: "부스트캠프 사랑해요", hType: "h2" }],
       keywords: {
         부스트캠프: 1,
         사랑해요: 1,

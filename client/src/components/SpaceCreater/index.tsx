@@ -14,7 +14,7 @@ interface IOnLoadFunction {
 
 interface SpaceCreaterProps {
   resource: Resource | null;
-  onSubmit: (period: PeriodType | null, theme: ThemeType | null) => void;
+  onSubmit: (period: PeriodType | null, theme: THEME | null) => void;
   onLoad: IOnLoadFunction;
 }
 
@@ -58,7 +58,7 @@ export default function SpaceCreater({ resource, onSubmit, onLoad }: SpaceCreate
           onSubmit(period, theme);
         }}
       >
-        <Data resource={resource} />
+        <Data resource={resource} onLoad={onLoad} />
       </SuspenseButton>
     </div>
   );

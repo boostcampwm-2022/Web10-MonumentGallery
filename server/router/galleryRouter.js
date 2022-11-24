@@ -57,6 +57,7 @@ router.get(
   "/gallery/:id",
   asyncHandler(async (req, res) => {
     const { id } = req.params;
+    console.log("hey!", id);
 
     const result = await loadLastGallery(id);
     res.status(200).json(result);

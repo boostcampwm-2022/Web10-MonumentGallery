@@ -75,7 +75,7 @@ async function loadGallery(userID, galleryID) {
 async function loadLastGalleryID(userID) {
 	const history = await loadGalleryHistory(userID);
 	const [result] = [...history].reduce( ([rescentID, rescentDate], [galleryID, date])=>{
-		if(rescentDate > date) return [galleryID, date];
+		if(rescentDate < date) return [galleryID, date];
 		return [rescentID, rescentDate];
 	}, [null, 0] );
 
@@ -83,9 +83,9 @@ async function loadLastGalleryID(userID) {
 }
 
 async function loadLastGallery(userID) {
-	const galleryID = loadLastGalleryID(userID);
+	const galleryID = await loadLastGalleryID(userID);
 	if (galleryID === null) return null;
-	return await Gallery.findById(galleryID);
+	return Gallery.findById(galleryID);
 }
 
 export { 

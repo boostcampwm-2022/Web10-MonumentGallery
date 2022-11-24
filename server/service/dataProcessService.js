@@ -16,15 +16,12 @@ export async function processDataFromRawContent(rawContent, theme) {
 function attachAllData(rawContent, notionKeyword, theme, positions, nodes) {
   return {
     theme: theme,
-    totalKeywords: sortKeywords(notionKeyword.totalKeywords).reduce((acc, cur) => {
-      acc[cur] = notionKeyword.totalKeywords[cur];
-      return acc;
-    }, {}),
+    totalKeywords: getTop30Keywords(notionKeyword.totalKeywords),
     pages: positions.map((page) => {
       return {
         position: page.position,
-        keywords: sortKeywords(notionKeyword.ppPages[page.id].keywords),
-        title: rawContent[page.id].title,
+        keywords: getTop30Keywords(notionKeyword.ppPages[page.id].keywords),
+        title: rawContent[page.id].title ? rawContent[page.id].title : "-",
         subTitle: [
           ...notionKeyword.ppPages[page.id].h1_keywords.map((keyword) => {
             return {
@@ -79,6 +76,13 @@ function sortKeywords(keywords) {
     })
     .slice(0, 30)
     .map((val) => val[0]);
+}
+
+function getTop30Keywords(keywords) {
+  return sortKeywords(keywords).reduce((acc, cur) => {
+    acc[cur] = keywords[cur];
+    return acc;
+  }, {});
 }
 
 function getFastAPIFormData(rawContent) {

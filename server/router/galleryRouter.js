@@ -70,7 +70,7 @@ router.get(
     const userID = req.userid;
 
     const result = await getLastGalleryID(userID);
-    res.status(200).json(result);
+    res.status(200).json({result});
   }),
 );
 

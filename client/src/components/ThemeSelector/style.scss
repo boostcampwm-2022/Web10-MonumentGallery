@@ -15,13 +15,9 @@
     &:focus {
       & + .select-box__list {
         opacity: 1;
-        animation-name: none;
         .select-box__option {
           cursor: pointer;
         }
-      }
-      .select-box__icon {
-        transform: translateY(-50%) rotate(180deg);
       }
     }
   }
@@ -54,12 +50,6 @@
     padding: 0;
     list-style: none;
     opacity: 0;
-
-    animation-name: HideList;
-    animation-duration: 0.5s;
-    animation-delay: 0.5s;
-    animation-fill-mode: forwards;
-    animation-timing-function: step-start;
     box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
   }
 

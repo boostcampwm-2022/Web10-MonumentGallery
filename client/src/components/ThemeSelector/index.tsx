@@ -1,8 +1,6 @@
-import useSelectorComponent from "../Selector";
 import "./style.scss";
 import { THEME } from "../../@types/gallery";
 import themeStore from "../../store/theme.store";
-import { useEffect, useState } from "react";
 
 export default function ThemeSeletor() {
   const { theme, setTheme } = themeStore();

@@ -57,7 +57,7 @@ router.get("/getData", async (req, res) => {
 
   const allData = await Gallery.find();
   console.log(allData);
-  
+
   res.status(200).json(processedNotionContent);
   console.log(`총 처리 시간: ${Date.now() - nowTime}`);
 });
@@ -65,7 +65,11 @@ router.get("/getData", async (req, res) => {
 router.get("/gallery/:user/:history", (req, res) => {
   const { user, history } = req.params;
   setTimeout(() => {
-    res.json(galleryMockData);
+    const themeList = ["DREAM", "SPRING", "SUMMER", "AUTUMN", "WINTER"];
+    const idx = parseInt(Math.random() * themeList.length);
+    const theme = themeList[idx];
+    galleryMockData.theme = theme;
+    return res.json(galleryMockData);
   }, 3000);
 });
 

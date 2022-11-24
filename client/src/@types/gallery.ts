@@ -23,7 +23,17 @@ export interface IGalleryPageData {
 
 export interface IGalleryMapData {
   uuid: string;
+  theme: THEME;
   totalKeywords: IKeywordMap;
   pages: IGalleryPageData[];
   nodes: number[][];
 }
+
+export const THEME = {
+  DREAM: "DREAM",
+  SPRING: "SPRING",
+  SUMMER: "SUMMER",
+  AUTUMN: "AUTUMN",
+  WINTER: "WINTER",
+} as const;
+export type THEME = typeof THEME[keyof typeof THEME];

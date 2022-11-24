@@ -7,13 +7,18 @@ import CollisionPlayerBody from "./mapObjects/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
 import dummyData from "./dummyData";
+import themeStore from "../store/theme.store";
+import { BACKGROUND_COLORS } from "../@types/colors";
+import { THEME } from "../@types/gallery";
 
 export default function Gallery() {
+  const { theme } = themeStore();
   return (
     <Canvas
       shadows
       className="canvas-inner"
       camera={{ fov: 75, near: 0.1, far: 100, position: [0, 1.5, 5], rotation: [0.4, 0, 0] }}
+      style={{ backgroundColor: (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM }}
     >
       <Physics gravity={[0, -30, 0]}>
         <Light />

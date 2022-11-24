@@ -4,8 +4,9 @@ import "./style.scss";
 import { Canvas } from "@react-three/fiber";
 import FloatLayout from "../layouts/FloatLayout";
 import Header from "../components/Header";
-import SpaceCreater, { PeriodType, ThemeType } from "../components/SpaceCreater";
+import SpaceCreater, { PeriodType } from "../components/SpaceCreater";
 import { createResource, Resource } from "../utils/suspender";
+import { THEME } from "../@types/gallery";
 
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
@@ -31,7 +32,7 @@ export default function CreatePage() {
       <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
         <SpaceCreater
           resource={resource}
-          onSubmit={(period: PeriodType | null, theme: ThemeType | null) => {
+          onSubmit={(period: PeriodType | null, theme: THEME | null) => {
             console.log({ period, theme });
             setResource(createResource({ params: { period, theme } }));
           }}

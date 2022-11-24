@@ -8,6 +8,7 @@ import galleryStore from "../store/gallery.store";
 import useResource from "../hooks/useResource";
 import { useParams } from "../hooks/useParams";
 import { IGalleryMapData } from "../@types/gallery";
+import themeStore from "../store/theme.store";
 
 export default function GalleryPage() {
   return (
@@ -25,7 +26,10 @@ export default function GalleryPage() {
 function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   const [user, history] = useParams("gallery", []);
   const { setData } = galleryStore();
-  // useResource(resource, { method: "get", url: `/test/gallery/${user}/${history}` }, (res) => setData(res));
-
+  const { setTheme } = themeStore();
+  useResource(resource, { method: "get", url: `/test/gallery/${user}/${history}` }, (res) => {
+    setData(res);
+    setTheme(res.theme);
+  });
   return <Gallery />;
 }

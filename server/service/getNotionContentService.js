@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+//notion의 데이터를 불러오는 로직
 
 //url 탐지
 const urlRegEx =

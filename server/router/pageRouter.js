@@ -9,8 +9,8 @@ router.get("/", (req, res) => {
 router.get("/create", async (req, res) => {
   res.sendFile(path.resolve("./dist/create.html"));
 });
-router.get("/myspace", async (req, res) => {
-  res.sendFile(path.resolve("./dist/myspace.html"));
+router.get(["/gallery", "/gallery/*"], async (req, res) => {
+  res.sendFile(path.resolve("./dist/gallery.html"));
 });
 
 export default router;

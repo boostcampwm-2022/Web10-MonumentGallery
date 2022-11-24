@@ -4,15 +4,29 @@ import "./style.scss";
 import { Canvas } from "@react-three/fiber";
 import FloatLayout from "../layouts/FloatLayout";
 import Header from "../components/Header";
-import SpaceCreater, { PeriodType, ThemeType } from "../components/SpaceCreater";
-import { fetchData } from "./api/fetchData";
+import SpaceCreater, { PeriodType } from "../components/SpaceCreater";
+import { createResource, Resource } from "../utils/suspender";
+import { THEME } from "../@types/gallery";
+
+interface IPostGalleryResponse {
+  page: string;
+}
+
+interface IOnLoadFunction {
+  <T>(a: T): void;
+}
 
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
-  const [fetcher, setFetcher] = useState<{ get: () => void } | boolean>(false);
+  const [resource, setResource] = useState<Resource | null>(null);
 
   function showModal() {
     setShow(true);
+  }
+
+  // refactor plz... da*n typescript
+  function onLoad({ page }: IPostGalleryResponse): void {
+    window.location.href = page;
   }
 
   return (
@@ -30,11 +44,12 @@ export default function CreatePage() {
       </FloatLayout>
       <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
         <SpaceCreater
-          fetcher={fetcher}
-          onSubmit={(period: PeriodType | null, theme: ThemeType | null) => {
+          resource={resource}
+          onSubmit={(period: PeriodType | null, theme: THEME | null) => {
             console.log({ period, theme });
-            setFetcher(fetchData(period, theme));
+            setResource(createResource({ method: "post", url: "/api/gallery", params: { period, theme } }));
           }}
+          onLoad={onLoad as IOnLoadFunction}
         />
       </FullScreenModal>
     </>

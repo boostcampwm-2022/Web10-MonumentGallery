@@ -9,6 +9,7 @@ import authRouter from "./router/authRouter.js";
 import redirectRouter from "./router/redirectRouter.js";
 import pageRouter from "./router/pageRouter.js";
 import testRouter from "./router/testRouter.js";
+import galleryRouter from "./router/galleryRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
 import { startRedis } from "./model/accessTokenStore.js";
@@ -36,12 +37,13 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 // auth middleware
-app.use(["/test/getData", "/create", "/auth/check"], authMiddleware);
-app.use(["/test/getData"], catchAuthError);
+app.use(["/test/getData", "/create", "/auth/check", "/api/*"], authMiddleware);
+app.use(["/test/getData", "/api/*"], catchAuthError);
 
 // api routing
 app.use("/auth", authRouter);
 app.use("/test", testRouter);
+app.use("/api", galleryRouter);
 app.use("/", redirectRouter);
 
 // page routing
@@ -64,6 +66,7 @@ if (process.env.NODE_ENV === "production") {
 // error handler
 app.use((err, req, res, next) => {
   if (err instanceof HttpError) {
+    console.log(err.message);
     res.status(err.statusCode).json({ reason: err.message });
   } else {
     console.log(err.stack);

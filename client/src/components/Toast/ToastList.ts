@@ -22,13 +22,14 @@ export default {
       icon: errorIcon,
     };
   },
-  INFO(description = "This is a info toast component") {
+  INFO(description = "This is a info toast component", autoDeleteTime = 2000) {
     return {
       id: Math.floor(Math.random() * 100001 + 1),
       type: "INFO",
       description,
       backgroundColor: "#5bc0de",
       icon: infoIcon,
+      autoDeleteTime,
     };
   },
   WARNING(description = "This is a warning toast component") {

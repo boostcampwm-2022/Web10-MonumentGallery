@@ -6,6 +6,7 @@ export interface IToast {
   description: string;
   backgroundColor: string;
   icon: string;
+  autoDeleteTime?: number;
 }
 
 export type Vector3Arr = [x: number, y: number, z: number];

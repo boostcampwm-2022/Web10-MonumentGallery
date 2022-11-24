@@ -35,9 +35,9 @@ function calculateMemorialStonePosition(subtitles: IGalleryPageSubTitle[]) {
   ];
   let cursor = 0;
   const stoneInfoList: IStoneInfo[] = [];
-  const h1List = subtitles.filter((subTitle: IGalleryPageSubTitle) => subTitle.type === "h1");
-  const h2List = subtitles.filter((subTitle: IGalleryPageSubTitle) => subTitle.type === "h2");
-  const h3List = subtitles.filter((subTitle: IGalleryPageSubTitle) => subTitle.type === "h3");
+  const h1List = subtitles.filter((subTitle: IGalleryPageSubTitle) => subTitle.hType === "h1");
+  const h2List = subtitles.filter((subTitle: IGalleryPageSubTitle) => subTitle.hType === "h2");
+  const h3List = subtitles.filter((subTitle: IGalleryPageSubTitle) => subTitle.hType === "h3");
   while (cursor < enalblePositions.length) {
     if (h1List.length > 0) {
       const subtitle = h1List.pop();
@@ -113,8 +113,8 @@ function getStyleByTitleType(type: string) {
 }
 
 function MemorialStone({ subTitle, position }: MemorialStoneProps) {
-  const { text, type } = subTitle;
-  const { textSize, stoneColor } = getStyleByTitleType(type);
+  const { text, hType } = subTitle;
+  const { textSize, stoneColor } = getStyleByTitleType(hType);
   const [pText, setPText] = useState("");
 
   const { visibleLetters, invisibleLetters } = useMemo(() => {

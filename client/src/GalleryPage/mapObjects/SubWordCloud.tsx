@@ -168,13 +168,18 @@ export default function SubWordCloud({ keywords, radius, animator, ...props }: S
     objectRef.current.rotation.y += 0.2 * delta;
   });
 
-  if (ready || playing)
-    return (
-      <animated.group rotation-order="YXZ" {...props} position-y={yPosition} scale={scale} ref={objectRef}>
-        {orbits.map((orbit: IOrbitData, i: number) => (
-          <WordHelix orbitData={orbit} radius={radius} key={`orbit_${i}`} />
-        ))}
-      </animated.group>
-    );
-  return null;
+  return (
+    <animated.group
+      rotation-order="YXZ"
+      visible={!!(ready || playing)}
+      position-y={yPosition}
+      scale={scale}
+      {...props}
+      ref={objectRef}
+    >
+      {orbits.map((orbit: IOrbitData, i: number) => (
+        <WordHelix orbitData={orbit} radius={radius} key={`orbit_${i}`} />
+      ))}
+    </animated.group>
+  );
 }

@@ -1,6 +1,15 @@
-import { BufferGeometry, Color, Float32BufferAttribute } from "three";
+import {
+  BufferGeometry,
+  Color,
+  Vector3,
+  Quaternion,
+  Float32BufferAttribute,
+  BufferAttribute,
+  InterleavedBufferAttribute,
+} from "three";
 
 type IColor = Color | string | number;
+type IBufferAttribute = BufferAttribute | InterleavedBufferAttribute;
 
 class PixelFragmentGeometry extends BufferGeometry {
   size: number;
@@ -23,9 +32,10 @@ class PixelFragmentGeometry extends BufferGeometry {
     this.width = this.columns * this.cellSize;
     this.height = this.rows * this.cellSize;
 
-    const positions = [];
+    const positions = new Array(this.rows * this.columns * 6 * 3).fill(0);
     const normals = [];
     const uvs = [];
+    const vertexPositions = [];
     const trianglePivots = [];
     const localRotationQuaternions = [];
     const globalRotationQuaternions = [];
@@ -34,7 +44,7 @@ class PixelFragmentGeometry extends BufferGeometry {
 
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.columns; x++) {
-        const { position, uv, pivot, localRot, globalRot, globalDist } = this.#setAttributes(x, y);
+        const { uv, pivot, vertexPosition, localRot, globalRot, globalDist } = this.#setAttributes(x, y);
 
         const normal = [];
         const color = [];
@@ -44,9 +54,9 @@ class PixelFragmentGeometry extends BufferGeometry {
           color.push(r, g, b);
         }
 
-        positions.push(...position);
         normals.push(...normal);
         uvs.push(...uv);
+        vertexPositions.push(...vertexPosition);
         trianglePivots.push(...pivot);
         localRotationQuaternions.push(...localRot);
         globalRotationQuaternions.push(...globalRot);
@@ -58,11 +68,14 @@ class PixelFragmentGeometry extends BufferGeometry {
     this.setAttribute("position", new Float32BufferAttribute(positions, 3));
     this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
     this.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
+    this.setAttribute("vertexPosition", new Float32BufferAttribute(vertexPositions, 3));
     this.setAttribute("pivot", new Float32BufferAttribute(trianglePivots, 3));
     this.setAttribute("localRotation", new Float32BufferAttribute(localRotationQuaternions, 4));
     this.setAttribute("globalRotation", new Float32BufferAttribute(globalRotationQuaternions, 4));
     this.setAttribute("globalDist", new Float32BufferAttribute(globalScatteredDistances, 1));
     this.setAttribute("color", new Float32BufferAttribute(colors, 3));
+
+    this.syncronizeVertex(1);
   }
   #setVertexAttributes(xIndex: number, yIndex: number, lx: number, ly: number) {
     const xPos = this.cellSize * (xIndex + lx) - this.width / 2;
@@ -90,13 +103,13 @@ class PixelFragmentGeometry extends BufferGeometry {
     const vert1 = this.#setVertexAttributes(x, y, 0, 0);
     const vert2 = this.#setVertexAttributes(x, y, 0, 1);
     const vert3 = this.#setVertexAttributes(x, y, 1, 1);
-    const position = [...vert1.position, ...vert2.position, ...vert3.position];
     const uv = [...vert1.uv, ...vert2.uv, ...vert3.uv];
-    const pivot = this.#setVertexAttributes(x, y, 0.25, 0.25).position;
+    const pivot = this.#setVertexAttributes(x, y, 0.25, 0.75).position;
+    const vertexPosition = [-0.25, 0.75, 0, -0.25, -0.25, 0, 0.75, -0.25, 0].map((e) => e * this.cellSize);
 
     return {
-      position,
       uv,
+      vertexPosition,
       pivot: this.#makeTriple<number>(pivot),
       ...this.#setTriangleAttributes(),
     };
@@ -105,13 +118,13 @@ class PixelFragmentGeometry extends BufferGeometry {
     const vert1 = this.#setVertexAttributes(x, y, 0, 0);
     const vert2 = this.#setVertexAttributes(x, y, 1, 1);
     const vert3 = this.#setVertexAttributes(x, y, 1, 0);
-    const position = [...vert1.position, ...vert2.position, ...vert3.position];
     const uv = [...vert1.uv, ...vert2.uv, ...vert3.uv];
-    const pivot = this.#setVertexAttributes(x, y, 0.75, 0.75).position;
+    const pivot = this.#setVertexAttributes(x, y, 0.75, 0.25).position;
+    const vertexPosition = [-0.75, 0.25, 0, 0.25, -0.75, 0, 0.25, 0.25, 0].map((e) => e * this.cellSize);
 
     return {
-      position,
       uv,
+      vertexPosition,
       pivot: this.#makeTriple<number>(pivot),
       ...this.#setTriangleAttributes(),
     };
@@ -130,12 +143,12 @@ class PixelFragmentGeometry extends BufferGeometry {
     const lower = this.#setLowerTriangleAttributes(x, y);
 
     return {
-      position: [...upper.position, ...lower.position],
       uv: [...upper.uv, ...lower.uv],
       pivot: [...upper.pivot, ...lower.pivot],
       localRot: [...upper.localRot, ...lower.localRot],
       globalRot: [...upper.globalRot, ...lower.globalRot],
       globalDist: [...upper.globalDist, ...lower.globalDist],
+      vertexPosition: [...upper.vertexPosition, ...lower.vertexPosition],
     };
   }
   #makeRandomAxisAngle() {
@@ -149,6 +162,42 @@ class PixelFragmentGeometry extends BufferGeometry {
     const z = u;
     const angle = (Math.random() * 2 - 1) * Math.PI;
     return [x, y, z, angle];
+  }
+  #getQuaternion(buffer: IBufferAttribute, index: number, lerp: number): Quaternion {
+    const axis = new Vector3().fromBufferAttribute(buffer, index);
+    const angle = buffer.getW(index);
+
+    return new Quaternion().setFromAxisAngle(axis, angle * lerp);
+  }
+  syncronizeVertex(lerp: number) {
+    const positions = this.attributes.position;
+    const vertexPositions = this.attributes.vertexPosition;
+    const localRotations = this.attributes.localRotation;
+    const globalRotations = this.attributes.globalRotation;
+    const pivots = this.attributes.pivot;
+    const globalDists = this.attributes.globalDist;
+
+    console.log(positions, vertexPositions);
+    for (let i = 0; i < positions.count; i++) {
+      // local vertex position rotation
+      const vertexPosition = new Vector3().fromBufferAttribute(vertexPositions, i);
+      const localQuaternion = this.#getQuaternion(localRotations, i, lerp);
+      const newLocalPosition = vertexPosition.applyQuaternion(localQuaternion);
+
+      // local triangle position rotation
+      const pivot = new Vector3().fromBufferAttribute(pivots, i);
+      const triangleQuaternion = this.#getQuaternion(globalRotations, i, lerp);
+      const length = pivot.length();
+      const newLength = length * (1 - lerp) + globalDists.getX(i) * lerp;
+      const newTriPosition = pivot.applyQuaternion(triangleQuaternion).setLength(newLength);
+
+      const newPosition = new Vector3().addVectors(newLocalPosition, newTriPosition);
+      console.log(pivot, i);
+
+      // update particle properties
+      positions.setXYZ(i, newPosition.x, newPosition.y, newPosition.z);
+    }
+    this.attributes.position.needsUpdate = true;
   }
 }
 

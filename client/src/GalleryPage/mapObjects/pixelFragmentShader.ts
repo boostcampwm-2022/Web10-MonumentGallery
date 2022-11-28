@@ -12,6 +12,7 @@ const pixelFragmentShader = {
   lights: true,
   vertexShader: /* glsl */ `
     attribute vec3 pivot;
+    attribute vec3 vertexPosition;
     attribute vec4 localRotation;
     attribute vec4 globalRotation;
     attribute float globalDist;
@@ -47,11 +48,9 @@ const pixelFragmentShader = {
       #include <color_vertex>
 
       // local vertex position rotation
-      vec3 localPosition = position - pivot;
       vec4 localQuaternion = getQuaternion(localRotation, lerp);
-      vec3 newLocalPosition = applyQuaternionToVector(localPosition, localQuaternion);
+      vec3 newLocalPosition = applyQuaternionToVector(vertexPosition, localQuaternion);
       vNormal = applyQuaternionToVector(normal, localQuaternion);
-      vNormal = normal;
 
       // local triangle position rotation
       vec4 triangleQuaternion = getQuaternion(globalRotation, lerp);

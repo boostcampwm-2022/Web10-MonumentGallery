@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { UniformsUtils, Color, Vector3, Quaternion, Mesh, Camera, Object3D } from "three";
+import { Color, Vector3, Quaternion, Mesh, Camera, Object3D, ShaderMaterial } from "three";
 import { useThree, useFrame, MeshProps } from "@react-three/fiber";
-import { animated, Interpolation } from "@react-spring/three";
+import { useSpring, animated, Interpolation } from "@react-spring/three";
 
 import PixelFragmentGeometry from "./pixelFragmentGeometry";
-import PixelFragmentShader from "./pixelFragmentShader";
-import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import PixelFragmentShader, { pixelFragmentShaderUniforms } from "./pixelFragmentShader";
 
 type IColor = Color | string | number;
 
@@ -41,14 +40,23 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   const { camera } = useThree();
   const meshRef = useRef<Mesh>(null);
   const worldPosition = useRef<Vector3>(new Vector3());
+  const geometry = useMemo(() => new PixelFragmentGeometry(pixels, size, scatterRadius), [pixels, size, scatterRadius]);
+  const material = useMemo(
+    () => new ShaderMaterial({ ...PixelFragmentShader, uniforms: pixelFragmentShaderUniforms() }),
+    [],
+  );
+
   const [activate, setActivate] = useState(false);
   const [destPosition, setDestPosition] = useState(new Vector3());
   const [destRotation, setDestRotation] = useState(new Quaternion());
-  const { spring, playing, ready } = useTriggeredSpring(activate, {});
-  const geometry = useMemo(() => new PixelFragmentGeometry(pixels, size, scatterRadius), [pixels, size, scatterRadius]);
-  const matUniforms = useMemo(() => UniformsUtils.clone(PixelFragmentShader.uniforms), []);
 
-  const lerp: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [1, 0]), []);
+  const { spring } = useSpring({
+    spring: +activate,
+    onChange: ({ value }) => {
+      material.uniforms.lerp.value = 1 - value.spring;
+    },
+  });
+
   const position: Interpolation<number, Vector3> = useMemo(
     () =>
       spring.to((i) => {
@@ -65,9 +73,12 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   );
 
   useEffect(() => {
-    if (!geometry) return;
+    material.uniforms.lerp.value = +!activate;
+  }, []);
+
+  useEffect(() => {
+    if (!geometry || !meshRef.current) return;
     geometry.syncronizeVertex(+!activate);
-    console.log("hey!");
 
     if (!activate) return;
 
@@ -79,7 +90,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   }, [activate]);
 
   useFrame(() => {
-    if (!activate || playing) return;
+    if (!activate) return;
 
     const zBasis = new Vector3().setFromMatrixColumn(camera.matrix, 2).setLength(-1);
     const worldDestPosition = destPosition.clone();
@@ -94,22 +105,26 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   function toggleActivate() {
     if (!meshRef.current) return;
 
-    meshRef.current.getWorldPosition(worldPosition.current);
-    if (camera.position.distanceTo(worldPosition.current) >= scatterRadius * 1.2) return;
+    if (!activate) {
+      meshRef.current.getWorldPosition(worldPosition.current);
+      if (camera.position.distanceTo(worldPosition.current) >= scatterRadius * 2) return;
+    }
 
     return setActivate((prev) => !prev);
   }
 
+  // why ts + react-spring + react-three/fiber is so messy
   return (
-    <animated.mesh
-      {...props}
-      position={position}
-      quaternion={rotation}
-      geometry={geometry}
-      onClick={toggleActivate}
-      ref={meshRef}
-    >
-      <animated.shaderMaterial {...PixelFragmentShader} uniforms={matUniforms} uniforms-lerp-value={lerp} />
-    </animated.mesh>
+    <>
+      <animated.mesh
+        {...props}
+        position={position as unknown as Vector3}
+        quaternion={rotation as unknown as Quaternion}
+        geometry={geometry}
+        material={material}
+        onClick={toggleActivate}
+        ref={meshRef}
+      />
+    </>
   );
 }

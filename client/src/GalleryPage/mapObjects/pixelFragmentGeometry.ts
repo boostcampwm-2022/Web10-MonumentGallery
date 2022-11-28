@@ -197,6 +197,8 @@ class PixelFragmentGeometry extends BufferGeometry {
       positions.setXYZ(i, newPosition.x, newPosition.y, newPosition.z);
     }
     this.attributes.position.needsUpdate = true;
+    this.computeBoundingBox();
+    this.computeBoundingSphere();
   }
 }
 

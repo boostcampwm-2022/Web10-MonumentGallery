@@ -1,12 +1,10 @@
 import { DoubleSide, UniformsUtils, UniformsLib } from "three";
 
+export const pixelFragmentShaderUniforms = () => {
+  return UniformsUtils.merge([UniformsLib.lights, { lerp: { value: 1 } }]);
+};
+
 const pixelFragmentShader = {
-  uniforms: UniformsUtils.merge([
-    UniformsLib.lights,
-    {
-      lerp: { value: 1 },
-    },
-  ]),
   side: DoubleSide,
   vertexColors: true,
   lights: true,
@@ -68,6 +66,7 @@ const pixelFragmentShader = {
   fragmentShader: /* glsl */ `
     #undef USE_SHADOWMAP
 
+    uniform float lerp;
     varying vec3 vNormal;
     #include <common>
     #include <color_pars_fragment>
@@ -91,7 +90,7 @@ const pixelFragmentShader = {
       vec3 diffuseResult = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
       vec3 specularResult = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
       vec3 outgoingLight = diffuseResult + specularResult;
-      gl_FragColor = vec4(outgoingLight, 0.5);
+      gl_FragColor = vec4(outgoingLight, 1);
     }`,
 };
 

@@ -161,7 +161,7 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
         <Text
           ref={subtitleRef}
           font={MapoFont}
-          fontSize={textSize * 0.7}
+          fontSize={textSize * 0.4}
           color={"black"}
           maxWidth={0.1}
           textAlign={"center"}

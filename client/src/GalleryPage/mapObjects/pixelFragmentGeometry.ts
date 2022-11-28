@@ -91,7 +91,8 @@ class PixelFragmentGeometry extends BufferGeometry {
   #setTriangleAttributes() {
     const localRot = this.#makeRandomAxisAngle();
     const globalRot = this.#makeRandomAxisAngle();
-    const globalDist = (Math.random() * 0.8 + 0.2) * this.scatterRadius;
+    let globalDist = (Math.random() * 0.35 + 0.65) * this.scatterRadius;
+    if (Math.random() < 0.05) globalDist = (Math.random() * 0.35 + 0.3) * this.scatterRadius;
 
     return {
       localRot: this.#makeTriple<number>(localRot),
@@ -177,7 +178,6 @@ class PixelFragmentGeometry extends BufferGeometry {
     const pivots = this.attributes.pivot;
     const globalDists = this.attributes.globalDist;
 
-    console.log(positions, vertexPositions);
     for (let i = 0; i < positions.count; i++) {
       // local vertex position rotation
       const vertexPosition = new Vector3().fromBufferAttribute(vertexPositions, i);
@@ -192,7 +192,6 @@ class PixelFragmentGeometry extends BufferGeometry {
       const newTriPosition = pivot.applyQuaternion(triangleQuaternion).setLength(newLength);
 
       const newPosition = new Vector3().addVectors(newLocalPosition, newTriPosition);
-      console.log(pivot, i);
 
       // update particle properties
       positions.setXYZ(i, newPosition.x, newPosition.y, newPosition.z);

@@ -37,9 +37,9 @@ export default function GalleryPageIsland({
       <AnimatedTitle text={title} animator={springs} />
       <Island color={(theme && ISLAND_COLORS[theme]) || THEME.DREAM} />
       <MemorialStones subtitles={subtitle} />
-      <SubWordCloud keywords={keywords} radius={5} scale={0.8} animator={springs} />
+      <SubWordCloud keywords={keywords} radius={6} scale={0.8} animator={springs} />
       {links && <LinkPedals links={links} />}
-      {imagePixel && <PictureFragments pixels={imagePixel} />}
+      {imagePixel && <PictureFragments pixels={imagePixel} position-y={3} />}
     </RigidBody>
   );
 }

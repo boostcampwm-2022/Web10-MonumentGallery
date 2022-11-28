@@ -58,7 +58,7 @@ const pixelFragmentShader = {
       float triPositionLength = mix(length(pivot), globalDist, lerp);
       vec3 newTriPosition = triPositionLength * newTriPositionDirection;
 
-      vec3 newPosition = newLocalPosition + newTriPosition;
+      vec3 newPosition = newLocalPosition * mix(1.0, 0.6, lerp) + newTriPosition;
 
       // vec4 modelViewPosition = modelViewMatrix * vec4( position.xy, globalDist, 1.0 );
       vec4 modelViewPosition = modelViewMatrix * vec4( newPosition, 1.0 );
@@ -91,7 +91,7 @@ const pixelFragmentShader = {
       vec3 diffuseResult = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
       vec3 specularResult = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
       vec3 outgoingLight = diffuseResult + specularResult;
-      gl_FragColor = vec4(outgoingLight, 1.0);
+      gl_FragColor = vec4(outgoingLight, 0.5);
     }`,
 };
 

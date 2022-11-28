@@ -15,7 +15,7 @@ interface PictureFragmentsProps extends MeshProps {
   scatterRadius?: number;
 }
 
-export default function PictureFragments({ pixels, size = 3, scatterRadius = 9, ...props }: PictureFragmentsProps) {
+export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, ...props }: PictureFragmentsProps) {
   const meshRef = useRef<Mesh>(null);
   const material = useRef<ShaderMaterial>(null);
   const [activate, setActivate] = useState(false);

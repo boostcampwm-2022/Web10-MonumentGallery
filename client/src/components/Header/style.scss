@@ -10,5 +10,28 @@
   }
   .header-right-elem {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    .skeleton {
+      border-radius: 4px;
+      background-color: #dfdfdf;
+    }
+    .skeleton-avatar {
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+    }
+    .skeleton-name {
+      width: 100px;
+      height: 20px;
+    }
+    .userinfo-avatar {
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+    }
+    .userinfo-name {
+      font-size: 14px;
+    }
   }
 }

@@ -16,3 +16,9 @@ export interface ITriggeredSpringState {
   ready: number;
   playing: boolean;
 }
+
+export interface User {
+  id?: string;
+  name?: string;
+  avatarUrl?: string;
+}

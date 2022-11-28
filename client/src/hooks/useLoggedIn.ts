@@ -2,9 +2,10 @@ import { useEffect, useMemo } from "react";
 import axios from "axios";
 import userStore from "../store/user.store";
 import { Resource } from "../utils/suspender";
+import { User } from "../@types/common";
 
 export function useLoggedIn() {
-  const { isLoggedIn, userId, setUser, clearUser } = userStore();
+  const { isLoggedIn, user, setUser, clearUser } = userStore();
 
   useEffect(() => {
     axios.get("/auth/check").then((res) => {
@@ -17,19 +18,19 @@ export function useLoggedIn() {
     });
   }, []);
 
-  return [isLoggedIn, userId] as const;
+  return [isLoggedIn, user] as const;
 }
 
 interface ICheck {
   logined: boolean;
-  id: string;
+  user: User;
 }
 
 export function CheckLoggedIn({ resource }: { resource: Resource<ICheck> }) {
   const { setUser, clearUser } = userStore();
   const res = useMemo(() => resource.read({ method: "get", url: "/auth/check" }), []);
   if (!res.data || res.error) return null;
-  const { logined, id: user } = res.data;
+  const { logined, user } = res.data;
 
   useEffect(() => {
     if (logined) {

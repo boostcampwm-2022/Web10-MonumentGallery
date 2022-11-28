@@ -27,7 +27,9 @@ router.get(
 
 router.get("/check", authMiddleware, (req, res) => {
   const id = req.userid ?? null;
-  res.json({ logined: !!id, id });
+  const name = req.username ?? null;
+  const avatarUrl = req.avatar_url ?? null;
+  res.json({ logined: !!id, user: { id, name, avatarUrl } });
 });
 
 export default router;

@@ -11,13 +11,21 @@ export default function UserInfo() {
     });
   }
 
+  function onLoginClick() {
+    window.location.href = "/auth/login";
+  }
+
   return (
     <div className="userinfo">
       {user.avatarUrl && <img className="userinfo-avatar" src={user.avatarUrl} />}
       <span className="userinfo-name">{user.name}</span>
-      {user.id && (
-        <button className="userinfo-logout" onClick={onLogoutClick}>
+      {user.id ? (
+        <button className="userinfo-button" onClick={onLogoutClick}>
           로그아웃
+        </button>
+      ) : (
+        <button className="userinfo-button" onClick={onLoginClick}>
+          로그인
         </button>
       )}
     </div>

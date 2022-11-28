@@ -3,7 +3,6 @@ import axios from "axios";
 import userStore from "../store/user.store";
 import { createResource } from "../utils/suspender";
 import { User } from "../@types/common";
-import useResource from "./useResource";
 
 export function useLoggedIn() {
   const { isLoggedIn, user, setUser, clearUser } = userStore();
@@ -28,11 +27,11 @@ export interface ICheck {
   isShared: boolean;
 }
 
-const resource = createResource<ICheck>();
+const resource = createResource<ICheck>({ method: "get", url: "/auth/check" });
 
 export function CheckLoggedIn() {
   const { setUser, setShared, clearUser } = userStore();
-  const res = useResource(resource, { method: "get", url: "/auth/check" });
+  const res = resource.read();
   if (!res.data || res.error) return null;
   const { logined, user, isShared } = res.data;
 

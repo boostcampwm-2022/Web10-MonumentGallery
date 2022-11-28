@@ -5,7 +5,6 @@ import React, { Suspense, useEffect, useState } from "react";
 import { createResource, Resource } from "../utils/suspender";
 import Loading from "./components/Loading";
 import galleryStore from "../store/gallery.store";
-import useResource from "../hooks/useResource";
 import { useParams } from "../hooks/useParams";
 import { IGalleryMapData } from "../@types/gallery";
 import themeStore from "../store/theme.store";
@@ -15,31 +14,31 @@ import TOAST from "../components/Toast/ToastList";
 import FullScreenModal from "../components/modal/FullScreenModal";
 
 export default function GalleryPage() {
+  const [user, history] = useParams("gallery", []);
+  function setRequestParams() {
+    const END_POINT = "/api/gallery";
+    return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
+  }
   return (
     <>
       <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
         <div className="canvas-outer">
-          <GalleryLoader resource={createResource()} />
+          <GalleryLoader resource={createResource({ method: "get", url: setRequestParams() })} />
         </div>
+        <DomElements />
       </Suspense>
-      <DomElements />
     </>
   );
 }
 
 function GalleryLoader({ resource }: { resource: Resource<{ gallery: IGalleryMapData; userId: string }> }) {
-  const [user, history] = useParams("gallery", []);
   const [remainTime, setRemainTime] = useState(5);
   const [useSampleData, setUseSampleData] = useState(false);
   const { setData } = galleryStore();
   const { setTheme } = themeStore();
   const { addToast } = toastStore();
 
-  function setRequestParams() {
-    const END_POINT = "/api/gallery";
-    return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
-  }
-  const { data } = useResource(resource, { method: "get", url: setRequestParams() });
+  const { data } = resource.read();
   useEffect(() => {
     if (data) {
       const { gallery, userId } = data;

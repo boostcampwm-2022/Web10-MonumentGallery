@@ -1,4 +1,3 @@
-import { verify } from "jsonwebtoken";
 import { COLORS } from "../@types/colors";
 import POSITION from "./randomPosition.json";
 

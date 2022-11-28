@@ -1,5 +1,4 @@
-import { Suspense, useLayoutEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useLayoutEffect, useState } from "react";
 
 import Header from "../components/Header";
 import SpaceCreater, { PeriodType } from "../components/SpaceCreater";
@@ -13,7 +12,6 @@ import dummyData from "../GalleryPage/dummyData";
 
 import toastStore from "../store/toast.store";
 import galleryStore from "../store/gallery.store";
-import themeStore from "../store/theme.store";
 import { createResource, Resource } from "../utils/suspender";
 
 import "./style.scss";
@@ -34,7 +32,7 @@ export default function CreatePage() {
   const { addToast } = toastStore();
 
   useLayoutEffect(() => {
-    setData(dummyData);
+    setData(dummyData, "");
     addToast(TOAST.INFO("데이터를 처리하는 동안 샘플 월드를 랜더링합니다", 5000));
     addToast(TOAST.INFO("WASD 키로 캐릭터를 움직입니다.", 1000 * 60));
     addToast(TOAST.INFO("left shift 및 space로 상하움직임을 제어합니다.", 1000 * 60));
@@ -46,7 +44,6 @@ export default function CreatePage() {
     setShow(true);
   }
 
-  // refactor plz... da*n typescript
   function onLoad({ page }: IPostGalleryResponse): void {
     window.location.href = page;
   }

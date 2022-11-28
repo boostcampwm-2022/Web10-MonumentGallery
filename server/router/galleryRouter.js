@@ -11,6 +11,7 @@ import {
 } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { updateShareState } from "../model/galleryModel.js";
+import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 
 const router = express.Router();
 
@@ -19,14 +20,19 @@ router.post(
   authMiddleware,
   catchAuthError,
   asyncHandler(async (req, res) => {
+    //timeout 5분..
+    req.connection.setTimeout(60 * 5 * 1000);
     //duration= 2w||1m||3m||1y
+    console.log("page making start");
     const userID = req.userid;
     const notionAccessToken = req.accessToken;
     const nowTime = Date.now();
     const { period = "all", theme = "dream" } = req.query;
 
     const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
-    const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
+    const notionImageContent = await getImagePixelsFromPages(notionRawContent);
+    // console.log(notionImageContent);
+    const processedNotionContent = await processDataFromRawContent(notionImageContent, theme);
     const galleryID = await saveGallery(userID, processedNotionContent);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);

@@ -5,6 +5,7 @@ import { getRawContentsFromNotion } from "../service/getNotionContentService.js"
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 import Gallery from "../schema/gallerySchema.js";
+import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 
 const router = express.Router();
 
@@ -46,19 +47,21 @@ router.get("/getData", async (req, res) => {
   const { period = "all", theme = "dream" } = req.query;
 
   const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
-  console.log(notionRawContent);
-  const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
-  console.log(processedNotionContent);
-  console.log(processedNotionContent.pages);
+  // console.log(notionRawContent);
+  const notionContentImage = await getImagePixelsFromPages(notionRawContent);
+  console.log(notionContentImage);
+  const processedNotionContent = await processDataFromRawContent(notionContentImage, theme);
+  // console.log(processedNotionContent);
+  // console.log(processedNotionContent.pages);
 
-  await Gallery.create(processedNotionContent)
-    .then((e) => {
-      console.log("success");
-    })
-    .catch((err) => {
-      console.log(err);
-      console.log("failed");
-    });
+  // await Gallery.create(processedNotionContent)
+  //   .then((e) => {
+  //     console.log("success");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     console.log("failed");
+  //   });
 
   const allData = await Gallery.find();
   console.log(allData);
@@ -192,5 +195,7 @@ const mockData = {
 };
 
 const mockImageUrlData = {
-  url: "https://grigostore.shop/file_data/grigostore/2021/09/22/29a2131b07160b2413021277862c2259.png",
+  url: "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
+  width: 10,
+  height: 10,
 };

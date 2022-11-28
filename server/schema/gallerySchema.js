@@ -8,6 +8,12 @@ const keywordScheama = new Schema({
 const gallerySchema = new Schema({
   theme: { type: String, required: true },
   totalKeywords: [keywordScheama],
+  groupKeywords: [
+    {
+      node: { type: Number, required: true },
+      keyword: { type: String, default: "-" },
+    },
+  ],
   pages: [
     {
       position: [Number],
@@ -25,9 +31,13 @@ const gallerySchema = new Schema({
           favicon: String,
         },
       ],
+      imagePixel: [[String]],
+      myUrl: { type: String, required: true },
     },
   ],
   nodes: [[Number]],
+  lastModified: { type: Date, default: new Date() },
+  created: { type: Date, default: new Date() },
 });
 
 export default model("monument_gallery_dev_lybell", gallerySchema);

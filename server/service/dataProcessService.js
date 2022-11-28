@@ -34,6 +34,7 @@ export function processDataForClient(galleryContent) {
         subtitle: page.subtitle,
         links: page.links,
         imagePixel: page.imagePixel,
+        myUrl: page.myUrl,
       };
     }),
     nodes: galleryContent.nodes,
@@ -72,6 +73,7 @@ function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes, 
         ],
         links: rawContent[page.id].links,
         imagePixel: rawContent[page.id].imagePixel,
+        myUrl: rawContent[page.id].myUrl,
       };
     }),
     nodes,

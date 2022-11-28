@@ -3,7 +3,7 @@ import errorIcon from "../../assets/images/toast-icon-error.svg";
 import infoIcon from "../../assets/images/toast-icon-info.svg";
 import warningIcon from "../../assets/images/toast-icon-warning.svg";
 
-export default {
+const TOAST = {
   SUCCESS(description = "This is a success toast component") {
     return {
       id: Math.floor(Math.random() * 100001 + 1),
@@ -42,3 +42,5 @@ export default {
     };
   },
 };
+
+export default TOAST;

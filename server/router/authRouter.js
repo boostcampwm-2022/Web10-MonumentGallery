@@ -1,5 +1,6 @@
 import express from "express";
-import { authMiddleware } from "../middleware/authMiddleware.js";
+import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
+import { loadShareStatus } from "../model/galleryModel.js";
 import { getTokenDataFromNotion, saveToken } from "../service/authService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { TOKEN_EXPIRES } from "../utils/constants.js";
@@ -25,9 +26,17 @@ router.get(
   }),
 );
 
-router.get("/check", authMiddleware, (req, res) => {
+router.get("/check", authMiddleware, async (req, res) => {
   const id = req.userid ?? null;
-  res.json({ logined: !!id, id });
+  const name = req.username ?? null;
+  const avatarUrl = req.avatar_url ?? null;
+  const isShared = await loadShareStatus(id);
+  res.json({ logined: !!id, user: { id, name, avatarUrl }, isShared });
+});
+
+router.post("/logout", authMiddleware, catchAuthError, (req, res) => {
+  res.clearCookie("token");
+  res.send();
 });
 
 export default router;

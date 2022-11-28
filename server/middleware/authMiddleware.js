@@ -6,6 +6,8 @@ export async function authMiddleware(req, res, next) {
   const { success, reason } = await validateToken(token);
   if (success) {
     const { user, accessToken } = await extractUserDataFromToken(token);
+    req.username = user.name;
+    req.avatar_url = user.avatar_url;
     req.userid = user.id;
     req.accessToken = accessToken;
   } else {

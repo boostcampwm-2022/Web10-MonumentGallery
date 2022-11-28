@@ -10,5 +10,44 @@
   }
   .header-right-elem {
     display: flex;
+    .userinfo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 10px;
+    }
+    .skeleton {
+      border-radius: 4px;
+      background-color: #dfdfdf;
+      margin-right: 10px;
+    }
+    .skeleton-avatar {
+      width: 25px;
+      height: 25px;
+    }
+    .skeleton-name {
+      width: 60px;
+      height: 20px;
+    }
+    .skeleton-logout {
+      width: 50px;
+      height: 20px;
+    }
+
+    .userinfo-avatar {
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+    }
+    .userinfo-name {
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .userinfo-button {
+      padding: 2px;
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid #222222;
+      border-radius: 4px;
+    }
   }
 }

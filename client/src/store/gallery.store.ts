@@ -3,7 +3,8 @@ import { IGalleryMapData, THEME } from "../@types/gallery";
 
 interface GalleryStore {
   data: IGalleryMapData;
-  setData: (data: IGalleryMapData) => void;
+  userId: string | null;
+  setData: (gallery: IGalleryMapData, userId: string) => void;
 }
 
 const galleryStore = create<GalleryStore>((set) => ({
@@ -14,7 +15,8 @@ const galleryStore = create<GalleryStore>((set) => ({
     totalKeywords: {},
     theme: THEME.DREAM,
   },
-  setData: (data) => set(() => ({ data })),
+  userId: null,
+  setData: (data, userId) => set((state) => ({ ...state, data, userId })),
 }));
 
 export default galleryStore;

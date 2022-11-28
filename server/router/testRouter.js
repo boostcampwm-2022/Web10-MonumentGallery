@@ -9,6 +9,10 @@ import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 
 const router = express.Router();
 
+router.get("/testShared", (req, res) => {
+  res.send({ isShared: true });
+});
+
 router.get("/testPost", (req, res) => {
   const username = `${Math.floor(Math.random() * 100000)}`;
   TestModel.create({

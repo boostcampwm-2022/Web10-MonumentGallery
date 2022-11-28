@@ -15,6 +15,7 @@
     &:focus {
       & + .select-box__list {
         opacity: 1;
+        animation-name: none;
         .select-box__option {
           cursor: pointer;
         }
@@ -50,7 +51,11 @@
     padding: 0;
     list-style: none;
     opacity: 0;
-    box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
+    animation-name: HideList;
+    animation-delay: 0.1s;
+    animation-duration: 0.1s;
+    animation-fill-mode: forwards;
+    animation-timing-function: step-start;
   }
 
   &__option {
@@ -66,5 +71,13 @@
       color: #546c84;
       background-color: #fbfbfb;
     }
+  }
+}
+@keyframes HideList {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
   }
 }

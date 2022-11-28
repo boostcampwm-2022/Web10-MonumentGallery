@@ -5,6 +5,53 @@
   position: fixed;
   z-index: 1;
 }
+
+.share {
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+  .share-hover {
+    color: #ffffff;
+    transform: translate(calc(-50% + 30px), 0);
+    transition: all ease 2s;
+  }
+  .share-button {
+    font-size: 20px;
+    width: 60px;
+    height: 60px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.3);
+    border: 3px solid #ffffff;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 50%;
+    & > img {
+      border: none;
+      width: 30px;
+      height: 30px;
+      transform: translate(0, 15%);
+    }
+  }
+}
+
+.share-modal {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  height: 100%;
+  & > button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 19px;
+    width: 100%;
+    height: 40px;
+    color: #ffffff;
+    background: #333333;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+  }
+}
+
 .toast-test-btn {
   position: fixed;
   left: 10%;
@@ -12,6 +59,15 @@
   z-index: 1;
   border: 1px solid black;
 }
+.sync-btn {
+  position: fixed;
+  left: 30px;
+  bottom: 30px;
+  img {
+    width: 30px;
+  }
+}
+
 .error-modal {
   height: 100%;
   display: flex;
@@ -28,5 +84,32 @@
     padding: 5px 10px;
     font-size: 20px;
     color: #642f3a;
+  }
+}
+.create-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  .make-gallery {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+  & > button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 19px;
+    width: 60%;
+    height: 50px;
+    color: #ffffff;
+    background: #333333;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    .fa {
+      margin-left: -12px;
+      margin-right: 8px;
+    }
   }
 }

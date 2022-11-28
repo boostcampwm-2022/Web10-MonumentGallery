@@ -18,6 +18,7 @@ function validateGalleryID(galleryID) {
 export async function saveGallery(userID, galleryData) {
   const id = await saveGalleryFromDB(userID, galleryData);
   if (id === null) throw new InternalServerError("DB 저장 실패");
+  console.log("db저장 완료");
   return id;
 }
 

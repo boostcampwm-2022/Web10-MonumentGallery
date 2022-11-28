@@ -3,13 +3,12 @@ import "./style.scss";
 
 interface FullScreenModalProps {
   children: React.ReactNode;
-  width: string;
-  height: string;
   show: boolean;
   setShow?: React.Dispatch<React.SetStateAction<boolean>>;
+  css: React.CSSProperties;
 }
 
-export default function FullScreenModal({ children, width, height, show, setShow }: FullScreenModalProps) {
+export default function FullScreenModal({ children, show, setShow, css }: FullScreenModalProps) {
   return (
     <div hidden={!show}>
       <div
@@ -20,7 +19,7 @@ export default function FullScreenModal({ children, width, height, show, setShow
           if (setShow) setShow(false);
         }}
       />
-      <div className="fullscreen-modal" style={{ width, height }}>
+      <div className="fullscreen-modal" style={css}>
         {children}
       </div>
     </div>

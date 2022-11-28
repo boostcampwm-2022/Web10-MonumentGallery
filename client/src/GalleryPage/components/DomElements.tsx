@@ -16,6 +16,7 @@ import toastStore from "../../store/toast.store";
 import TOAST from "../../components/Toast/ToastList";
 import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
+import axios from "axios";
 
 export default function DomElements() {
   const { locked } = lockStore();
@@ -41,7 +42,7 @@ export default function DomElements() {
             <ShareButton show={showShareModal} setShow={setShowShareModal} />
           </Suspense>
         </FloatLayout>
-        <FullScreenModal css={{ width: "20%", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
+        <FullScreenModal css={{ width: "230px", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
         </FullScreenModal>
       </div>
@@ -59,9 +60,12 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
       <span>{isShared ? "공유를 중단하시겠습니까?" : "공유를 시작하시겠습니까?"}</span>
       <button
         onClick={() => {
+          console.log(isShared);
           const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
-          addToast(TOAST.INFO(toastMsg));
-          setShared(!isShared);
+          axios.post("/api/user/share", { isShared: !isShared }).then(() => {
+            addToast(TOAST.INFO(toastMsg));
+            setShared(!isShared);
+          });
           onShareButtonClick();
         }}
       >

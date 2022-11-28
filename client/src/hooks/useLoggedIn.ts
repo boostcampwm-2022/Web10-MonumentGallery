@@ -25,19 +25,21 @@ export function useLoggedIn() {
 export interface ICheck {
   logined: boolean;
   user: User;
+  isShared: boolean;
 }
 
 const resource = createResource<ICheck>();
 
 export function CheckLoggedIn() {
-  const { setUser, clearUser } = userStore();
+  const { setUser, setShared, clearUser } = userStore();
   const res = useResource(resource, { method: "get", url: "/auth/check" });
   if (!res.data || res.error) return null;
-  const { logined, user } = res.data;
+  const { logined, user, isShared } = res.data;
 
   useEffect(() => {
     if (logined) {
       setUser(user);
+      setShared(isShared);
     } else {
       clearUser();
     }

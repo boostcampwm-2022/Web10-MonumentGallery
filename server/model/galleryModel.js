@@ -44,6 +44,13 @@ async function loadShareStatus(userID) {
   return null;
 }
 
+async function updateShareState(userID, isShared) {
+  const isExists = await User.exists({ userID });
+  if (!isExists) return null;
+  const res = User.updateOne({ userID }, { isShared });
+  return res;
+}
+
 async function saveGallery(userID, galleryData) {
   const session = await startSession();
   try {
@@ -98,6 +105,7 @@ async function loadLastGallery(userID) {
 
 export {
   loadShareStatus,
+  updateShareState,
   saveGallery,
   loadGallery,
   loadLastGallery,

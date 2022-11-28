@@ -1,5 +1,4 @@
 import express from "express";
-import axios from "axios";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import { processDataFromRawContent, processDataForClient } from "../service/dataProcessService.js";
@@ -11,6 +10,7 @@ import {
   getLastGalleryID,
 } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
+import { updateShareState } from "../model/galleryModel.js";
 
 const router = express.Router();
 
@@ -77,6 +77,18 @@ router.get(
 
     const result = await getLastGalleryID(userID);
     res.status(200).json({ result });
+  }),
+);
+
+router.post(
+  "/user/share",
+  authMiddleware,
+  catchAuthError,
+  asyncHandler(async (req, res) => {
+    const { isShared } = req.body;
+    const result = await updateShareState(req.userid, isShared);
+    console.log(result);
+    res.status(200).json();
   }),
 );
 

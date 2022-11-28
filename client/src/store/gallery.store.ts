@@ -3,9 +3,8 @@ import { IGalleryMapData, THEME } from "../@types/gallery";
 
 interface GalleryStore {
   data: IGalleryMapData;
-  isShared: boolean;
-  setData: (data: IGalleryMapData) => void;
-  setShared: (shared: boolean) => void;
+  userId: string | null;
+  setData: (gallery: IGalleryMapData, userId: string) => void;
 }
 
 const galleryStore = create<GalleryStore>((set) => ({
@@ -16,9 +15,8 @@ const galleryStore = create<GalleryStore>((set) => ({
     totalKeywords: {},
     theme: THEME.DREAM,
   },
-  isShared: false,
-  setData: (data) => set((state) => ({ ...state, data })),
-  setShared: (shared) => set((state) => ({ ...state, isShared: shared })),
+  userId: null,
+  setData: (data, userId) => set((state) => ({ ...state, data, userId })),
 }));
 
 export default galleryStore;

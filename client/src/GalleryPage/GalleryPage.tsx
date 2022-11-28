@@ -27,7 +27,7 @@ export default function GalleryPage() {
   );
 }
 
-function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
+function GalleryLoader({ resource }: { resource: Resource<{ gallery: IGalleryMapData; userId: string }> }) {
   const [user, history] = useParams("gallery", []);
   const [remainTime, setRemainTime] = useState(5);
   const [useSampleData, setUseSampleData] = useState(false);
@@ -42,12 +42,13 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
   const { data } = useResource(resource, { method: "get", url: setRequestParams() });
   useEffect(() => {
     if (data) {
-      setData(data);
-      setTheme(data.theme);
+      const { gallery, userId } = data;
+      setData(gallery, userId);
+      setTheme(gallery.theme);
       return;
     }
     if (useSampleData) {
-      setData(dummyData);
+      setData(dummyData, "");
       addToast(TOAST.INFO("데이터가 존재하지 않아 샘플 월드를 랜더링합니다", 5000));
       addToast(TOAST.INFO("WASD 키로 캐릭터를 움직입니다.", 1000 * 60));
       addToast(TOAST.INFO("left shift 및 space로 상하움직임을 제어합니다.", 1000 * 60));

@@ -12,6 +12,9 @@ import FullScreenModal from "../../components/modal/FullScreenModal";
 import { CheckLoggedIn } from "../../hooks/useLoggedIn";
 import CheckShared from "../../hooks/useShared";
 import UserInfoSkeleton from "../../components/Header/UserInfoSkeleton";
+import toastStore from "../../store/toast.store";
+import TOAST from "../../components/Toast/ToastList";
+import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
 
 export default function DomElements() {
@@ -38,8 +41,8 @@ export default function DomElements() {
             <ShareButton show={showShareModal} setShow={setShowShareModal} />
           </Suspense>
         </FloatLayout>
-        <FullScreenModal css={{ width: "20%", height: "20%" }} show={showShareModal} setShow={setShowShareModal}>
-          <ShareModal />
+        <FullScreenModal css={{ width: "20%", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
+          <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
         </FullScreenModal>
       </div>
       <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
@@ -47,12 +50,23 @@ export default function DomElements() {
   );
 }
 
-function ShareModal() {
-  const { isShared } = galleryStore();
+function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) {
+  const { isShared, setShared } = userStore();
+  const { addToast } = toastStore();
 
   return (
-    <div>
+    <div className="share-modal">
       <span>{isShared ? "공유를 중단하시겠습니까?" : "공유를 시작하시겠습니까?"}</span>
+      <button
+        onClick={() => {
+          const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
+          addToast(TOAST.INFO(toastMsg));
+          setShared(!isShared);
+          onShareButtonClick();
+        }}
+      >
+        {isShared ? "공유 중단" : "공유 시작"}
+      </button>
     </div>
   );
 }
@@ -68,12 +82,19 @@ function ShareButtonFallback() {
 }
 
 function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const { isShared } = galleryStore();
+  const { userId: galleryUserId } = galleryStore();
+  const {
+    isLoggedIn,
+    isShared,
+    user: { id },
+  } = userStore();
   const [hover, setHover] = useState(false);
 
-  function onShareClick() {
+  function onClick() {
     setShow(!show);
   }
+
+  if (!isLoggedIn || id !== galleryUserId) return null;
 
   return (
     <div className="share">
@@ -82,7 +103,7 @@ function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch
       </div>
       <button
         className="share-button"
-        onClick={onShareClick}
+        onClick={onClick}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >

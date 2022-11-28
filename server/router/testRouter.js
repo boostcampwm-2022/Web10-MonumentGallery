@@ -9,9 +9,7 @@ import Gallery from "../schema/gallerySchema.js";
 const router = express.Router();
 
 router.get("/testShared", (req, res) => {
-  setTimeout(() => {
-    res.send({ isShared: true });
-  }, 2000);
+  res.send({ isShared: true });
 });
 
 router.get("/testPost", (req, res) => {

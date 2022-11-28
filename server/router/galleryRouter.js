@@ -53,7 +53,7 @@ router.get(
     const { targetUserID, galleryID } = req.params;
 
     const result = await loadGallery(targetUserID, galleryID);
-    res.status(200).json(processDataForClient(result));
+    res.status(200).json({ gallery: processDataForClient(result), userId: targetUserID });
   }),
 );
 

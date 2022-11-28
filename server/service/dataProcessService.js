@@ -9,16 +9,7 @@ export async function processDataFromRawContent(rawContent, theme) {
   const positionData = getPositions(grouppedPage);
   // console.log(positionData.pages);
   // console.log(positionData.nodes);
-  const res = attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
-
-  return attachAllDataForDB(
-    rawContent,
-    keywordData,
-    theme,
-    positionData.pages,
-    positionData.nodes,
-    positionData.groupKeywords,
-  );
+  return attachAllDataForDB(rawContent, keywordData, theme, positionData);
 }
 
 export function processDataForClient(galleryContent) {
@@ -41,12 +32,12 @@ export function processDataForClient(galleryContent) {
   };
 }
 
-function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes, groupKeywords) {
+function attachAllDataForDB(rawContent, notionKeyword, theme, positionData) {
   return {
     theme: theme,
     totalKeywords: getTop30Keywords(notionKeyword.totalKeywords),
-    groupKeywords,
-    pages: positions.map((page) => {
+    groupKeywords: positionData.groupKeywords,
+    pages: positionData.pages.map((page) => {
       return {
         position: page.position,
         keywords: getTop30Keywords(notionKeyword.ppPages[page.id].keywords),
@@ -76,7 +67,7 @@ function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes, 
         myUrl: rawContent[page.id].myUrl,
       };
     }),
-    nodes,
+    nodes: positionData.nodes,
   };
 }
 

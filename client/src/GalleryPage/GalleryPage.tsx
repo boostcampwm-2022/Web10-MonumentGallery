@@ -12,7 +12,6 @@ import dummyData from "./dummyData";
 import toastStore from "../store/toast.store";
 import TOAST from "../components/Toast/ToastList";
 import FullScreenModal from "../components/modal/FullScreenModal";
-import { CheckLoggedIn } from "../hooks/useLoggedIn";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);

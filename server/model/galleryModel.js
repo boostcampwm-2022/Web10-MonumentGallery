@@ -47,7 +47,7 @@ async function loadShareStatus(userID) {
 async function updateShareState(userID, isShared) {
   const isExists = await User.exists({ userID });
   if (!isExists) return null;
-  const res = User.updateOne({ userID }, { isShared });
+  const res = await User.updateOne({ userID }, { isShared });
   return res;
 }
 

@@ -15,13 +15,14 @@ interface IOnLoadFunction {
 export default function SyncButton() {
   const [show, setShow] = useState<boolean>(false);
   const [resource, setResource] = useState<Resource | null>(null);
-  const { setData } = galleryStore();
-  const { userId } = userStore();
-  const [targetUserId] = useParams("gallery", []);
+  const { userId, setData } = galleryStore();
+  const { user } = userStore();
+  // const [targetUserId] = useParams("gallery", []);
   const [isMine, setIsMine] = useState<boolean>(false);
   useEffect(() => {
-    console.log(userId, targetUserId);
-    if (targetUserId === userId) {
+    const { id } = user;
+    console.log(id, userId);
+    if (id === userId) {
       setIsMine(true);
     }
   }, [userId]);
@@ -30,7 +31,7 @@ export default function SyncButton() {
     setShow(true);
   }
   function onLoad(data: IGalleryMapData): void {
-    setData(data);
+    setData(data, userId ?? "");
     setResource(null);
     setShow(false);
   }
@@ -40,7 +41,7 @@ export default function SyncButton() {
         <button className="sync-btn" onClick={showModal}>
           <img src={SyncButtonIcon}></img>
         </button>
-        <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
+        <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
           <SpaceCreater
             resource={resource}
             onSubmit={(period: PeriodType | null, theme: THEME | null) => {

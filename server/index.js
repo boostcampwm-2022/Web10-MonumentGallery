@@ -36,10 +36,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
-// auth middleware
-app.use(["/test/getData", "/create", "/auth/check", "/api/*"], authMiddleware);
-app.use(["/test/getData", "/api/*"], catchAuthError);
-
 // api routing
 app.use("/auth", authRouter);
 app.use("/test", testRouter);

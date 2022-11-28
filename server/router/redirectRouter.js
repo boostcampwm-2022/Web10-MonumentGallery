@@ -1,9 +1,10 @@
 import express from "express";
-import path from "node:path";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/create", (req, res, next) => {
+router.get("/create", authMiddleware, (req, res, next) => {
+  console.log(req.userid);
   if (req.userid == null) return res.redirect("/");
   next();
 });

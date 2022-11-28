@@ -4,11 +4,11 @@ import axios from "axios";
 export async function processDataFromRawContent(rawContent, theme) {
   const keywordData = await getKeywordFromFastAPI(rawContent);
   const grouppedPage = getGroups(keywordData);
-  console.log("keywords : ", keywordData);
-  console.log("groupPage : ", grouppedPage);
+  // console.log("keywords : ", keywordData);
+  // console.log("groupPage : ", grouppedPage);
   const positionData = getPositions(grouppedPage);
-  console.log(positionData.pages);
-  console.log(positionData.nodes);
+  // console.log(positionData.pages);
+  // console.log(positionData.nodes);
   const res = attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
 
   return attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
@@ -25,6 +25,7 @@ export function processDataForClient(galleryContent) {
         title: page.title,
         subtitle: page.subtitle,
         links: page.links,
+        imagePixel: page.imagePixel,
       };
     }),
     nodes: galleryContent.nodes,
@@ -61,6 +62,7 @@ function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes) 
           }),
         ],
         links: rawContent[page.id].links,
+        imagePixel: rawContent[page.id].imagePixel,
       };
     }),
     nodes,
@@ -119,7 +121,7 @@ function getFastAPIFormData(rawContent) {
   //data를 fastapi 서버로 보내기 용이한 형태로 가공
   return Object.keys(rawContent).reduce(
     (acc, cur) => {
-      console.log(cur);
+      // console.log(cur);
       acc.pages[cur] = {
         title: rawContent[cur].title,
         h1: rawContent[cur].h1,
@@ -135,7 +137,7 @@ function getFastAPIFormData(rawContent) {
 
 function getGroups(keywords) {
   const sortedTotalKeywords = sortKeywords(keywords.totalKeywords);
-  console.log(sortedTotalKeywords);
+  // console.log(sortedTotalKeywords);
 
   if (sortedTotalKeywords.length < 3) return {};
 

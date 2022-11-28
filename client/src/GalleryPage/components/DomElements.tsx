@@ -2,10 +2,11 @@ import { Suspense, useState } from "react";
 import Header from "../../components/Header";
 import { Toast } from "../../components/Toast/Toast";
 import FloatLayout from "../../layouts/FloatLayout";
+import SyncButton from "./SyncButton";
 import lockStore from "../../store/lock.store";
+import HistoryIcon from "../../assets/images/hamburger.svg";
 import SharedIcon from "../../assets/images/shared.svg";
 import ProtectedIcon from "../../assets/images/protected.svg";
-import MenuIcon from "../../assets/images/hamburger.svg";
 import ThemeSeletor from "../../components/ThemeSelector";
 import UserInfo from "../../components/Header/UserInfo";
 import FullScreenModal from "../../components/modal/FullScreenModal";
@@ -21,7 +22,7 @@ import axios from "axios";
 export default function DomElements() {
   const { locked } = lockStore();
   const [showShareModal, setShowShareModal] = useState(false);
-
+  
   return (
     <>
       <div hidden={locked}>
@@ -33,10 +34,10 @@ export default function DomElements() {
             </Suspense>
             <ThemeSeletor />
             <button>
-              <img width={24} src={MenuIcon} />
+              <img width={24} src={HistoryIcon} />
             </button>
           </Header>
-
+          <SyncButton />
           <Suspense fallback={<ShareButtonFallback />}>
             <CheckShared />
             <ShareButton show={showShareModal} setShow={setShowShareModal} />

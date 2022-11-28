@@ -1,19 +1,23 @@
-import React, { Suspense, useLayoutEffect, useState } from "react";
-import FullScreenModal from "../components/modal/FullScreenModal";
-import "./style.scss";
+import { Suspense, useLayoutEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import FloatLayout from "../layouts/FloatLayout";
+
 import Header from "../components/Header";
 import SpaceCreater, { PeriodType } from "../components/SpaceCreater";
-import { createResource, Resource } from "../utils/suspender";
-import { THEME } from "../@types/gallery";
+import FullScreenModal from "../components/modal/FullScreenModal";
+import { Toast } from "../components/Toast/Toast";
+import TOAST from "../components/Toast/ToastList";
+import FloatLayout from "../layouts/FloatLayout";
+
 import Gallery from "../GalleryPage/Gallery";
+import dummyData from "../GalleryPage/dummyData";
+
+import toastStore from "../store/toast.store";
 import galleryStore from "../store/gallery.store";
 import themeStore from "../store/theme.store";
-import dummyData from "../GalleryPage/dummyData";
-import TOAST from "../components/Toast/ToastList";
-import toastStore from "../store/toast.store";
-import { Toast } from "../components/Toast/Toast";
+import { createResource, Resource } from "../utils/suspender";
+
+import "./style.scss";
+import { THEME } from "../@types/gallery";
 
 interface IPostGalleryResponse {
   page: string;

@@ -38,7 +38,7 @@ export async function loadLastGallery(userID) {
 
 export async function getGalleryHistory(userID) {
   const historyMap = await loadUserGalleryListFromDB(userID);
-  return Object.fromEntries( [...historyMap] );
+  return Object.fromEntries([...historyMap]);
 }
 
 export function getLastGalleryID(userID) {

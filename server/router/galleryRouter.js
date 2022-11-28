@@ -1,6 +1,6 @@
 import express from "express";
 import axios from "axios";
-import { asyncHandler } from "../utils/utils.js";
+import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import { processDataFromRawContent, processDataForClient } from "../service/dataProcessService.js";
 import {
@@ -10,11 +10,14 @@ import {
   getGalleryHistory,
   getLastGalleryID,
 } from "../service/dataSaveService.js";
+import { asyncHandler } from "../utils/utils.js";
 
 const router = express.Router();
 
 router.post(
   "/gallery",
+  authMiddleware,
+  catchAuthError,
   asyncHandler(async (req, res) => {
     //duration= 2w||1m||3m||1y
     const userID = req.userid;
@@ -43,6 +46,7 @@ router.get(
 
 router.get(
   "/gallery/:targetUserID/:galleryID",
+  authMiddleware,
   asyncHandler(async (req, res) => {
     // const userID = req.userid;
     console.log(req.params);
@@ -55,6 +59,7 @@ router.get(
 
 router.get(
   "/gallery/:id",
+  authMiddleware,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
     console.log("hey!", id);
@@ -66,6 +71,7 @@ router.get(
 
 router.get(
   "/user/lastGallery",
+  authMiddleware,
   asyncHandler(async (req, res) => {
     const userID = req.userid;
 

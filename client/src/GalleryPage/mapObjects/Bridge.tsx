@@ -1,6 +1,5 @@
 import { Vector3, Quaternion } from "three";
 import { Vector3Arr } from "../../@types/common";
-import { Color } from "@react-three/fiber";
 import themeStore from "../../store/theme.store";
 import { BRIDGE_COLORS } from "../../@types/colors";
 import { THEME } from "../../@types/gallery";

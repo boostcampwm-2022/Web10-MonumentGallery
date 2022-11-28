@@ -17,11 +17,7 @@ export default function Stone(props: GroupProps) {
   return (
     <group {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]} scale={1}>
-        <group rotation={[Math.PI / 2, 0, 0]}>
-          <group rotation={[-Math.PI / 2, 0, 0]}>
-            <mesh castShadow receiveShadow geometry={nodes.lp2_Material_0.geometry} material={materials.Material} />
-          </group>
-        </group>
+        <mesh castShadow receiveShadow geometry={nodes.lp2_Material_0.geometry} material={materials.Material} />
       </group>
     </group>
   );

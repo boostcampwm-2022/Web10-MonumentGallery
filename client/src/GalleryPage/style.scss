@@ -12,6 +12,15 @@
   z-index: 1;
   border: 1px solid black;
 }
+.sync-btn {
+  position: fixed;
+  left: 30px;
+  bottom: 30px;
+  img {
+    width: 30px;
+  }
+}
+
 .error-modal {
   height: 100%;
   display: flex;

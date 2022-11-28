@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "../../components/Header";
 import { Toast } from "../../components/Toast/Toast";
 import FloatLayout from "../../layouts/FloatLayout";
@@ -6,7 +5,6 @@ import SyncButton from "./SyncButton";
 import lockStore from "../../store/lock.store";
 import HistoryIcon from "../../assets/images/hamburger.svg";
 import ThemeSeletor from "../../components/ThemeSelector";
-import userStore from "../../store/user.store";
 
 export default function DomElements() {
   const { locked } = lockStore();

@@ -11,7 +11,6 @@ import ThemeSeletor from "../../components/ThemeSelector";
 import UserInfo from "../../components/Header/UserInfo";
 import FullScreenModal from "../../components/modal/FullScreenModal";
 import { CheckLoggedIn } from "../../hooks/useLoggedIn";
-import CheckShared from "../../hooks/useShared";
 import UserInfoSkeleton from "../../components/Header/UserInfoSkeleton";
 import toastStore from "../../store/toast.store";
 import TOAST from "../../components/Toast/ToastList";
@@ -22,7 +21,7 @@ import axios from "axios";
 export default function DomElements() {
   const { locked } = lockStore();
   const [showShareModal, setShowShareModal] = useState(false);
-  
+
   return (
     <>
       <div hidden={locked}>
@@ -38,10 +37,7 @@ export default function DomElements() {
             </button>
           </Header>
           <SyncButton />
-          <Suspense fallback={<ShareButtonFallback />}>
-            <CheckShared />
-            <ShareButton show={showShareModal} setShow={setShowShareModal} />
-          </Suspense>
+          <ShareButton show={showShareModal} setShow={setShowShareModal} />
         </FloatLayout>
         <FullScreenModal css={{ width: "230px", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />

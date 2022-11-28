@@ -107,8 +107,7 @@ router.post(
   catchAuthError,
   asyncHandler(async (req, res) => {
     const { isShared } = req.body;
-    const result = await updateShareState(req.userid, isShared);
-    console.log(result);
+    await updateShareState(req.userid, isShared);
     res.status(200).json();
   }),
 );

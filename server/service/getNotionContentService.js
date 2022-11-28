@@ -30,14 +30,16 @@ async function getPages(notion, limitTime) {
       Date.parse(result.last_edited_time) > limitTime
     ) {
       pageIds.push(result.id);
+      // console.log(result);
       const innerText = getTitleFromProperties(result.properties);
-      console.log(innerText);
+      // console.log(innerText);
       if (innerText)
         pageContents[result.id] = {
           type: "page",
           title: innerText,
           createdTime: result.created_time,
           lastEditedTime: result.last_edited_time,
+          myUrl: result.url,
         };
     }
   });
@@ -60,6 +62,7 @@ async function getPages(notion, limitTime) {
         title: innerText?.length > 0 ? innerText[0] : "-",
         createdTime: result.created_time,
         lastEditedTime: result.last_edited_time,
+        myUrl: result.url,
       };
     }
   });
@@ -73,13 +76,13 @@ async function getPages(notion, limitTime) {
     pageContents[pageIds[i]] = { ...pageContents[pageIds[i]], ...pageData };
   }
 
-  console.log(pageContents);
+  // console.log(pageContents);
 
   //자식 페이지들 재귀탐색 (85개까지만 => 대략 1분 걸림)
   let cursor = -1;
 
   while (++cursor < pageIds.length && pageIds.length <= 85) {
-    console.log(cursor);
+    // console.log(cursor);
     const cursorId = pageIds[cursor];
     for (let i = 0; i < pageContents[cursorId].childPage.length && pageIds.length < 100; i++) {
       const nowPage = pageContents[cursorId].childPage[i];
@@ -89,6 +92,7 @@ async function getPages(notion, limitTime) {
         title: nowPage.title,
         createdTime: nowPage.createdTime,
         lastEditedTime: nowPage.lastEditedTime,
+        myUrl: nowPage.myUrl,
         ...(await getDataFromPage(notion, nowPage.id)),
       };
     }
@@ -116,6 +120,15 @@ async function getDataFromPage(notion, pageId) {
     delete res.columnList;
   }
 
+  //자식 페이지 url 처리
+
+  if (res.childPage.length > 0) {
+    for (let i = 0; i < res.childPage.length; i++) {
+      const childPage = await notion.pages.retrieve({ page_id: res.childPage[i].id });
+      res.childPage[i].myUrl = childPage.url;
+    }
+  }
+
   //자식 데이터베이스 처리
   if (res.childDatabase.length > 0) {
     for (let i = 0; i < res.childDatabase.length; i++) {
@@ -131,6 +144,7 @@ async function getDataFromPage(notion, pageId) {
           title: innerText?.length > 0 ? innerText[0] : "-",
           createdTime: childDatabase.created_time,
           lastEditedTime: childDatabase.last_edited_time,
+          myUrl: childDatabase.url,
         });
       } else {
         //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> paragraph

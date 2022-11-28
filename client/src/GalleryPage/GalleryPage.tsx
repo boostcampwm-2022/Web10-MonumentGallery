@@ -13,17 +13,17 @@ import dummyData from "./dummyData";
 import toastStore from "../store/toast.store";
 import TOAST from "../components/Toast/ToastList";
 import FullScreenModal from "../components/modal/FullScreenModal";
-import { CheckLoggedIn } from "../hooks/useLoggedIn";
 
 export default function GalleryPage() {
   return (
-    <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
-      <CheckLoggedIn resource={createResource()} />
-      <div className="canvas-outer">
-        <GalleryLoader resource={createResource()} />
-      </div>
+    <>
+      <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
+        <div className="canvas-outer">
+          <GalleryLoader resource={createResource()} />
+        </div>
+      </Suspense>
       <DomElements />
-    </Suspense>
+    </>
   );
 }
 
@@ -40,8 +40,6 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
     return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
   }
   const { data } = useResource(resource, { method: "get", url: setRequestParams() });
-  console.log(data);
-
   useEffect(() => {
     if (data) {
       setData(data);
@@ -75,7 +73,7 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryMapData> }) {
     return (
       <div>
         <Loading />
-        <FullScreenModal show={true} width="50%" height="30%">
+        <FullScreenModal show={true} css={{ width: "50%", height: "30%" }}>
           <div className="error-modal">
             <span className="error-span">메인화면으로 돌아갑니다 ... {remainTime}</span>
             <button className="enter-sample-world-button" onClick={() => setUseSampleData(true)}>

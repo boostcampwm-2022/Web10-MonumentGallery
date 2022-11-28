@@ -8,6 +8,12 @@ import Gallery from "../schema/gallerySchema.js";
 
 const router = express.Router();
 
+router.get("/testShared", (req, res) => {
+  setTimeout(() => {
+    res.send({ isShared: true });
+  }, 2000);
+});
+
 router.get("/testPost", (req, res) => {
   const username = `${Math.floor(Math.random() * 100000)}`;
   TestModel.create({

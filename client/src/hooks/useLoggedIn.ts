@@ -1,8 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import userStore from "../store/user.store";
-import { Resource } from "../utils/suspender";
+import { createResource } from "../utils/suspender";
 import { User } from "../@types/common";
+import useResource from "./useResource";
 
 export function useLoggedIn() {
   const { isLoggedIn, user, setUser, clearUser } = userStore();
@@ -21,14 +22,16 @@ export function useLoggedIn() {
   return [isLoggedIn, user] as const;
 }
 
-interface ICheck {
+export interface ICheck {
   logined: boolean;
   user: User;
 }
 
-export function CheckLoggedIn({ resource }: { resource: Resource<ICheck> }) {
+const resource = createResource<ICheck>();
+
+export function CheckLoggedIn() {
   const { setUser, clearUser } = userStore();
-  const res = useMemo(() => resource.read({ method: "get", url: "/auth/check" }), []);
+  const res = useResource(resource, { method: "get", url: "/auth/check" });
   if (!res.data || res.error) return null;
   const { logined, user } = res.data;
 

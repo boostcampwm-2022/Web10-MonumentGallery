@@ -5,7 +5,6 @@ import FullScreenModal from "../components/modal/FullScreenModal";
 import FloatLayout from "../layouts/FloatLayout";
 import NotionIcon from "../assets/images/notion-icon.png";
 import "./style.scss";
-import { createResource } from "../utils/suspender";
 import userStore from "../store/user.store";
 import { CheckLoggedIn } from "../hooks/useLoggedIn";
 import Loading from "./Loading";
@@ -32,7 +31,7 @@ export default function MainPage() {
       </div>
 
       <Suspense fallback={<Loading />}>
-        <CheckLoggedIn resource={createResource()} />
+        <CheckLoggedIn />
         <FloatLayout>
           <Header>
             <UserInfo />
@@ -48,7 +47,7 @@ export default function MainPage() {
           )}
         </FloatLayout>
       </Suspense>
-      <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
+      <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
         <div className="create-modal">
           <span className="make-gallery">갤러리 만들기</span>
           <button type="button" onClick={notionOauthHandler}>

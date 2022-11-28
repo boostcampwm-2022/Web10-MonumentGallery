@@ -63,7 +63,7 @@ export default function CreatePage() {
           Upload
         </button>
       </FloatLayout>
-      <FullScreenModal show={show} width="70%" height="55%" setShow={setShow}>
+      <FullScreenModal show={show} css={{ width: "70%", height: "55%", minHeight: "480px" }} setShow={setShow}>
         <SpaceCreater
           resource={resource}
           onSubmit={(period: PeriodType | null, theme: THEME | null) => {

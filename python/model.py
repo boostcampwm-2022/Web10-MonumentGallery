@@ -24,6 +24,8 @@ class preprocessedNotionData(BaseModel):
 
 class ImageURLData(BaseModel):
     url: str
+    width : int = 10,
+    height : int = 10,
 
 
 

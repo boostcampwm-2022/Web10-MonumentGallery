@@ -1,5 +1,4 @@
 import express from "express";
-import axios from "axios";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import { processDataFromRawContent, processDataForClient } from "../service/dataProcessService.js";
@@ -11,6 +10,8 @@ import {
   getLastGalleryID,
 } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
+import { updateShareState } from "../model/galleryModel.js";
+import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 
 const router = express.Router();
 
@@ -19,14 +20,19 @@ router.post(
   authMiddleware,
   catchAuthError,
   asyncHandler(async (req, res) => {
+    //timeout 5분..
+    req.connection.setTimeout(60 * 5 * 1000);
     //duration= 2w||1m||3m||1y
+    console.log("page making start");
     const userID = req.userid;
     const notionAccessToken = req.accessToken;
     const nowTime = Date.now();
     const { period = "all", theme = "dream" } = req.query;
 
     const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
-    const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
+    const notionImageContent = await getImagePixelsFromPages(notionRawContent);
+    // console.log(notionImageContent);
+    const processedNotionContent = await processDataFromRawContent(notionImageContent, theme);
     const galleryID = await saveGallery(userID, processedNotionContent);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
@@ -53,7 +59,7 @@ router.get(
     const { targetUserID, galleryID } = req.params;
 
     const result = await loadGallery(targetUserID, galleryID);
-    res.status(200).json(processDataForClient(result));
+    res.status(200).json({ gallery: processDataForClient(result), userId: targetUserID });
   }),
 );
 
@@ -92,6 +98,18 @@ router.get(
 
     const result = await getLastGalleryID(userID);
     res.status(200).json({ result });
+  }),
+);
+
+router.post(
+  "/user/share",
+  authMiddleware,
+  catchAuthError,
+  asyncHandler(async (req, res) => {
+    const { isShared } = req.body;
+    const result = await updateShareState(req.userid, isShared);
+    console.log(result);
+    res.status(200).json();
   }),
 );
 

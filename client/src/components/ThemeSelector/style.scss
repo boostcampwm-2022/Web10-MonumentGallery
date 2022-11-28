@@ -2,7 +2,7 @@
   position: relative;
   display: block;
   margin-right: 10px;
-  width: 100px;
+  width: 80px;
   color: #60666d;
   border-radius: 30px;
 
@@ -15,6 +15,7 @@
     &:focus {
       & + .select-box__list {
         opacity: 1;
+        animation-name: none;
         .select-box__option {
           cursor: pointer;
         }
@@ -38,7 +39,7 @@
     display: none;
     width: 100%;
     margin: 0;
-    padding: 15px;
+    padding: 4px;
     background-color: #fff;
     text-align: center;
     border-radius: 10px;
@@ -50,7 +51,11 @@
     padding: 0;
     list-style: none;
     opacity: 0;
-    box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
+    animation-name: HideList;
+    animation-delay: 0.1s;
+    animation-duration: 0.1s;
+    animation-fill-mode: forwards;
+    animation-timing-function: step-start;
   }
 
   &__option {
@@ -66,5 +71,13 @@
       color: #546c84;
       background-color: #fbfbfb;
     }
+  }
+}
+@keyframes HideList {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
   }
 }

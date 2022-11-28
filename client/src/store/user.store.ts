@@ -1,17 +1,22 @@
 import create from "zustand";
+import { User } from "../@types/common";
 
 interface UserStore {
   isLoggedIn: boolean;
-  userId: string | null;
-  setUser: (userId: string) => void;
+  isShared: boolean;
+  user: User;
+  setUser: (user: User) => void;
+  setShared: (shared: boolean) => void;
   clearUser: () => void;
 }
 
 const userStore = create<UserStore>((set) => ({
   isLoggedIn: false,
-  userId: null,
-  setUser: (userId) => set(() => ({ isLoggedIn: true, userId })),
-  clearUser: () => set(() => ({ isLoggedIn: false, userId: null })),
+  isShared: false,
+  user: {},
+  setUser: (user) => set((state) => ({ ...state, isLoggedIn: true, user })),
+  setShared: (shared) => set((state) => ({ ...state, isShared: shared })),
+  clearUser: () => set(() => ({})),
 }));
 
 export default userStore;

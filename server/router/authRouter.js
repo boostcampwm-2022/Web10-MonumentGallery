@@ -1,5 +1,5 @@
 import express from "express";
-import { authMiddleware } from "../middleware/authMiddleware.js";
+import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { getTokenDataFromNotion, saveToken } from "../service/authService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { TOKEN_EXPIRES } from "../utils/constants.js";
@@ -30,6 +30,11 @@ router.get("/check", authMiddleware, (req, res) => {
   const name = req.username ?? null;
   const avatarUrl = req.avatar_url ?? null;
   res.json({ logined: !!id, user: { id, name, avatarUrl } });
+});
+
+router.post("/logout", authMiddleware, catchAuthError, (req, res) => {
+  res.clearCookie("token");
+  res.send();
 });
 
 export default router;

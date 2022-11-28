@@ -7,12 +7,7 @@ export default function Header({ children }: { children?: React.ReactNode }) {
       <a href="/">
         <span className="logo">MonumentGallery</span>
       </a>
-      <div className="header-right-elem">
-        <>
-          <div></div>
-          {children}
-        </>
-      </div>
+      <div className="header-right-elem">{children}</div>
     </div>
   );
 }

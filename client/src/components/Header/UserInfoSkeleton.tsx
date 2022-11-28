@@ -3,6 +3,7 @@ export default function UserInfoSkeleton() {
     <>
       <div className="skeleton skeleton-avatar"></div>
       <div className="skeleton skeleton-name"></div>
+      <div className="skeleton skeleton-logout"></div>
     </>
   );
 }

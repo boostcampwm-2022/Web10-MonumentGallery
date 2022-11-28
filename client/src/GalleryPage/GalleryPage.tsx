@@ -13,10 +13,12 @@ import dummyData from "./dummyData";
 import toastStore from "../store/toast.store";
 import TOAST from "../components/Toast/ToastList";
 import FullScreenModal from "../components/modal/FullScreenModal";
+import { CheckLoggedIn } from "../hooks/useLoggedIn";
 
 export default function GalleryPage() {
   return (
     <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
+      <CheckLoggedIn resource={createResource()} />
       <div className="canvas-outer">
         <GalleryLoader resource={createResource()} />
       </div>

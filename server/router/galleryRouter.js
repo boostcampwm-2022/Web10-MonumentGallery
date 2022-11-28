@@ -57,6 +57,21 @@ router.get(
   }),
 );
 
+router.post(
+  "/gallery/sync",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    const userID = req.userid;
+    const notionAccessToken = req.accessToken;
+    const { period = "all", theme = "dream" } = req.query;
+    const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
+    const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
+    const galleryID = await saveGallery(userID, processedNotionContent);
+    const result = await loadGallery(userID, galleryID);
+    res.status(200).json(processDataForClient(result));
+  }),
+);
+
 router.get(
   "/gallery/:id",
   authMiddleware,

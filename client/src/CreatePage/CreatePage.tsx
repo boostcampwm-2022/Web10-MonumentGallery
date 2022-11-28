@@ -1,6 +1,4 @@
-import { Suspense, useLayoutEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-
+import { useLayoutEffect, useState } from "react";
 import Header from "../components/Header";
 import SpaceCreater, { PeriodType } from "../components/SpaceCreater";
 import FullScreenModal from "../components/modal/FullScreenModal";
@@ -13,7 +11,6 @@ import dummyData from "../GalleryPage/dummyData";
 
 import toastStore from "../store/toast.store";
 import galleryStore from "../store/gallery.store";
-import themeStore from "../store/theme.store";
 import { createResource, Resource } from "../utils/suspender";
 
 import "./style.scss";

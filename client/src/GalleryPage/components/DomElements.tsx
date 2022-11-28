@@ -2,13 +2,14 @@ import React from "react";
 import Header from "../../components/Header";
 import { Toast } from "../../components/Toast/Toast";
 import FloatLayout from "../../layouts/FloatLayout";
+import SyncButton from "./SyncButton";
 import lockStore from "../../store/lock.store";
-import MenuIcon from "../../assets/images/hamburger.svg";
+import HistoryIcon from "../../assets/images/hamburger.svg";
 import ThemeSeletor from "../../components/ThemeSelector";
+import userStore from "../../store/user.store";
 
 export default function DomElements() {
   const { locked } = lockStore();
-
   return (
     <>
       {!locked && (
@@ -16,9 +17,10 @@ export default function DomElements() {
           <Header>
             <ThemeSeletor />
             <button>
-              <img width={24} src={MenuIcon} />
+              <img width={24} src={HistoryIcon} />
             </button>
           </Header>
+          <SyncButton />
         </FloatLayout>
       )}
       <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />

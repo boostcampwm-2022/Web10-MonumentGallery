@@ -11,13 +11,21 @@ export async function processDataFromRawContent(rawContent, theme) {
   // console.log(positionData.nodes);
   const res = attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
 
-  return attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
+  return attachAllDataForDB(
+    rawContent,
+    keywordData,
+    theme,
+    positionData.pages,
+    positionData.nodes,
+    positionData.groupKeywords,
+  );
 }
 
 export function processDataForClient(galleryContent) {
   return {
     theme: galleryContent.theme,
     totalKeywords: getKeywordsAsDictionary(galleryContent.totalKeywords),
+    groupKeywords: galleryContent.groupKeywords,
     pages: galleryContent.pages.map((page) => {
       return {
         position: page.position,
@@ -32,10 +40,11 @@ export function processDataForClient(galleryContent) {
   };
 }
 
-function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes) {
+function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes, groupKeywords) {
   return {
     theme: theme,
     totalKeywords: getTop30Keywords(notionKeyword.totalKeywords),
+    groupKeywords,
     pages: positions.map((page) => {
       return {
         position: page.position,
@@ -173,17 +182,20 @@ function getPositions(groups) {
   //중심 좌표 (0,0)
   let pages = [];
   let nodes = [];
+  let groupKeywords = [];
 
   Object.keys(groups).forEach((keyword, idx) => {
     const nowPositionData = getSquarePositions(groups[keyword], idx, pages.length);
-    console.log(nowPositionData.pages, nowPositionData.nodes);
+    // console.log(nowPositionData.pages, nowPositionData.nodes);
+    groupKeywords = [...groupKeywords, ...[{ keyword: keyword, node: pages.length }]];
     pages = [...pages, ...nowPositionData.pages];
     nodes = [...nodes, ...nowPositionData.nodes];
   });
-
+  // console.log(groupKeywords);
   return {
     pages,
     nodes,
+    groupKeywords: groupKeywords,
   };
 }
 

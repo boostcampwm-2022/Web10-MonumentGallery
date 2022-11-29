@@ -2,12 +2,7 @@ import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
 import { processDataFromRawContent, processDataForClient } from "../service/dataProcessService.js";
-import {
-  saveGallery,
-  loadGallery,
-  loadLastGallery,
-  getGalleryHistory,
-} from "../service/dataSaveService.js";
+import { saveGallery, loadGallery, loadLastGallery, getGalleryHistory } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { updateShareState } from "../model/galleryModel.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";

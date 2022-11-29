@@ -26,15 +26,16 @@ router.get(
   }),
 );
 
-router.get("/check", authMiddleware, 
+router.get(
+  "/check",
+  authMiddleware,
   asyncHandler(async (req, res) => {
     const id = req.userid ?? null;
     const name = req.username ?? null;
     const avatarUrl = req.avatar_url ?? null;
     const galleryStatus = await getUserGalleryStatus(id);
-    console.log(galleryStatus);
     res.json({ logined: !!id, user: { id, name, avatarUrl }, ...galleryStatus });
-  })
+  }),
 );
 
 router.post("/logout", authMiddleware, catchAuthError, (req, res) => {

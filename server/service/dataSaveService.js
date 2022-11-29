@@ -44,9 +44,9 @@ export async function getGalleryHistory(userID) {
 }
 
 export async function getUserGalleryStatus(userID) {
-  const [ lastGalleryID, isShared ] = await Promise.all([
+  const [lastGalleryID, isShared] = await Promise.all([
     loadLastGalleryIDFromDB(userID),
-    loadSharedStatusFromDB(userID)
+    loadSharedStatusFromDB(userID),
   ]);
 
   return { isCreated: lastGalleryID !== null, isShared: isShared ?? false };

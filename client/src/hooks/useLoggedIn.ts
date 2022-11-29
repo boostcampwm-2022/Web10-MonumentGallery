@@ -13,7 +13,7 @@ export interface ICheck {
 const resource = createResource<ICheck>({ method: "get", url: "/auth/check" });
 
 export function CheckLoggedIn() {
-  const { setUser, setShared, setCreated, clearUser, getState } = userStore();
+  const { setUser, setShared, setCreated, clearUser } = userStore();
   const res = resource.read();
   if (!res.data || res.error) return null;
   const { logined, user, isShared, isCreated } = res.data;

@@ -17,9 +17,9 @@ const userStore = create<UserStore>((set) => ({
   isShared: false,
   isCreated: false,
   user: {},
-  setUser: (user) => set((state) => ({ isLoggedIn: true, user })),
-  setShared: (shared) => set((state) => ({ isShared: shared })),
-  setCreated: (created) => set((state) => ({ isCreated: created })),
+  setUser: (user) => set(() => ({ isLoggedIn: true, user })),
+  setShared: (shared) => set(() => ({ isShared: shared })),
+  setCreated: (created) => set(() => ({ isCreated: created })),
   clearUser: () => set(() => ({ isLoggedIn: false, isShared: false, isCreated: false, user: {} })),
 }));
 

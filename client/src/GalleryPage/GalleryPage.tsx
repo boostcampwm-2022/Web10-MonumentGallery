@@ -15,7 +15,7 @@ import FullScreenModal from "../components/modal/FullScreenModal";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);
-  function setRequestParams() {
+  function getRequestUrl() {
     const END_POINT = "/api/gallery";
     return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
   }
@@ -23,7 +23,7 @@ export default function GalleryPage() {
     <>
       <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
         <div className="canvas-outer">
-          <GalleryLoader resource={createResource({ method: "get", url: setRequestParams() })} />
+          <GalleryLoader resource={createResource({ method: "get", url: getRequestUrl() })} />
         </div>
         <DomElements />
       </Suspense>

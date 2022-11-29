@@ -26,22 +26,6 @@ router.post(
   }),
 );
 
-router.post(
-  "/gallery/sync",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    const userID = req.userid;
-    const nowTime = Date.now();
-    const galleryID = await createGallery(req, res);
-
-    writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 불러오는 중...", progress: 90, data: data }), res);
-    const result = await loadGallery(userID, galleryID);
-    writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 불러오기 완료", progress: 95, data: data }), res);
-
-    console.log(`총 처리 시간: ${Date.now() - nowTime}`);
-    endConnectionSSE(res, processDataForClient(result));
-  }),
-);
 
 router.get(
   "/gallery/history/:id",
@@ -63,6 +47,22 @@ router.get(
 
     const result = await loadGallery(targetUserID, galleryID);
     res.status(200).json({ gallery: processDataForClient(result), userId: targetUserID });
+  }),
+);
+
+
+router.post(
+  "/gallery/sync",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    const userID = req.userid;
+    const notionAccessToken = req.accessToken;
+    const { period = "all", theme = "dream" } = req.query;
+    const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
+    const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
+    const galleryID = await saveGallery(userID, processedNotionContent);
+    const result = await loadGallery(userID, galleryID);
+    res.status(200).json({ data: processDataForClient(result), page: `/gallery/${userID}/${galleryID}` });
   }),
 );
 

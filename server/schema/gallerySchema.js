@@ -10,7 +10,7 @@ const gallerySchema = new Schema({
   totalKeywords: [keywordScheama],
   groupKeywords: [
     {
-      node: { type: Number, required: true },
+      position: [Number],
       keyword: { type: String, default: "-" },
     },
   ],
@@ -32,7 +32,6 @@ const gallerySchema = new Schema({
         },
       ],
       imagePixel: [[Number]],
-      myUrl: { type: String, required: true },
     },
   ],
   nodes: [[Number]],

@@ -74,7 +74,7 @@ function GalleryLoader({ resource }: { resource: Resource<{ gallery: IGalleryMap
       <div>
         <Loading />
         <FullScreenModal show={true} css={{ width: "50%", height: "30%" }}>
-          <div className="error-modal">
+          <div className="modal error-modal">
             <span className="error-span">메인화면으로 돌아갑니다 ... {remainTime}</span>
             <button className="enter-sample-world-button" onClick={() => setUseSampleData(true)}>
               샘플 월드로 입장하기

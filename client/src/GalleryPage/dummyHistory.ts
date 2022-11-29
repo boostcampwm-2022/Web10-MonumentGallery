@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import dummyData from "../dummyData";
+import dummyData from "./dummyData";
 
 export const dummyHistory = [
   {

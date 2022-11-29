@@ -57,12 +57,15 @@
   }
 }
 
-.error-modal {
+.modal {
   height: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+
+.error-modal {
   .error-span {
     font-size: 23px;
     margin-bottom: 20px;
@@ -76,11 +79,6 @@
   }
 }
 .create-modal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
   .make-gallery {
     font-size: 30px;
     margin-bottom: 20px;
@@ -108,12 +106,37 @@
   font-size: 18px;
   position: fixed;
   top: 100px;
-  text-align: right;
-  right: calc(30% + 100px);
+  right: calc(20% + 100px);
+  .history-modal {
+    color: #222222;
+    .history-modal-data {
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    .history-modal-buttons {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      button {
+        color: #ffffff;
+        width: 30%;
+        height: 30px;
+        border-radius: 10px;
+      }
+      .history-get-button {
+        background-color: #222222;
+      }
+      .history-cancel-button {
+        background-color: #ce0029;
+      }
+    }
+  }
   .history-list {
     position: inherit;
     z-index: 1;
-    width: 30%;
+    width: 20%;
+    text-align: right;
     .history-item {
       cursor: pointer;
     }

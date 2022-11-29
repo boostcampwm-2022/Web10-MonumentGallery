@@ -17,10 +17,8 @@ import TOAST from "../../components/Toast/ToastList";
 import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
 import axios from "axios";
-import { v4 } from "uuid";
 import { IGalleryMapData } from "../../@types/gallery";
-import dummyData from "../dummyData";
-import { dummyHistory } from "./dummyHistory";
+import { dummyHistory } from "../dummyHistory";
 
 export default function DomElements() {
   const { locked } = lockStore();
@@ -59,7 +57,7 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
   const { addToast } = toastStore();
 
   return (
-    <div className="share-modal">
+    <div className="modal share-modal">
       <span>{isShared ? "공유를 중단하시겠습니까?" : "공유를 시작하시겠습니까?"}</span>
       <button
         onClick={() => {
@@ -115,7 +113,8 @@ function HistorySidebar({ show }: { show: boolean }) {
   const [scrollOffset, setScrollOffset] = useState(4);
   const [selected, setSelectd] = useState(4);
   const [canScroll, setCanScroll] = useState(true);
-  const [histories, setHistories] = useState(dummyHistory);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const histories = dummyHistory;
 
   useEffect(() => {
     const offset = Math.abs(selected - scrollOffset);
@@ -150,6 +149,7 @@ function HistorySidebar({ show }: { show: boolean }) {
       setScrollOffset(newSelected);
       return;
     }
+    setShowHistoryModal(true);
   }
 
   return (
@@ -160,6 +160,26 @@ function HistorySidebar({ show }: { show: boolean }) {
           <HistoryItem key={history.id} distanceToSelected={i - selected} history={history} onClick={onHistoryClick} />
         ))}
       </div>
+      {showHistoryModal && (
+        <FullScreenModal css={{ width: "20%", height: "20%" }} show={showHistoryModal} setShow={setShowHistoryModal}>
+          <div className="modal history-modal">
+            <div>데이터를 불러옵니다.</div>
+            <div className="history-modal-data">
+              <span>
+                {histories[selected].date} - {histories[selected].time}
+              </span>
+              <br />
+              <span>{histories[selected].id}</span>
+            </div>
+            <div className="history-modal-buttons">
+              <button className="history-get-button">불러오기</button>
+              <button className="history-cancel-button" onClick={() => setShowHistoryModal(false)}>
+                취소
+              </button>
+            </div>
+          </div>
+        </FullScreenModal>
+      )}
     </div>
   );
 }

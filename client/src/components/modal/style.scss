@@ -6,6 +6,7 @@
   border-radius: 10px;
   background: #fff;
   transform: translate(-50%, -50%);
+  z-index: 2;
 }
 .dimmed {
   position: fixed;
@@ -14,4 +15,5 @@
   width: 100%;
   height: 100%;
   background: rgba(34, 34, 34, 0.3);
+  z-index: 1;
 }

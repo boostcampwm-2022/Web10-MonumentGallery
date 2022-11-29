@@ -134,7 +134,7 @@ function HistorySidebar({
   const historyRef = useRef<HTMLDivElement>(null);
   const historyListRef = useRef<HTMLDivElement>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
-  const [selected, setSelectd] = useState(0);
+  const [selected, setSelected] = useState(0);
   const [canScroll, setCanScroll] = useState(true);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const { userId } = galleryStore();
@@ -148,25 +148,29 @@ function HistorySidebar({
       setHistories(res.data);
       const idx = res.data.findIndex((history) => history.id === galleryId);
       setScrollOffset(idx);
-      setSelectd(idx);
+      setSelected(idx);
     });
   }, [userId]);
+
+  useEffect(() => {
+    if (canScroll) return;
+    const scrollTimeout = setTimeout(() => {
+      setCanScroll(true);
+    }, 20);
+    return () => clearTimeout(scrollTimeout);
+  }, [canScroll]);
 
   useEffect(() => {
     const offset = Math.abs(selected - scrollOffset);
     if (offset >= 1) {
       if (!historyListRef.current) return;
-      setSelectd(parseInt("" + scrollOffset));
+      setSelected(parseInt("" + scrollOffset));
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const height = historyListRef.current.querySelector("div")!.clientHeight - historyListRef.current.clientHeight;
       const length = histories.length - 2;
       const scr = height / length;
       historyListRef.current.scrollTop = -scr + selected * scr;
     }
-
-    const scrollTimeout = setTimeout(() => {
-      setCanScroll(true);
-    }, 20);
 
     const scrollHandler = (e: WheelEvent) => {
       if (!canScroll || Math.abs(e.deltaY) < 10) return;
@@ -175,13 +179,9 @@ function HistorySidebar({
       if (dir > 0 && selected >= histories.length - 1) return;
       setScrollOffset(scrollOffset + dir);
       setCanScroll(false);
-      scrollTimeout;
     };
     historyRef.current?.addEventListener("wheel", scrollHandler);
-    return () => {
-      historyRef.current?.removeEventListener("wheel", scrollHandler);
-      clearTimeout(scrollTimeout);
-    };
+    return () => historyRef.current?.removeEventListener("wheel", scrollHandler);
   }, [scrollOffset, canScroll]);
 
   function setGalleryDataFromHistory() {
@@ -196,7 +196,7 @@ function HistorySidebar({
   function onHistoryClick(distanceToSelected: number) {
     if (distanceToSelected) {
       const newSelected = selected + distanceToSelected;
-      setSelectd(newSelected);
+      setSelected(newSelected);
       setScrollOffset(newSelected);
       return;
     }

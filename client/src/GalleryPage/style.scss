@@ -2,6 +2,14 @@
   background-color: #f2ced5;
 }
 
+.modal {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 .share {
   position: absolute;
   left: 40px;
@@ -32,7 +40,7 @@
 .share-modal {
   display: flex;
   flex-wrap: wrap;
-  align-content: space-between;
+  justify-content: space-between;
   height: 100%;
   & > button {
     display: flex;
@@ -80,14 +88,6 @@
       transform: translate(0, 15%);
     }
   }
-}
-
-.modal {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
 }
 
 .error-modal {

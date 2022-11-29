@@ -8,6 +8,7 @@ const urlRegEx =
 
 export async function getRawContentsFromNotion(notionAccessToken, period) {
   const limitTime = getLimitTime(period);
+  // const limitTime = Date.now();
   const notion = new Client({ auth: notionAccessToken });
 
   return await getPages(notion, limitTime);

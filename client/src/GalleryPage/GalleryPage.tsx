@@ -1,12 +1,12 @@
 import "./style.scss";
 import Gallery from "./Gallery";
 import DomElements from "./components/DomElements";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { createResource, Resource } from "../utils/suspender";
 import Loading from "./components/Loading";
 import galleryStore from "../store/gallery.store";
 import { useParams } from "../hooks/useParams";
-import { IGalleryMapData } from "../@types/gallery";
+import { IGalleryDataResponse } from "../@types/gallery";
 import themeStore from "../store/theme.store";
 import dummyData from "./dummyData";
 import toastStore from "../store/toast.store";
@@ -15,7 +15,11 @@ import FullScreenModal from "../components/modal/FullScreenModal";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);
-  function setRequestParams() {
+
+  const requestUrl = useMemo(() => getRequestUrl(), []);
+  const [resource, setResource] = useState({ method: "get", url: requestUrl });
+
+  function getRequestUrl() {
     const END_POINT = "/api/gallery";
     return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
   }
@@ -23,15 +27,15 @@ export default function GalleryPage() {
     <>
       <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
         <div className="canvas-outer">
-          <GalleryLoader resource={createResource({ method: "get", url: setRequestParams() })} />
+          <GalleryLoader resource={createResource(resource)} />
         </div>
-        <DomElements />
+        <DomElements setResource={setResource} />
       </Suspense>
     </>
   );
 }
 
-function GalleryLoader({ resource }: { resource: Resource<{ gallery: IGalleryMapData; userId: string }> }) {
+function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> }) {
   const [remainTime, setRemainTime] = useState(5);
   const [useSampleData, setUseSampleData] = useState(false);
   const { setData } = galleryStore();
@@ -54,7 +58,7 @@ function GalleryLoader({ resource }: { resource: Resource<{ gallery: IGalleryMap
       addToast(TOAST.INFO("E 키눌러 마우스로 화면전환을 할 수 있습니다.", 1000 * 60));
       addToast(TOAST.INFO("E 키를 다시 눌러 마우스를 표시합니다.", 1000 * 60));
     }
-  }, [useSampleData]);
+  }, [useSampleData, data]);
 
   useEffect(() => {
     if (data || useSampleData) return;
@@ -74,7 +78,7 @@ function GalleryLoader({ resource }: { resource: Resource<{ gallery: IGalleryMap
       <div>
         <Loading />
         <FullScreenModal show={true} css={{ width: "50%", height: "30%" }}>
-          <div className="error-modal">
+          <div className="modal error-modal">
             <span className="error-span">메인화면으로 돌아갑니다 ... {remainTime}</span>
             <button className="enter-sample-world-button" onClick={() => setUseSampleData(true)}>
               샘플 월드로 입장하기

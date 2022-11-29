@@ -1,7 +1,7 @@
 import { DoubleSide, UniformsUtils, UniformsLib } from "three";
 
 export const pixelFragmentShaderUniforms = () => {
-  return UniformsUtils.merge([UniformsLib.lights, { lerp: { value: 1 } }]);
+  return UniformsUtils.merge([UniformsLib.lights, { lerp: { value: 1 }, scatterFragScale: { value: 1 } }]);
 };
 
 const pixelFragmentShader = {
@@ -16,6 +16,7 @@ const pixelFragmentShader = {
     attribute float globalDist;
 
     uniform float lerp;
+    uniform float scatterFragScale;
 
     varying vec3 vNormal;
     varying vec3 vViewPosition;
@@ -56,7 +57,7 @@ const pixelFragmentShader = {
       float triPositionLength = mix(length(pivot), globalDist, lerp);
       vec3 newTriPosition = triPositionLength * newTriPositionDirection;
 
-      vec3 newPosition = newLocalPosition * mix(1.0, 0.6, lerp) + newTriPosition;
+      vec3 newPosition = newLocalPosition * mix(1.0, scatterFragScale, lerp) + newTriPosition;
 
       // vec4 modelViewPosition = modelViewMatrix * vec4( position.xy, globalDist, 1.0 );
       vec4 modelViewPosition = modelViewMatrix * vec4( newPosition, 1.0 );
@@ -77,9 +78,9 @@ const pixelFragmentShader = {
     void main() {
       vec4 diffuseColor = vec4( vColor, 1.0 );
       ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-      vec3 specular = vec3( 0.8, 0.8, 0.8 );
-      float shininess = 45.0;
-      float specularStrength = 0.5;
+      vec3 specular = vec3( mix(0.1, 0.4, lerp) );
+      float shininess = 120.0;
+      float specularStrength = 1.0;
       vec3 normal = vNormal;
 
       #include <lights_phong_fragment>

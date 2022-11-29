@@ -16,7 +16,7 @@ const galleryStore = create<GalleryStore>((set) => ({
     theme: THEME.DREAM,
   },
   userId: null,
-  setData: (data, userId) => set((state) => ({ ...state, data, userId })),
+  setData: (data, id) => set((state) => ({ ...state, data, userId: id })),
 }));
 
 export default galleryStore;

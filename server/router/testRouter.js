@@ -150,6 +150,77 @@ router.get("/sse/:id", (req, res) => {
 
   // emitSSE(res, id, new Date().toLocaleTimeString());
 });
+let clients = [];
+function eventsHandler(request, response, next) {
+  const { period, theme } = request.query;
+  console.log("test:", period, theme);
+  const headers = {
+    "Content-Type": "text/event-stream",
+    Connection: "keep-alive",
+    "Cache-Control": "no-cache",
+    charset: "UTF-8",
+    "Transfer-Encoding": "chunked",
+  };
+  response.writeHead(200, headers);
+
+  const clientId = Date.now();
+
+  const newClient = {
+    id: clientId,
+    response,
+  };
+
+  clients.push(newClient);
+
+  console.log(`${clientId} Connection opened!`);
+
+  request.on("close", () => {
+    console.log(`${clientId} Connection closed!`);
+    clients = clients.filter((client) => client.id !== clientId);
+  });
+  setTimeout(() => {
+    const response = {
+      kind: "노션에서 데이터 가져오기",
+      progress: 10,
+      data: {},
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 1000);
+  setTimeout(() => {
+    const response = {
+      kind: "자연어 처리하기",
+      progress: 40,
+      data: {},
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 3000);
+  setTimeout(() => {
+    const response = {
+      kind: "DB에 저장하기",
+      progress: 70,
+      data: {},
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 5000);
+  setTimeout(() => {
+    const response = {
+      kind: "완료",
+      progress: 100,
+      data: { page: "/gallery/a3fb0ee0-7379-4ae7-aada-c4eff877c0de/903c2514-3ddc-4d20-9daf-06577bcd7b15" },
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 7000);
+}
+
+router.get("/sse", eventsHandler);
 
 export default router;
 

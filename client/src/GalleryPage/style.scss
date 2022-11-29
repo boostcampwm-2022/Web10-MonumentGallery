@@ -1,9 +1,13 @@
 .canvas {
   background-color: #f2ced5;
 }
-.logo {
-  position: fixed;
-  z-index: 1;
+
+.modal {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .share {
@@ -36,7 +40,7 @@
 .share-modal {
   display: flex;
   flex-wrap: wrap;
-  align-content: space-between;
+  justify-content: space-between;
   height: 100%;
   & > button {
     display: flex;
@@ -87,11 +91,6 @@
 }
 
 .error-modal {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
   .error-span {
     font-size: 23px;
     margin-bottom: 20px;
@@ -105,11 +104,6 @@
   }
 }
 .create-modal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
   .make-gallery {
     font-size: 30px;
     margin-bottom: 20px;
@@ -128,6 +122,84 @@
     .fa {
       margin-left: -12px;
       margin-right: 8px;
+    }
+  }
+}
+
+.history-sidebar {
+  color: #ffffff;
+  font-size: 18px;
+  position: fixed;
+  top: 100px;
+  right: calc(20% + 150px);
+  .history-modal {
+    color: #222222;
+    .history-modal-data {
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    .history-modal-buttons {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      button {
+        color: #ffffff;
+        width: 30%;
+        height: 30px;
+        border-radius: 10px;
+      }
+      .history-get-button {
+        background-color: #222222;
+      }
+      .history-cancel-button {
+        background-color: #ce0029;
+      }
+    }
+  }
+  .history-list {
+    position: inherit;
+    z-index: 1;
+    width: 25%;
+    height: calc(100% - 200px);
+    text-align: right;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    .history {
+      margin: 5px;
+    }
+    .history-item {
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 10px;
+    }
+    .history-item-0 {
+      color: #333333;
+      font-size: 30px;
+    }
+    .history-item-1 {
+      font-size: 27px;
+    }
+    .history-item-2 {
+      font-size: 25px;
+    }
+    .history-item-3 {
+      font-size: 22px;
+      opacity: 0.6;
+    }
+    .history-item-4 {
+      font-size: 20px;
+      opacity: 0.5;
+    }
+    .history-item-plain {
+      opacity: 0.4;
+    }
+    .history-time {
+      color: #333333;
+      margin-right: 20px;
+      width: 200px;
+      top: 10px;
+      font-size: 15px;
     }
   }
 }

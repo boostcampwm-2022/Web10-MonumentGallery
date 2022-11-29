@@ -16,6 +16,7 @@ import { createResource, Resource } from "../utils/suspender";
 
 import "./style.scss";
 import { THEME } from "../@types/gallery";
+import URLCreator from "../utils/URLCreator";
 
 interface IPostGalleryResponse {
   page: string;
@@ -27,7 +28,7 @@ interface IOnLoadFunction {
 
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [eventSourceUrl, setEventSourceUrl] = useState<string>("");
   const { setData } = galleryStore();
   const { addToast } = toastStore();
 
@@ -36,7 +37,7 @@ export default function CreatePage() {
     addToast(TOAST.INFO("데이터를 처리하는 동안 샘플 월드를 랜더링합니다", 5000));
     addToast(TOAST.INFO("WASD 키로 캐릭터를 움직입니다.", 1000 * 60));
     addToast(TOAST.INFO("left shift 및 space로 상하움직임을 제어합니다.", 1000 * 60));
-    addToast(TOAST.INFO("E 키눌러 마우스로 화면전환을 할 수 있습니다.", 1000 * 60));
+    addToast(TOAST.INFO("E 키를 눌러 마우스로 화면전환을 할 수 있습니다.", 1000 * 60));
     addToast(TOAST.INFO("E 키를 다시 눌러 마우스를 표시합니다.", 1000 * 60));
   }, []);
 
@@ -62,10 +63,10 @@ export default function CreatePage() {
       </FloatLayout>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%", minHeight: "480px" }} setShow={setShow}>
         <SpaceCreater
-          resource={resource}
+          eventSourceUrl={eventSourceUrl}
           onSubmit={(period: PeriodType | null, theme: THEME | null) => {
-            console.log({ period, theme });
-            setResource(createResource({ method: "post", url: "/api/gallery", params: { period, theme } }));
+            const eventSourceUrl = URLCreator({ path: "/test/sse", params: { period: period, theme: theme } });
+            setEventSourceUrl(eventSourceUrl);
           }}
           onLoad={onLoad as IOnLoadFunction}
         />

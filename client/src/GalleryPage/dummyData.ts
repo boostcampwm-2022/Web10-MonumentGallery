@@ -2,7 +2,6 @@ import { IGalleryMapData } from "../@types/gallery";
 
 // dummy data
 const dummyData: IGalleryMapData = {
-  uuid: "#24adaf",
   theme: "SPRING",
   totalKeywords: {
     부스트캠프: 2,

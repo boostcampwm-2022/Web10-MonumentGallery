@@ -46,7 +46,7 @@ router.get(
     const { targetUserID, galleryID } = req.params;
 
     const result = await loadGallery(targetUserID, galleryID);
-    res.status(200).json({ gallery: processDataForClient(result), userId: targetUserID });
+    res.status(200).json({ gallery: result, userId: targetUserID });
   }),
 );
 
@@ -62,7 +62,7 @@ router.post(
     const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
     const galleryID = await saveGallery(userID, processedNotionContent);
     const result = await loadGallery(userID, galleryID);
-    res.status(200).json({ data: processDataForClient(result), page: `/gallery/${userID}/${galleryID}` });
+    res.status(200).json({ data: result, page: `/gallery/${userID}/${galleryID}` });
   }),
 );
 
@@ -71,21 +71,9 @@ router.get(
   authMiddleware,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
-    console.log("hey!", id);
 
     const result = await loadLastGallery(id);
-    res.status(200).json(result);
-  }),
-);
-
-router.get(
-  "/user/lastGallery",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    const userID = req.userid;
-
-    const result = await getLastGalleryID(userID);
-    res.status(200).json({ result });
+    res.status(200).json({ gallery: result, userID: id });
   }),
 );
 
@@ -97,6 +85,20 @@ router.post(
     const { isShared } = req.body;
     await updateShareState(req.userid, isShared);
     res.status(200).json();
+  }),
+);
+
+router.get(
+  "/history/:userid",
+  asyncHandler(async (req, res) => {
+    const { userid } = req.params;
+    const history = await loadUserGalleryList(userid);
+    const histories = [];
+    history.forEach((data, id) => {
+      const date = data.toLocaleDateString().slice(0, -1).replaceAll(". ", "-");
+      histories.push({ id, date, time: data.toLocaleTimeString() });
+    });
+    res.status(200).json(histories);
   }),
 );
 

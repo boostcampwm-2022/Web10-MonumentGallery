@@ -1,0 +1,47 @@
+@mixin narrow{
+  @media (max-width: 799px){ 
+    @content;
+  }
+}
+
+.create-modal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  @include narrow {
+    flex-direction: column;
+  }
+  .create-modal-part {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    .create-modal-title {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 19px;
+      width: 60%;
+      min-width: 270px;
+      height: 50px;
+      color: #ffffff;
+      background: #333333;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 20px;
+      img {
+        line-height: 20px;
+        margin-right: 12px;
+      }
+    }
+  }
+}
+

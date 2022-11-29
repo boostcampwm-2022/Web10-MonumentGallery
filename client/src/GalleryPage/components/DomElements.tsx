@@ -150,8 +150,6 @@ function HistorySidebar({
       setScrollOffset(idx);
       setSelectd(idx);
     });
-    setScrollOffset(4);
-    setSelectd(4);
   }, [userId]);
 
   useEffect(() => {

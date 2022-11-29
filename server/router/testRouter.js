@@ -103,6 +103,8 @@ router.get("/pytest/image", (req, res) => {
 
 let clients = [];
 function eventsHandler(request, response, next) {
+  const { period, theme } = request.query;
+  console.log("test:", period, theme);
   const headers = {
     "Content-Type": "text/event-stream",
     Connection: "keep-alive",

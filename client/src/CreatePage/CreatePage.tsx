@@ -16,6 +16,7 @@ import { createResource, Resource } from "../utils/suspender";
 
 import "./style.scss";
 import { THEME } from "../@types/gallery";
+import URLCreator from "../utils/URLCreator";
 
 interface IPostGalleryResponse {
   page: string;
@@ -64,7 +65,8 @@ export default function CreatePage() {
         <SpaceCreater
           eventSourceUrl={eventSourceUrl}
           onSubmit={(period: PeriodType | null, theme: THEME | null) => {
-            setEventSourceUrl("/test/sse");
+            const eventSourceUrl = URLCreator({ path: "/test/sse", params: { period: period, theme: theme } });
+            setEventSourceUrl(eventSourceUrl);
           }}
           onLoad={onLoad as IOnLoadFunction}
         />

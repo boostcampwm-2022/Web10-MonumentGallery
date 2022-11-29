@@ -29,6 +29,7 @@ interface IOnLoadFunction {
 export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
   const [eventSourceUrl, setEventSourceUrl] = useState<string>("");
+  const [requested, setRequested] = useState<boolean>(false);
   const { setData } = galleryStore();
   const { addToast } = toastStore();
 
@@ -65,10 +66,15 @@ export default function CreatePage() {
         <SpaceCreater
           eventSourceUrl={eventSourceUrl}
           onSubmit={(period: PeriodType | null, theme: THEME | null) => {
-            const eventSourceUrl = URLCreator({ path: "/test/sse", params: { period: period, theme: theme } });
+            const eventSourceUrl = URLCreator({
+              path: "/api/gallery/create",
+              params: { period: period, theme: theme },
+            });
             setEventSourceUrl(eventSourceUrl);
           }}
           onLoad={onLoad as IOnLoadFunction}
+          requested={requested}
+          setRequested={setRequested}
         />
       </FullScreenModal>
     </>

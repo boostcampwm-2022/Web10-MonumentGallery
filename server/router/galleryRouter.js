@@ -1,7 +1,7 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
-import { processDataFromRawContent, processDataForClient } from "../service/dataProcessService.js";
+import { processDataFromRawContent } from "../service/dataProcessService.js";
 import { saveGallery, loadGallery, loadLastGallery, getGalleryHistory } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { updateShareState } from "../model/galleryModel.js";
@@ -53,7 +53,7 @@ router.get(
     const { targetUserID, galleryID } = req.params;
 
     const result = await loadGallery(targetUserID, galleryID);
-    res.status(200).json({ gallery: processDataForClient(result), userId: targetUserID });
+    res.status(200).json({ gallery: result, userId: targetUserID });
   }),
 );
 
@@ -68,7 +68,7 @@ router.post(
     const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
     const galleryID = await saveGallery(userID, processedNotionContent);
     const result = await loadGallery(userID, galleryID);
-    res.status(200).json(processDataForClient(result));
+    res.status(200).json(result);
   }),
 );
 

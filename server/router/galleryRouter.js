@@ -68,7 +68,7 @@ router.post(
     const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
     const galleryID = await saveGallery(userID, processedNotionContent);
     const result = await loadGallery(userID, galleryID);
-    res.status(200).json(result);
+    res.status(200).json({ data: result, page: `/gallery/${userID}/${galleryID}` });
   }),
 );
 
@@ -79,7 +79,6 @@ router.get(
     const { id } = req.params;
 
     const result = await loadLastGallery(id);
-    console.log(result);
     res.status(200).json( { gallery: result, userID: id} );
   }),
 );

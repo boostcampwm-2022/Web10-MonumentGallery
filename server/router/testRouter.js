@@ -6,7 +6,7 @@ import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 import Gallery from "../schema/gallerySchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
-
+import { getConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
 const router = express.Router();
 
 router.get("/testShared", (req, res) => {
@@ -99,6 +99,56 @@ router.get("/pytest/image", (req, res) => {
       res.send(e.data);
     })
     .catch((err) => console.log(err));
+});
+
+const sse = {};
+
+router.get("/sse/integration/:id", (req, res) => {
+  getConnectionSSE(req.params.id, res);
+  setTimeout(() => {
+    writeMessageSSE(req.params.id, "hi");
+  }, 1000);
+  setTimeout(() => {
+    endConnectionSSE(req.params.id);
+  }, 2000);
+});
+
+router.get("/sse/connection/:id", (req, res) => {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+  sse[req.params.id] = res;
+
+  res.write("connected\n\n");
+});
+
+router.get("/sse/:id", (req, res) => {
+  setTimeout(() => {
+    sse[req.params.id].write("hello\n\n");
+  }, 1000);
+  setTimeout(() => {
+    sse[req.params.id].write("hello2\n\n");
+  }, 2000);
+  setTimeout(() => {
+    sse[req.params.id].write("hello3\n\n");
+  }, 3000);
+  setTimeout(() => {
+    sse[req.params.id].write("hello4\n\n");
+  }, 4000);
+  setTimeout(() => {
+    sse[req.params.id].write("end\n\n");
+    sse[req.params.id].end();
+  }, 5000);
+  res.send("success");
+  // const id = new Date().toLocaleTimeString();
+  // Sends a SSE every 3 seconds on a single connection.
+  // setInterval(function () {
+  //   emitSSE(res, id, new Date().toLocaleTimeString());
+  // }, 3000);
+
+  // emitSSE(res, id, new Date().toLocaleTimeString());
 });
 
 export default router;

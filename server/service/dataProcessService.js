@@ -4,12 +4,12 @@ import axios from "axios";
 export async function processDataFromRawContent(rawContent, theme) {
   const keywordData = await getKeywordFromFastAPI(rawContent);
   const grouppedPage = getGroups(keywordData);
-  console.log(rawContent);
-  console.log("keywords : ", keywordData);
-  console.log("groupPage : ", grouppedPage);
+  // console.log(rawContent);
+  // console.log("keywords : ", keywordData);
+  // console.log("groupPage : ", grouppedPage);
   const positionData = getPositions(grouppedPage);
-  console.log(positionData.pages);
-  console.log(positionData.nodes);
+  // console.log(positionData.pages);
+  // console.log(positionData.nodes);
   return attachAllDataForDB(rawContent, keywordData, theme, positionData);
 }
 

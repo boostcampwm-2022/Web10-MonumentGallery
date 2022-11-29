@@ -82,7 +82,7 @@ async function getPages(notion, limitTime) {
     ...(await getRootPages(notion, limitTime, "database")),
   };
   const pageIds = Object.keys(pageContents);
-  console.log(pageIds);
+  // console.log(pageIds);
   //자식 페이지들 재귀탐색 (85개까지만 => 대략 1분 걸림)
 
   let cursor = -1;
@@ -97,8 +97,8 @@ async function getPages(notion, limitTime) {
       pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
     }
   }
-  console.log(pageIds);
-  console.log(pageContents);
+  // console.log(pageIds);
+  // console.log(pageContents);
   return pageContents;
 }
 

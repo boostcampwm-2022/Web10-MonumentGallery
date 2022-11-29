@@ -4,7 +4,7 @@ import FullScreenModal from "../../components/modal/FullScreenModal";
 import SpaceCreater, { PeriodType } from "../../components/SpaceCreater";
 import galleryStore from "../../store/gallery.store";
 import SyncButtonIcon from "../../assets/images/sync-button-icon.png";
-import { createResource, Resource } from "../../utils/suspender";
+import URLCreator from "../../utils/URLCreator";
 import userStore from "../../store/user.store";
 
 interface IOnLoadFunction {
@@ -17,7 +17,8 @@ interface IOnLoadFunctionParams {
 
 export default function SyncButton() {
   const [show, setShow] = useState<boolean>(false);
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [eventSourceUrl, setEventSourceUrl] = useState<string>("");
+  const [requested, setRequested] = useState<boolean>(false);
   const { userId, setData } = galleryStore();
   const { user } = userStore();
   const [isMine, setIsMine] = useState<boolean>(false);
@@ -36,7 +37,7 @@ export default function SyncButton() {
   function onLoad({ data, page }: IOnLoadFunctionParams): void {
     setData(data, userId ?? "");
     history.replaceState(null, "", page);
-    setResource(null);
+    setRequested(false);
     setShow(false);
   }
   if (isMine) {
@@ -58,11 +59,17 @@ export default function SyncButton() {
 
         <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
           <SpaceCreater
-            resource={resource}
+            eventSourceUrl={eventSourceUrl}
             onSubmit={(period: PeriodType | null, theme: THEME | null) => {
-              setResource(createResource({ method: "post", url: "/api/gallery/sync", params: { period, theme } }));
+              const eventSourceUrl = URLCreator({
+                path: "/api/gallery/sync",
+                params: { period: period, theme: theme },
+              });
+              setEventSourceUrl(eventSourceUrl);
             }}
             onLoad={onLoad as IOnLoadFunction}
+            requested={requested}
+            setRequested={setRequested}
             type="sync"
           />
         </FullScreenModal>

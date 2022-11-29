@@ -29,6 +29,18 @@ export interface IGalleryMapData {
   nodes: number[][];
 }
 
+export interface IGalleryDataResponse {
+  gallery: IGalleryMapData;
+  userId: string;
+}
+
+export interface IHistory {
+  id: string;
+  date: string;
+  time: string;
+  data: IGalleryMapData;
+}
+
 export const THEME = {
   DREAM: "DREAM",
   SPRING: "SPRING",

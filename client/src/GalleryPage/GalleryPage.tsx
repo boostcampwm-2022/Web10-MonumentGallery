@@ -6,7 +6,7 @@ import { createResource, Resource } from "../utils/suspender";
 import Loading from "./components/Loading";
 import galleryStore from "../store/gallery.store";
 import { useParams } from "../hooks/useParams";
-import { IGalleryMapData } from "../@types/gallery";
+import { IGalleryDataResponse } from "../@types/gallery";
 import themeStore from "../store/theme.store";
 import dummyData from "./dummyData";
 import toastStore from "../store/toast.store";
@@ -31,7 +31,7 @@ export default function GalleryPage() {
   );
 }
 
-function GalleryLoader({ resource }: { resource: Resource<{ gallery: IGalleryMapData; userId: string }> }) {
+function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> }) {
   const [remainTime, setRemainTime] = useState(5);
   const [useSampleData, setUseSampleData] = useState(false);
   const { setData } = galleryStore();

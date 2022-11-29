@@ -45,6 +45,8 @@ function keyStateReducer(state: KeyState, { code, type }: KeyStateReducerProps) 
       return { ...state, [code]: true };
     case "keyup":
       return { ...state, [code]: false };
+    case "allKeyUp":
+      return {};
     default:
       throw new Error("invalid command!");
   }
@@ -67,13 +69,18 @@ function useKeyMovement() {
       if (movementKey === null) return;
       controlKeyState({ type: "keyup", code: movementKey });
     }
+    function allRelease() {
+      controlKeyState({ type: "allKeyUp" });
+    }
 
     document.addEventListener("keydown", keyDown);
     document.addEventListener("keyup", keyUp);
+    window.addEventListener("blur", allRelease);
 
     return () => {
       document.removeEventListener("keydown", keyDown);
       document.removeEventListener("keyup", keyUp);
+      window.removeEventListener("blur", allRelease);
     };
   }, []);
 

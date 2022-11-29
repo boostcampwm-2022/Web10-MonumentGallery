@@ -79,7 +79,7 @@ router.get(
     const { id } = req.params;
 
     const result = await loadLastGallery(id);
-    res.status(200).json( { gallery: result, userID: id} );
+    res.status(200).json({ gallery: result, userID: id });
   }),
 );
 

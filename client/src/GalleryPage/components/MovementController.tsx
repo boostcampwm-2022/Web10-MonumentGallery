@@ -8,7 +8,7 @@ interface KeyState {
 
 interface KeyStateReducerProps {
   code: string;
-  type: "keydown" | "keyup";
+  type: "keydown" | "keyup" | "allKeyUp";
 }
 
 interface MovementControllerProps {
@@ -70,7 +70,7 @@ function useKeyMovement() {
       controlKeyState({ type: "keyup", code: movementKey });
     }
     function allRelease() {
-      controlKeyState({ type: "allKeyUp" });
+      controlKeyState({ type: "allKeyUp", code: "" });
     }
 
     document.addEventListener("keydown", keyDown);

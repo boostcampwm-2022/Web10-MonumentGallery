@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Color, Vector3, Quaternion, Mesh, Camera, Object3D, ShaderMaterial } from "three";
+import { Color, Vector3, Quaternion, Mesh, Camera, Object3D } from "three";
 import { useThree, useFrame, MeshProps } from "@react-three/fiber";
 import { useSpring, animated, Interpolation } from "@react-spring/three";
 
@@ -41,22 +41,20 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   const meshRef = useRef<Mesh>(null);
   const worldPosition = useRef<Vector3>(new Vector3());
   const geometry = useMemo(() => new PixelFragmentGeometry(pixels, size, scatterRadius), [pixels, size, scatterRadius]);
-  const material = useMemo(
-    () => new ShaderMaterial({ ...PixelFragmentShader, uniforms: pixelFragmentShaderUniforms() }),
-    [],
-  );
+  const uniforms = useRef(pixelFragmentShaderUniforms());
+  const scatterFragScale = useMemo(() => {
+    const max = Math.max(pixels.length, pixels[0].length);
+    if (max === 0 || Number.isNaN(max)) return 1;
+    return 0.08 * max;
+  }, [pixels]);
 
   const [activate, setActivate] = useState(false);
   const [destPosition, setDestPosition] = useState(new Vector3());
   const [destRotation, setDestRotation] = useState(new Quaternion());
 
-  const { spring } = useSpring({
-    spring: +activate,
-    onChange: ({ value }) => {
-      material.uniforms.lerp.value = 1 - value.spring;
-    },
-  });
+  const { spring } = useSpring({ spring: +activate });
 
+  const lerp: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [1, 0]), []);
   const position: Interpolation<number, Vector3> = useMemo(
     () =>
       spring.to((i) => {
@@ -71,10 +69,6 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
       }),
     [destRotation],
   );
-
-  useEffect(() => {
-    material.uniforms.lerp.value = +!activate;
-  }, []);
 
   useEffect(() => {
     if (!geometry || !meshRef.current) return;
@@ -113,7 +107,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
     return setActivate((prev) => !prev);
   }
 
-  // why ts + react-spring + react-three/fiber is so messy
+  // why ts + react-spring + react-three/fiber is so messy!
   return (
     <>
       <animated.mesh
@@ -121,10 +115,16 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
         position={position as unknown as Vector3}
         quaternion={rotation as unknown as Quaternion}
         geometry={geometry}
-        material={material}
         onClick={toggleActivate}
         ref={meshRef}
-      />
+      >
+        <animated.shaderMaterial
+          {...PixelFragmentShader}
+          uniforms={uniforms.current}
+          uniforms-lerp-value={lerp}
+          uniforms-scatterFragScale-value={scatterFragScale}
+        />
+      </animated.mesh>
     </>
   );
 }

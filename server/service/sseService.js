@@ -1,4 +1,4 @@
-export function getConnectionSSE(res) {
+export function createConnectionSSE(res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
@@ -6,14 +6,13 @@ export function getConnectionSSE(res) {
     charset: "UTF-8",
     "Transfer-Encoding": "chunked",
   });
-  res.write(JSON.stringify({ kind: "시작", progress: 0, data: {} }) + "\n\n");
+  res.write("data: " + JSON.stringify({ kind: "시작", progress: 0, data: {} }) + "\n\n");
 }
 
 export function writeMessageSSE(msg, res) {
-  res.write(msg + "\n\n");
+  res.write("data: " + msg + "\n\n");
 }
 
 export function endConnectionSSE(res, data) {
-  res.write(JSON.stringify({ kind: "완료", progress: 100, data: data }) + "\n\n");
-  res.end();
+  res.write("data: " + JSON.stringify({ kind: "완료", progress: 100, data: data }) + "\n\n");
 }

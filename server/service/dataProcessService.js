@@ -4,11 +4,12 @@ import axios from "axios";
 export async function processDataFromRawContent(rawContent, theme) {
   const keywordData = await getKeywordFromFastAPI(rawContent);
   const grouppedPage = getGroups(keywordData);
-  // console.log("keywords : ", keywordData);
-  // console.log("groupPage : ", grouppedPage);
+  console.log(rawContent);
+  console.log("keywords : ", keywordData);
+  console.log("groupPage : ", grouppedPage);
   const positionData = getPositions(grouppedPage);
-  // console.log(positionData.pages);
-  // console.log(positionData.nodes);
+  console.log(positionData.pages);
+  console.log(positionData.nodes);
   return attachAllDataForDB(rawContent, keywordData, theme, positionData);
 }
 
@@ -25,7 +26,6 @@ export function processDataForClient(galleryContent) {
         subtitle: page.subtitle,
         links: page.links,
         imagePixel: page.imagePixel,
-        myUrl: page.myUrl,
       };
     }),
     nodes: galleryContent.nodes,
@@ -64,7 +64,6 @@ function attachAllDataForDB(rawContent, notionKeyword, theme, positionData) {
         ],
         links: rawContent[page.id].links,
         imagePixel: rawContent[page.id].imagePixel,
-        myUrl: rawContent[page.id].myUrl,
       };
     }),
     nodes: positionData.nodes,
@@ -180,11 +179,14 @@ function getPositions(groups) {
   Object.keys(groups).forEach((keyword, idx) => {
     const nowPositionData = getSquarePositions(groups[keyword], idx, pages.length);
     // console.log(nowPositionData.pages, nowPositionData.nodes);
-    groupKeywords = [...groupKeywords, ...[{ keyword: keyword, node: pages.length }]];
+    let start = pages.length;
     pages = [...pages, ...nowPositionData.pages];
     nodes = [...nodes, ...nowPositionData.nodes];
+    groupKeywords = [
+      ...groupKeywords,
+      ...[{ keyword: keyword, position: pages.length > start ? pages[start].position : [0, 0] }],
+    ];
   });
-  // console.log(groupKeywords);
   return {
     pages,
     nodes,

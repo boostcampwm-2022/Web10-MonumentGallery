@@ -132,6 +132,7 @@ function HistorySidebar({
   >;
 }) {
   const historyRef = useRef<HTMLDivElement>(null);
+  const historyListRef = useRef<HTMLDivElement>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
   const [selected, setSelectd] = useState(0);
   const [canScroll, setCanScroll] = useState(true);
@@ -149,12 +150,20 @@ function HistorySidebar({
       setScrollOffset(idx);
       setSelectd(idx);
     });
+    setScrollOffset(4);
+    setSelectd(4);
   }, [userId]);
 
   useEffect(() => {
     const offset = Math.abs(selected - scrollOffset);
     if (offset >= 1) {
+      if (!historyListRef.current) return;
       setSelectd(parseInt("" + scrollOffset));
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const height = historyListRef.current.querySelector("div")!.clientHeight - historyListRef.current.clientHeight;
+      const length = histories.length - 2;
+      const scr = height / length;
+      historyListRef.current.scrollTop = -scr + selected * scr;
     }
 
     const scrollTimeout = setTimeout(() => {
@@ -199,10 +208,17 @@ function HistorySidebar({
   return (
     <div ref={historyRef} className="history-sidebar" style={{ display: show ? "block" : "none" }}>
       <div className="dimmed" />
-      <div className="history-list">
-        {histories.map((history, i) => (
-          <HistoryItem key={history.id} distanceToSelected={i - selected} history={history} onClick={onHistoryClick} />
-        ))}
+      <div ref={historyListRef} className="history-list">
+        <div>
+          {histories.map((history, i) => (
+            <HistoryItem
+              key={history.id}
+              distanceToSelected={i - selected}
+              history={history}
+              onClick={onHistoryClick}
+            />
+          ))}
+        </div>
       </div>
       {showHistoryModal && (
         <FullScreenModal css={{ width: "20%", height: "20%" }} show={showHistoryModal} setShow={setShowHistoryModal}>

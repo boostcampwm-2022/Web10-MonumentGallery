@@ -27,13 +27,21 @@ interface SpaceCreaterProps {
   eventSourceUrl: string;
   onSubmit: (period: PeriodType | null, theme: THEME | null) => void;
   onLoad: IOnLoadFunction;
+  requested: boolean;
+  setRequested: React.Dispatch<React.SetStateAction<boolean>>;
   type?: "create" | "sync";
 }
 
-export default function SpaceCreater({ eventSourceUrl, onSubmit, onLoad, type = "create" }: SpaceCreaterProps) {
+export default function SpaceCreater({
+  eventSourceUrl,
+  onSubmit,
+  onLoad,
+  requested,
+  setRequested,
+  type = "create",
+}: SpaceCreaterProps) {
   const [period, PeriodSelectorWrapper, PeriodSelectorItem] = useSelectorComponent<PeriodType>("all");
   const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent<THEME>(THEME.DREAM);
-  const [requested, setRequested] = useState<boolean>(false);
   return (
     <div className="create-modal">
       <span className="make-gallery">{ModalName[type]}</span>

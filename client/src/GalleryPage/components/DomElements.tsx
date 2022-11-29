@@ -17,10 +17,19 @@ import TOAST from "../../components/Toast/ToastList";
 import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
 import axios from "axios";
-import { IGalleryDataResponse, IHistory } from "../../@types/gallery";
+import { IHistory } from "../../@types/gallery";
 import { useParams } from "../../hooks/useParams";
 
-export default function DomElements() {
+export default function DomElements({
+  setResource,
+}: {
+  setResource: React.Dispatch<
+    React.SetStateAction<{
+      method: string;
+      url: string;
+    }>
+  >;
+}) {
   const { locked } = lockStore();
   const [showShareModal, setShowShareModal] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -45,7 +54,7 @@ export default function DomElements() {
         <FullScreenModal css={{ width: "230px", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
         </FullScreenModal>
-        <HistorySidebar show={showSidebar} />
+        <HistorySidebar show={showSidebar} setShow={setShowSidebar} setResource={setResource} />
       </div>
       <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
     </>
@@ -108,14 +117,27 @@ function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch
   );
 }
 
-function HistorySidebar({ show }: { show: boolean }) {
+function HistorySidebar({
+  show,
+  setShow,
+  setResource,
+}: {
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setResource: React.Dispatch<
+    React.SetStateAction<{
+      method: string;
+      url: string;
+    }>
+  >;
+}) {
   const historyRef = useRef<HTMLDivElement>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
   const [selected, setSelectd] = useState(0);
   const [canScroll, setCanScroll] = useState(true);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const { userId, setData } = galleryStore();
-  const [, galleryId] = useParams("gallery", []);
+  const { userId } = galleryStore();
+  const [, galleryId] = useParams("gallery");
   const [histories, setHistories] = useState<IHistory[]>([]);
 
   useLayoutEffect(() => {
@@ -158,10 +180,10 @@ function HistorySidebar({ show }: { show: boolean }) {
   function setGalleryDataFromHistory() {
     const history = histories[selected];
     const url = `/api/gallery/${userId}/${history.id}`;
-    axios.get<IGalleryDataResponse>(url).then((res) => {
-      const { gallery, userId } = res.data;
-      setData(gallery, userId);
-    });
+    setResource({ method: "get", url });
+    setShow(false);
+    setShowHistoryModal(false);
+    window.history.pushState({}, "", `/gallery/${userId}/${history.id}`);
   }
 
   function onHistoryClick(distanceToSelected: number) {
@@ -220,7 +242,7 @@ function HistoryItem({
   onClick: (distanceToSelected: number) => void;
 }) {
   const [hover, setHover] = useState(false);
-  const [, galleryId] = useParams("gallery", []);
+  const [, galleryId] = useParams("gallery");
   const offset = useMemo(() => Math.abs(distanceToSelected), [distanceToSelected]);
 
   return (

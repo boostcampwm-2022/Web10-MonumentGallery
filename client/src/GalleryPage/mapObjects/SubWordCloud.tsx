@@ -23,7 +23,7 @@ interface IOrbitData {
   height: number;
 }
 
-interface WordHelixProps {
+interface WordHelixProps extends GroupProps {
   orbitData: IOrbitData;
   radius: number;
 }
@@ -121,7 +121,7 @@ function WordObject({ data, ...props }: WordObjectProps) {
 }
 
 // 각 텍스트 원통 집합 컴포넌트입니다.
-function WordHelix({ orbitData, radius }: WordHelixProps) {
+function WordHelix({ orbitData, radius, scale }: WordHelixProps) {
   const { children, y, height } = orbitData;
 
   const toRenderChildren = useMemo<WordObjectProps[]>(() => {
@@ -141,7 +141,7 @@ function WordHelix({ orbitData, radius }: WordHelixProps) {
   }, [children]);
 
   return (
-    <group>
+    <group scale={scale}>
       {toRenderChildren.map(({ data, position, quaternion }: WordObjectProps, i: number) => {
         const key = `${data.text}_${i}`;
         return <WordObject data={data} position={position} quaternion={quaternion} key={key} />;
@@ -158,10 +158,10 @@ export default function SubWordCloud({ keywords, radius, animator, ...props }: S
   const orbits = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
     return seperateWordToOrbits(wordData, radius);
-  }, [keywords]);
+  }, [keywords, radius]);
 
   const yPosition: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-1, 2]), []);
-  const scale: Interpolation<number, number> = useMemo(() => spring.to([0, 0.5, 1], [0, 0, 0.8]), []);
+  const scale: Interpolation<number, number> = useMemo(() => spring.to([0, 0.3, 1], [0, 0, 1]), []);
 
   useFrame((_, delta) => {
     if (!objectRef.current) return;
@@ -173,12 +173,12 @@ export default function SubWordCloud({ keywords, radius, animator, ...props }: S
       rotation-order="YXZ"
       visible={!!(ready || playing)}
       position-y={yPosition}
-      scale={scale}
       {...props}
+      scale={scale}
       ref={objectRef}
     >
       {orbits.map((orbit: IOrbitData, i: number) => (
-        <WordHelix orbitData={orbit} radius={radius} key={`orbit_${i}`} />
+        <WordHelix orbitData={orbit} radius={radius} scale={props.scale} key={`orbit_${i}`} />
       ))}
     </animated.group>
   );

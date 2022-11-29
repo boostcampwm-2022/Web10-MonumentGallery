@@ -6,6 +6,7 @@ import galleryStore from "../../store/gallery.store";
 import SyncButtonIcon from "../../assets/images/sync-button-icon.png";
 import { createResource, Resource } from "../../utils/suspender";
 import userStore from "../../store/user.store";
+
 interface IOnLoadFunction {
   <T>(a: T): void;
 }
@@ -20,6 +21,7 @@ export default function SyncButton() {
   const { userId, setData } = galleryStore();
   const { user } = userStore();
   const [isMine, setIsMine] = useState<boolean>(false);
+  const [hover, setHover] = useState(false);
   useEffect(() => {
     const { id } = user;
     console.log(id, userId);
@@ -40,9 +42,20 @@ export default function SyncButton() {
   if (isMine) {
     return (
       <>
-        <button className="sync-btn" onClick={showModal}>
-          <img src={SyncButtonIcon}></img>
-        </button>
+        <div className="sync">
+          <div className="sync-hover" hidden={!hover}>
+            동기화하기
+          </div>
+          <button
+            className="sync-button"
+            onClick={showModal}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
+            <img src={SyncButtonIcon}></img>
+          </button>
+        </div>
+
         <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
           <SpaceCreater
             resource={resource}

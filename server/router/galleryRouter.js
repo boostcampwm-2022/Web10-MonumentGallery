@@ -74,7 +74,7 @@ router.post(
     const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
     const galleryID = await saveGallery(userID, processedNotionContent);
     const result = await loadGallery(userID, galleryID);
-    res.status(200).json(processDataForClient(result));
+    res.status(200).json({ data: processDataForClient(result), page: `/gallery/${userID}/${galleryID}` });
   }),
 );
 

@@ -10,6 +10,10 @@ import userStore from "../../store/user.store";
 interface IOnLoadFunction {
   <T>(a: T): void;
 }
+interface IOnLoadFunctionParams {
+  data: IGalleryMapData;
+  page: string;
+}
 
 export default function SyncButton() {
   const [show, setShow] = useState<boolean>(false);
@@ -29,8 +33,9 @@ export default function SyncButton() {
   function showModal() {
     setShow(true);
   }
-  function onLoad(data: IGalleryMapData): void {
+  function onLoad({ data, page }: IOnLoadFunctionParams): void {
     setData(data, userId ?? "");
+    history.replaceState(null, "", page);
     setResource(null);
     setShow(false);
   }

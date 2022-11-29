@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import "./style.scss";
 
 interface IOnLoadFunction {
@@ -13,12 +14,13 @@ interface ProgressBarProps {
 interface IResponse {
   kind: string;
   progress: number;
-  data: any;
+  data: unknown;
 }
 
 export default function ProgressBar({ eventSourceUrl, onLoad }: ProgressBarProps) {
-  const [response, setReponse] = useState<IResponse>();
   const [listening, setListeing] = useState(false);
+  const barRef = useRef(null!);
+  const textRef = useRef<HTMLDivElement>(null!);
   let eventSource: EventSource;
   useEffect(() => {
     if (!listening) {
@@ -26,21 +28,35 @@ export default function ProgressBar({ eventSourceUrl, onLoad }: ProgressBarProps
         withCredentials: true,
       });
       eventSource.onmessage = (event) => {
-        const res = JSON.parse(event.data);
-        setReponse(res);
+        const res: IResponse = JSON.parse(event.data);
+        gsap.to(barRef.current, {
+          x: `${res.progress}%`,
+          duration: 2,
+          onStart: () => {
+            textRef.current.innerText = res.kind;
+          },
+          onComplete: () => {
+            if (res.progress === 100) {
+              onLoad(res.data);
+            }
+          },
+        });
       };
       setListeing(true);
+      return () => eventSource?.close();
     }
-    if (response?.progress === 100) {
-      eventSource?.close();
-      onLoad(response.data);
-    }
-  }, [response]);
+  }, []);
 
   return (
     <>
-      <h1>{response?.kind}</h1>
-      <progress className="progress-bar" value={response?.progress} max={100}></progress>
+      <div className="container">
+        <div className="progress-bar__container">
+          <div className="progress-bar" ref={barRef}></div>
+        </div>
+      </div>
+      <div className="progress-bar__text" ref={textRef}>
+        로딩을 시작합니다.
+      </div>
     </>
   );
 }

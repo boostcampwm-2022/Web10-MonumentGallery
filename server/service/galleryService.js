@@ -1,13 +1,12 @@
 import { saveGallery } from "./dataSaveService.js";
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
-import { getConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseService.js";
+import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseService.js";
+import { getRawContentsFromNotion } from "./getNotionContentService.js";
 
-export async function createGallery(req, res) {
-  req.connection.setTimeout(60 * 5 * 1000); //5분
-  getConnectionSSE(res);
-  const notionAccessToken = req.accessToken;
-  const { period = "all", theme = "dream" } = req.query;
+export async function createGallery(notionAccessToken, period, theme, userID, res) {
+  createConnectionSSE(res);
+
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 25, data: {} }), res);
   const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 50, data: {} }), res);

@@ -1,31 +1,33 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { processDataForClient } from "../service/dataProcessService.js";
-import { loadGallery, loadLastGallery, getGalleryHistory, getLastGalleryID } from "../service/dataSaveService.js";
+import { loadGallery, loadLastGallery, getGalleryHistory } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
-import { updateShareState } from "../model/galleryModel.js";
+import { updateShareState, loadUserGalleryList } from "../model/galleryModel.js";
 import { createGallery } from "../service/galleryService.js";
 import { writeMessageSSE, endConnectionSSE } from "../service/sseService.js";
 
 const router = express.Router();
 
-router.post(
-  "/gallery",
+router.get(
+  "/gallery/create",
   authMiddleware,
   catchAuthError,
   asyncHandler(async (req, res) => {
+    req.connection.setTimeout(60 * 5 * 1000); //5분
     //duration= 2w||1m||3m||1y
     console.log("page making start");
-    const userID = req.userid;
+    const userId = req.userid;
     const nowTime = Date.now();
+    const notionAccessToken = req.accessToken;
+    const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGallery(req, res);
+    const galleryID = await createGallery(notionAccessToken, period, theme, userId, res);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
-    endConnectionSSE(res, { page: `/gallery/${userID}/${galleryID}` });
+    endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}` });
   }),
 );
-
 
 router.get(
   "/gallery/history/:id",
@@ -50,19 +52,20 @@ router.get(
   }),
 );
 
-
-router.post(
+router.get(
   "/gallery/sync",
   authMiddleware,
   asyncHandler(async (req, res) => {
-    const userID = req.userid;
+    req.connection.setTimeout(60 * 5 * 1000); //5분
+    const userId = req.userid;
+
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
-    const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
-    const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
-    const galleryID = await saveGallery(userID, processedNotionContent);
-    const result = await loadGallery(userID, galleryID);
-    res.status(200).json({ data: result, page: `/gallery/${userID}/${galleryID}` });
+
+    const galleryID = await createGallery(notionAccessToken, period, theme, userId, res);
+
+    const result = await loadGallery(userId, galleryID);
+    endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}`, data: result });
   }),
 );
 
@@ -73,7 +76,7 @@ router.get(
     const { id } = req.params;
 
     const result = await loadLastGallery(id);
-    res.status(200).json({ gallery: result, userID: id });
+    res.status(200).json({ gallery: result, userId: id });
   }),
 );
 

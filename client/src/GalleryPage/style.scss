@@ -1,10 +1,6 @@
 .canvas {
   background-color: #f2ced5;
 }
-.logo {
-  position: fixed;
-  z-index: 1;
-}
 
 .share {
   position: absolute;
@@ -52,13 +48,6 @@
   }
 }
 
-.toast-test-btn {
-  position: fixed;
-  left: 10%;
-  top: 20%;
-  z-index: 1;
-  border: 1px solid black;
-}
 .sync-btn {
   position: fixed;
   left: 30px;
@@ -110,6 +99,51 @@
     .fa {
       margin-left: -12px;
       margin-right: 8px;
+    }
+  }
+}
+
+.history-sidebar {
+  color: #ffffff;
+  font-size: 18px;
+  position: fixed;
+  top: 100px;
+  text-align: right;
+  right: calc(30% + 100px);
+  .history-list {
+    position: inherit;
+    z-index: 1;
+    width: 30%;
+    .history-item {
+      cursor: pointer;
+    }
+    .history-item-0 {
+      color: #333333;
+      font-size: 30px;
+    }
+    .history-item-1 {
+      font-size: 27px;
+    }
+    .history-item-2 {
+      font-size: 25px;
+    }
+    .history-item-3 {
+      font-size: 22px;
+      opacity: 0.6;
+    }
+    .history-item-4 {
+      font-size: 20px;
+      opacity: 0.5;
+    }
+    .history-item-plain {
+      opacity: 0.4;
+    }
+    .history-time {
+      color: #333333;
+      margin-right: 20px;
+      width: 200px;
+      top: 10px;
+      font-size: 15px;
     }
   }
 }

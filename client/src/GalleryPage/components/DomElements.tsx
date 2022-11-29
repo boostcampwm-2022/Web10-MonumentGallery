@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Header from "../../components/Header";
 import { Toast } from "../../components/Toast/Toast";
 import FloatLayout from "../../layouts/FloatLayout";
@@ -17,10 +17,15 @@ import TOAST from "../../components/Toast/ToastList";
 import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
 import axios from "axios";
+import { v4 } from "uuid";
+import { IGalleryMapData } from "../../@types/gallery";
+import dummyData from "../dummyData";
+import { dummyHistory } from "./dummyHistory";
 
 export default function DomElements() {
   const { locked } = lockStore();
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   return (
     <>
@@ -33,7 +38,7 @@ export default function DomElements() {
             </Suspense>
             <ThemeSeletor />
             <button>
-              <img width={24} src={HistoryIcon} />
+              <img width={24} src={HistoryIcon} onClick={() => setShowSidebar(!showSidebar)} />
             </button>
           </Header>
           <SyncButton />
@@ -42,6 +47,7 @@ export default function DomElements() {
         <FullScreenModal css={{ width: "230px", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
         </FullScreenModal>
+        <HistorySidebar show={showSidebar} />
       </div>
       <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
     </>
@@ -67,16 +73,6 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
         }}
       >
         {isShared ? "공유 중단" : "공유 시작"}
-      </button>
-    </div>
-  );
-}
-
-function ShareButtonFallback() {
-  return (
-    <div className="share">
-      <button className="share-button">
-        <i />
       </button>
     </div>
   );
@@ -110,6 +106,86 @@ function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch
       >
         {isShared ? <img src={SharedIcon} /> : <img src={ProtectedIcon} />}
       </button>
+    </div>
+  );
+}
+
+function HistorySidebar({ show }: { show: boolean }) {
+  const historyRef = useRef<HTMLDivElement>(null);
+  const [scrollOffset, setScrollOffset] = useState(4);
+  const [selected, setSelectd] = useState(4);
+  const [canScroll, setCanScroll] = useState(true);
+  const [histories, setHistories] = useState(dummyHistory);
+
+  useEffect(() => {
+    const offset = Math.abs(selected - scrollOffset);
+    if (offset >= 1) {
+      setSelectd(parseInt("" + scrollOffset));
+    }
+
+    const scrollTimeout = setTimeout(() => {
+      setCanScroll(true);
+    }, 20);
+
+    const scrollHandler = (e: WheelEvent) => {
+      if (!canScroll || Math.abs(e.deltaY) < 10) return;
+      const dir = e.deltaY > 0 ? 1 : -1;
+      if (dir < 0 && selected <= 0) return;
+      if (dir > 0 && selected >= histories.length - 1) return;
+      setScrollOffset(scrollOffset + dir);
+      setCanScroll(false);
+      scrollTimeout;
+    };
+    historyRef.current?.addEventListener("wheel", scrollHandler);
+    return () => {
+      historyRef.current?.removeEventListener("wheel", scrollHandler);
+      clearTimeout(scrollTimeout);
+    };
+  }, [scrollOffset, canScroll]);
+
+  function onHistoryClick(distanceToSelected: number) {
+    if (distanceToSelected) {
+      const newSelected = selected + distanceToSelected;
+      setSelectd(newSelected);
+      setScrollOffset(newSelected);
+      return;
+    }
+  }
+
+  return (
+    <div ref={historyRef} className="history-sidebar" style={{ display: show ? "block" : "none" }}>
+      <div className="dimmed" />
+      <div className="history-list">
+        {histories.map((history, i) => (
+          <HistoryItem key={history.id} distanceToSelected={i - selected} history={history} onClick={onHistoryClick} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HistoryItem({
+  distanceToSelected,
+  history,
+  onClick,
+}: {
+  distanceToSelected: number;
+  history: { id: string; date: string; time: string; data: IGalleryMapData };
+  onClick: (distanceToSelected: number) => void;
+}) {
+  const [hover, setHover] = useState(false);
+  const offset = useMemo(() => Math.abs(distanceToSelected), [distanceToSelected]);
+  return (
+    <div key={history.id}>
+      {(hover || !distanceToSelected) && <span className="history-time">{history.time}</span>}
+      <span
+        className={`history-item history-item-${offset <= 4 ? offset : "plain"}`}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        onClick={() => onClick(distanceToSelected)}
+      >
+        {history.date}
+      </span>
     </div>
   );
 }

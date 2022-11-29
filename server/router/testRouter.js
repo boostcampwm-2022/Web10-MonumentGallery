@@ -6,7 +6,7 @@ import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 import Gallery from "../schema/gallerySchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
-import { getConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
+import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
 const router = express.Router();
 
 router.get("/testShared", (req, res) => {
@@ -317,6 +317,6 @@ const mockData = {
 
 const mockImageUrlData = {
   url: "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
-  width: 10,
-  height: 10,
+  width: 50,
+  height: 50,
 };

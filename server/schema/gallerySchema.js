@@ -31,7 +31,7 @@ const gallerySchema = new Schema({
           favicon: String,
         },
       ],
-      imagePixel: [[String]],
+      imagePixel: [[Number]],
       myUrl: { type: String, required: true },
     },
   ],

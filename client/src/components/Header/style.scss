@@ -14,6 +14,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      color: #3c3c3c;
+      font-family: "Nato-sans";
       margin-right: 10px;
     }
     .skeleton {
@@ -44,10 +46,10 @@
       margin-right: 10px;
     }
     .userinfo-button {
-      padding: 2px;
+      color: #3c3c3c;
+      padding: 4px;
       background: rgba(255, 255, 255, 0.3);
-      border: 1px solid #222222;
-      border-radius: 4px;
+      border-radius: 8px;
     }
   }
 }

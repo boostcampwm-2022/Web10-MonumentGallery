@@ -205,7 +205,7 @@ function HistorySidebar({
 
   return (
     <div ref={historyRef} className="history-sidebar" style={{ display: show ? "block" : "none" }}>
-      <div className="dimmed" />
+      <div className="dimmed" onClick={() => setShow(false)} />
       <div ref={historyListRef} className="history-list">
         <div>
           {histories.map((history, i) => (

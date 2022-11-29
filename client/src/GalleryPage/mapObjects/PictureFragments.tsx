@@ -45,7 +45,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   const scatterFragScale = useMemo(() => {
     const max = Math.max(pixels.length, pixels[0].length);
     if (max === 0 || Number.isNaN(max)) return 1;
-    return 0.08 * max;
+    return 0.6 * Math.sqrt(max / 8);
   }, [pixels]);
 
   const [activate, setActivate] = useState(false);

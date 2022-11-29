@@ -10,7 +10,7 @@ import {
   getLastGalleryID,
 } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
-import { updateShareState } from "../model/galleryModel.js";
+import { loadUserGalleryList, updateShareState } from "../model/galleryModel.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 
 const router = express.Router();
@@ -109,6 +109,20 @@ router.post(
     const { isShared } = req.body;
     await updateShareState(req.userid, isShared);
     res.status(200).json();
+  }),
+);
+
+router.get(
+  "/history/:userid",
+  asyncHandler(async (req, res) => {
+    const { userid } = req.params;
+    const history = await loadUserGalleryList(userid);
+    const histories = [];
+    history.forEach((data, id) => {
+      const date = data.toLocaleDateString().slice(0, -1).replaceAll(". ", "-");
+      histories.push({ id, date, time: data.toLocaleTimeString() });
+    });
+    res.status(200).json(histories);
   }),
 );
 

@@ -137,8 +137,13 @@
     z-index: 1;
     width: 20%;
     text-align: right;
+    .history {
+      margin: 5px;
+    }
     .history-item {
       cursor: pointer;
+      padding: 5px;
+      border-radius: 10px;
     }
     .history-item-0 {
       color: #333333;

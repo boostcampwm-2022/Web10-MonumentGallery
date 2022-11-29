@@ -22,7 +22,6 @@ export interface IGalleryPageData {
 }
 
 export interface IGalleryMapData {
-  uuid: string;
   theme: THEME;
   totalKeywords: IKeywordMap;
   pages: IGalleryPageData[];
@@ -38,7 +37,6 @@ export interface IHistory {
   id: string;
   date: string;
   time: string;
-  data: IGalleryMapData;
 }
 
 export const THEME = {

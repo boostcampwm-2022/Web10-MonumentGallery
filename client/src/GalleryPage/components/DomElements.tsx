@@ -18,7 +18,7 @@ import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
 import axios from "axios";
 import { IGalleryDataResponse, IHistory } from "../../@types/gallery";
-import { dummyHistory } from "../dummyHistory";
+import { useParams } from "../../hooks/useParams";
 
 export default function DomElements() {
   const { locked } = lockStore();
@@ -110,16 +110,24 @@ function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch
 
 function HistorySidebar({ show }: { show: boolean }) {
   const historyRef = useRef<HTMLDivElement>(null);
-  const [scrollOffset, setScrollOffset] = useState(4);
-  const [selected, setSelectd] = useState(4);
+  const [scrollOffset, setScrollOffset] = useState(0);
+  const [selected, setSelectd] = useState(0);
   const [canScroll, setCanScroll] = useState(true);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const { userId, setData } = galleryStore();
+  const [, galleryId] = useParams("gallery", []);
   const [histories, setHistories] = useState<IHistory[]>([]);
 
   useLayoutEffect(() => {
-    setHistories(dummyHistory);
-  }, []);
+    if (!userId) return;
+    axios.get<IHistory[]>(`/api/history/${userId}`).then((res) => {
+      if (!res.data) return;
+      setHistories(res.data);
+      const idx = res.data.findIndex((history) => history.id === galleryId);
+      setScrollOffset(idx);
+      setSelectd(idx);
+    });
+  }, [userId]);
 
   useEffect(() => {
     const offset = Math.abs(selected - scrollOffset);
@@ -149,8 +157,7 @@ function HistorySidebar({ show }: { show: boolean }) {
 
   function setGalleryDataFromHistory() {
     const history = histories[selected];
-    // const url = `/api/gallery/${userId}/${history.id}`;
-    const url = `/api/gallery/${userId}/6384d02539dfa7ebffef6f7e`;
+    const url = `/api/gallery/${userId}/${history.id}`;
     axios.get<IGalleryDataResponse>(url).then((res) => {
       const { gallery, userId } = res.data;
       setData(gallery, userId);
@@ -178,7 +185,9 @@ function HistorySidebar({ show }: { show: boolean }) {
       {showHistoryModal && (
         <FullScreenModal css={{ width: "20%", height: "20%" }} show={showHistoryModal} setShow={setShowHistoryModal}>
           <div className="modal history-modal">
-            <div>새로운 데이터를 불러옵니다.</div>
+            <div>
+              {histories[selected].id === galleryId ? "현재 히스토리 데이터입니다." : "새로운 데이터를 불러옵니다."}
+            </div>
             <div className="history-modal-data">
               <span>
                 {histories[selected].date} - {histories[selected].time}
@@ -211,11 +220,14 @@ function HistoryItem({
   onClick: (distanceToSelected: number) => void;
 }) {
   const [hover, setHover] = useState(false);
+  const [, galleryId] = useParams("gallery", []);
   const offset = useMemo(() => Math.abs(distanceToSelected), [distanceToSelected]);
+
   return (
-    <div key={history.id}>
+    <div key={history.id} className="history">
       {(hover || !distanceToSelected) && <span className="history-time">{history.time}</span>}
       <span
+        style={history.id === galleryId ? { backgroundColor: "#ffffff", color: "#222222" } : {}}
         className={`history-item history-item-${offset <= 4 ? offset : "plain"}`}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}

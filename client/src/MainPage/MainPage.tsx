@@ -1,14 +1,17 @@
-import { Canvas } from "@react-three/fiber";
 import React, { Suspense, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+
+import Loading from "./Loading";
 import Header from "../components/Header";
+import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
+
+import { CheckLoggedIn } from "../hooks/useLoggedIn";
+import userStore from "../store/user.store";
+
 import FloatLayout from "../layouts/FloatLayout";
 import NotionIcon from "../assets/images/notion-icon.png";
 import "./style.scss";
-import userStore from "../store/user.store";
-import { CheckLoggedIn } from "../hooks/useLoggedIn";
-import Loading from "./Loading";
-import UserInfo from "../components/Header/UserInfo";
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);

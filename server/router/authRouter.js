@@ -1,7 +1,7 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
-import { loadShareStatus } from "../model/galleryModel.js";
 import { getTokenDataFromNotion, saveToken } from "../service/authService.js";
+import { getUserGalleryStatus } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { TOKEN_EXPIRES } from "../utils/constants.js";
 
@@ -26,13 +26,16 @@ router.get(
   }),
 );
 
-router.get("/check", authMiddleware, async (req, res) => {
-  const id = req.userid ?? null;
-  const name = req.username ?? null;
-  const avatarUrl = req.avatar_url ?? null;
-  const isShared = await loadShareStatus(id);
-  res.json({ logined: !!id, user: { id, name, avatarUrl }, isShared });
-});
+router.get("/check", authMiddleware, 
+  asyncHandler(async (req, res) => {
+    const id = req.userid ?? null;
+    const name = req.username ?? null;
+    const avatarUrl = req.avatar_url ?? null;
+    const galleryStatus = await getUserGalleryStatus(id);
+    console.log(galleryStatus);
+    res.json({ logined: !!id, user: { id, name, avatarUrl }, ...galleryStatus });
+  })
+);
 
 router.post("/logout", authMiddleware, catchAuthError, (req, res) => {
   res.clearCookie("token");

@@ -7,7 +7,6 @@ import {
   loadGallery,
   loadLastGallery,
   getGalleryHistory,
-  getLastGalleryID,
 } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { updateShareState } from "../model/galleryModel.js";
@@ -87,17 +86,6 @@ router.get(
 
     const result = await loadLastGallery(id);
     res.status(200).json(result);
-  }),
-);
-
-router.get(
-  "/user/lastGallery",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    const userID = req.userid;
-
-    const result = await getLastGalleryID(userID);
-    res.status(200).json({ result });
   }),
 );
 

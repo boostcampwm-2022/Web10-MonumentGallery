@@ -4,6 +4,7 @@ import {
   loadLastGallery as loadLastGalleryFromDB,
   loadLastGalleryID as loadLastGalleryIDFromDB,
   loadUserGalleryList as loadUserGalleryListFromDB,
+  loadShareStatus as loadSharedStatusFromDB,
 } from "../model/galleryModel.js";
 import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
 //DB에서 데이터를 불러오는 로직
@@ -42,6 +43,11 @@ export async function getGalleryHistory(userID) {
   return Object.fromEntries([...historyMap]);
 }
 
-export function getLastGalleryID(userID) {
-  return loadLastGalleryIDFromDB(userID);
+export async function getUserGalleryStatus(userID) {
+  const [ lastGalleryID, isShared ] = await Promise.all([
+    loadLastGalleryIDFromDB(userID),
+    loadSharedStatusFromDB(userID)
+  ]);
+
+  return { isCreated: lastGalleryID !== null, isShared: isShared ?? false };
 }

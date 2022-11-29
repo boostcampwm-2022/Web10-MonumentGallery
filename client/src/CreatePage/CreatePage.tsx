@@ -36,7 +36,7 @@ export default function CreatePage() {
     addToast(TOAST.INFO("데이터를 처리하는 동안 샘플 월드를 랜더링합니다", 5000));
     addToast(TOAST.INFO("WASD 키로 캐릭터를 움직입니다.", 1000 * 60));
     addToast(TOAST.INFO("left shift 및 space로 상하움직임을 제어합니다.", 1000 * 60));
-    addToast(TOAST.INFO("E 키눌러 마우스로 화면전환을 할 수 있습니다.", 1000 * 60));
+    addToast(TOAST.INFO("E 키를 눌러 마우스로 화면전환을 할 수 있습니다.", 1000 * 60));
     addToast(TOAST.INFO("E 키를 다시 눌러 마우스를 표시합니다.", 1000 * 60));
   }, []);
 

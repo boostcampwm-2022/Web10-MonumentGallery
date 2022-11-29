@@ -147,7 +147,7 @@ function HistorySidebar({ show }: { show: boolean }) {
     };
   }, [scrollOffset, canScroll]);
 
-  function getRequestUrlFromHistory() {
+  function setGalleryDataFromHistory() {
     const history = histories[selected];
     // const url = `/api/gallery/${userId}/${history.id}`;
     const url = `/api/gallery/${userId}/6384d02539dfa7ebffef6f7e`;
@@ -187,7 +187,7 @@ function HistorySidebar({ show }: { show: boolean }) {
               <span>{histories[selected].id}</span>
             </div>
             <div className="history-modal-buttons">
-              <button className="history-get-button" onClick={() => getRequestUrlFromHistory()}>
+              <button className="history-get-button" onClick={() => setGalleryDataFromHistory()}>
                 불러오기
               </button>
               <button className="history-cancel-button" onClick={() => setShowHistoryModal(false)}>

@@ -1,6 +1,10 @@
 export interface IKeywordMap {
   [keyword: string]: number;
 }
+export interface IGroupKeywordData {
+  keyword: string;
+  position: number[];
+}
 
 export interface IGalleryPageSubTitle {
   text: string;
@@ -24,6 +28,7 @@ export interface IGalleryPageData {
 export interface IGalleryMapData {
   theme: THEME;
   totalKeywords: IKeywordMap;
+  groupKeywords: IGroupKeywordData[];
   pages: IGalleryPageData[];
   nodes: number[][];
 }

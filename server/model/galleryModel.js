@@ -70,18 +70,26 @@ async function saveGallery(userID, galleryData) {
   }
 }
 
-async function loadGallery(ipaddr, userID, galleryID) {
+async function loadGallery(requestUserData, userID, galleryID) {
+  const { ipaddr, requestUserID } = requestUserData;
+
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
     return { success: false, err: "bad_request" };
   }
   if ((await User.exists({ userID })) === false) return { success: false, err: "no user" };
 
-  const { history } = await User.findOne({ userID });
+  const user = await User.findOne({ userID });
+  const { history } = user;
   if (!history.has(galleryID)) return { success: false, err: "don't have gallery" };
 
   const galleryData = await Gallery.findById(galleryID);
   if (galleryData === null) return { success: false, err: "no gallery" };
 
+  console.log({ id: userID, requestUserID });
+
+  if (!user.isShared && userID !== requestUserID) return { success: false, err: "not authorized" };
+
+  // 조회수 관련 로직
   const { views, viewers } = galleryData;
 
   const now = new Date().toLocaleDateString();

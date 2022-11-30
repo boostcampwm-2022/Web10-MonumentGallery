@@ -225,7 +225,11 @@ function HistorySidebar({
         </div>
       </div>
       {showHistoryModal && (
-        <FullScreenModal css={{ width: "20%", height: "20%" }} show={showHistoryModal} setShow={setShowHistoryModal}>
+        <FullScreenModal
+          css={{ width: "300px", height: "200px" }}
+          show={showHistoryModal}
+          setShow={setShowHistoryModal}
+        >
           <div className="modal history-modal">
             <div>
               {histories[selected].id === data.id ? "현재 히스토리 데이터입니다." : "새로운 데이터를 불러옵니다."}

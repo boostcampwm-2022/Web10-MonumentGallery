@@ -25,10 +25,10 @@ export async function saveGallery(userID, galleryData) {
   return id;
 }
 
-export async function loadGallery(ipaddr, userID, galleryID = null) {
+export async function loadGallery(requestUserData, userID, galleryID = null) {
   if (galleryID === null) galleryID = await getLastGalleryID(userID);
   if (!validateGalleryID(galleryID)) throw new BadRequestError("올바른 갤러리 ID가 아닙니다!");
-  const result = await loadGalleryFromDB(ipaddr, userID, galleryID);
+  const result = await loadGalleryFromDB(requestUserData, userID, galleryID);
   if (result.success) return processDataForClient(result.data);
   if (result.err === "bad_request") throw new BadRequestError("갤러리를 찾을 수 없습니다!");
   throw new NotFoundError(result.err);

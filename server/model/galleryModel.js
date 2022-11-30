@@ -69,7 +69,7 @@ async function saveGallery(userID, galleryData) {
   }
 }
 
-async function loadGallery(userID, galleryID) {
+async function loadGallery(ipaddr, userID, galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
     return { success: false, err: "bad_request" };
   }
@@ -81,6 +81,14 @@ async function loadGallery(userID, galleryID) {
   const galleryData = await Gallery.findById(galleryID);
   if (galleryData === null) return { success: false, err: "no gallery" };
 
+  const { views, viewers } = galleryData;
+
+  const now = new Date().toLocaleDateString();
+  const viewed = true;
+
+  if (!viewed || ipaddr === "development") {
+    await Gallery.updateOne({ galleryID }, { views: views + 1 });
+  }
   return { success: true, data: galleryData };
 }
 

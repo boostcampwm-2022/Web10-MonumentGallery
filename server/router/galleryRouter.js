@@ -1,11 +1,10 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
-import { processDataForClient } from "../service/dataProcessService.js";
-import { loadGallery, loadLastGallery, getGalleryHistory } from "../service/dataSaveService.js";
+import { loadGallery, getGalleryHistory } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { updateShareState, loadUserGalleryList } from "../model/galleryModel.js";
 import { createGallery } from "../service/galleryService.js";
-import { writeMessageSSE, endConnectionSSE } from "../service/sseService.js";
+import { endConnectionSSE } from "../service/sseService.js";
 
 const router = express.Router();
 
@@ -47,7 +46,7 @@ router.get(
     console.log(req.params);
     const { targetUserID, galleryID } = req.params;
 
-    const result = await loadGallery(targetUserID, galleryID);
+    const result = await loadGallery(req.ipaddr, targetUserID, galleryID);
     res.status(200).json({ gallery: result, userId: targetUserID });
   }),
 );
@@ -64,7 +63,7 @@ router.get(
 
     const galleryID = await createGallery(notionAccessToken, period, theme, userId, res);
 
-    const result = await loadGallery(userId, galleryID);
+    const result = await loadGallery(req.ipaddr, userId, galleryID);
     endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}`, data: result });
   }),
 );
@@ -74,8 +73,7 @@ router.get(
   authMiddleware,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
-
-    const result = await loadLastGallery(id);
+    const result = await loadGallery(req.ipaddr, id);
     res.status(200).json({ gallery: result, userId: id });
   }),
 );

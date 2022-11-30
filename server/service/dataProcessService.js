@@ -15,6 +15,7 @@ export async function processDataFromRawContent(rawContent, theme) {
 
 export function processDataForClient(galleryContent) {
   return {
+    id: galleryContent._id,
     theme: galleryContent.theme,
     totalKeywords: getKeywordsAsDictionary(galleryContent.totalKeywords),
     groupKeywords: galleryContent.groupKeywords,

@@ -18,7 +18,6 @@ import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
 import axios from "axios";
 import { IHistory } from "../../@types/gallery";
-import { useParams } from "../../hooks/useParams";
 
 export default function DomElements({
   setResource,
@@ -137,8 +136,7 @@ function HistorySidebar({
   const [selected, setSelected] = useState(0);
   const [canScroll, setCanScroll] = useState(true);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const { userId } = galleryStore();
-  const [, galleryId] = useParams("gallery");
+  const { data, userId } = galleryStore();
   const [histories, setHistories] = useState<IHistory[]>([]);
 
   useLayoutEffect(() => {
@@ -146,7 +144,7 @@ function HistorySidebar({
     axios.get<IHistory[]>(`/api/history/${userId}`).then((res) => {
       if (!res.data) return;
       setHistories(res.data);
-      const idx = res.data.findIndex((history) => history.id === galleryId);
+      const idx = res.data.findIndex((history) => history.id === data.id);
       setScrollOffset(idx);
       setSelected(idx);
     });
@@ -222,7 +220,7 @@ function HistorySidebar({
         <FullScreenModal css={{ width: "20%", height: "20%" }} show={showHistoryModal} setShow={setShowHistoryModal}>
           <div className="modal history-modal">
             <div>
-              {histories[selected].id === galleryId ? "현재 히스토리 데이터입니다." : "새로운 데이터를 불러옵니다."}
+              {histories[selected].id === data.id ? "현재 히스토리 데이터입니다." : "새로운 데이터를 불러옵니다."}
             </div>
             <div className="history-modal-data">
               <span>
@@ -256,14 +254,14 @@ function HistoryItem({
   onClick: (distanceToSelected: number) => void;
 }) {
   const [hover, setHover] = useState(false);
-  const [, galleryId] = useParams("gallery");
+  const { data } = galleryStore();
   const offset = useMemo(() => Math.abs(distanceToSelected), [distanceToSelected]);
 
   return (
     <div key={history.id} className="history">
       {(hover || !distanceToSelected) && <span className="history-time">{history.time}</span>}
       <span
-        style={history.id === galleryId ? { backgroundColor: "#ffffff", color: "#222222" } : {}}
+        style={history.id === data.id ? { backgroundColor: "#ffffff", color: "#222222" } : {}}
         className={`history-item history-item-${offset <= 4 ? offset : "plain"}`}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}

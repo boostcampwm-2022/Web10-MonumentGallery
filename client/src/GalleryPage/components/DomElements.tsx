@@ -82,7 +82,7 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
                   onShareButtonClick();
                 }
               })
-              .catch((e) => {
+              .catch(() => {
                 const toastErrMsg = "에러가 발생했습니다.";
                 addToast(TOAST.ERROR(toastErrMsg));
               });

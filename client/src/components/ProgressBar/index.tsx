@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import "./style.scss";

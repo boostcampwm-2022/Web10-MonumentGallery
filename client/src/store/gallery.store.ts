@@ -9,7 +9,6 @@ interface GalleryStore {
 
 const galleryStore = create<GalleryStore>((set) => ({
   data: {
-    uuid: "",
     nodes: [[]],
     pages: [],
     totalKeywords: {},

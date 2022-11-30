@@ -1,11 +1,7 @@
 import useSelectorComponent from "../Selector";
-import SuspenseButton from "../buttons/SuspenseButton";
 import styles from "./style.module.scss";
-import { Resource } from "../../utils/suspender";
 import { THEME } from "../../@types/gallery";
-import themeStore from "../../store/theme.store";
 import ProgressBar from "../ProgressBar";
-import { useState } from "react";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
 

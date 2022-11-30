@@ -103,7 +103,6 @@ function MovementController({ camera, speed = 1 }: MovementControllerProps) {
   const { camera: defaultCamera } = useThree();
 
   const targetCamera = camera || defaultCamera;
-  console.log(targetCamera.position);
   function runMovement(delta: number) {
     const [front, right] = getCameraXZAxis(targetCamera);
     const moveVector = new Vector3();

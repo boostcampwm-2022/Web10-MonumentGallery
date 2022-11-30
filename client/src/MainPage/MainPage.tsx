@@ -1,5 +1,5 @@
 import "./style.scss";
-import React, { Suspense, useRef, useState } from "react";
+import React, { Suspense, useState } from "react";
 
 import Loading from "./Loading";
 import MainWorld from "./MainWorld";
@@ -17,11 +17,10 @@ import { Canvas } from "@react-three/fiber";
 import { BACKGROUND_COLORS } from "../@types/colors";
 import themeStore from "../store/theme.store";
 import { THEME } from "../@types/gallery";
-import { PerspectiveCamera } from "@react-three/drei";
+import { Box } from "@react-three/drei";
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
-  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const { theme } = themeStore();
   const { isLoggedIn } = userStore();
 
@@ -36,18 +35,12 @@ export default function MainPage() {
           <Canvas
             shadows
             className="canvas-inner"
-            // camera={{ fov: 75, near: 0.1, far: 100, position: [0, 3, 5], rotation: [0.4, 0, 0] }}
-            // camera={cameraRef.current}
+            camera={{ fov: 75, near: 0.1, far: 100, position: [10, 13, 10], rotation: [0, Math.PI / 4, 0, "YXZ"] }}
             style={{ backgroundColor: (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM }}
           >
-            {cameraRef.current && <MainWorld cameraRef={cameraRef} />}
-            <PerspectiveCamera
-              makeDefault={true}
-              position={[0, 13, 10]}
-              near={0.1}
-              far={100}
-              ref={cameraRef}
-            ></PerspectiveCamera>
+            <MainWorld />
+            <axesHelper />
+            <Box position={[2, 0, 0]} />
           </Canvas>
         </Suspense>
       </div>

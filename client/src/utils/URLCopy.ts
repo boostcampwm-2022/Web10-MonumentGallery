@@ -5,7 +5,7 @@ export default async function URLCopy() {
     .then(() => {
       return true;
     })
-    .catch((err) => {
+    .catch(() => {
       return false;
     });
 }

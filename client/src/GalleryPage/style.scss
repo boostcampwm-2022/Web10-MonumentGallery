@@ -13,6 +13,8 @@
 .share {
   position: absolute;
   text-align: center;
+  width: 60px;
+  height: 60px;
   left: 40px;
   bottom: 40px;
   .share-hover {
@@ -42,16 +44,16 @@
   }
   .share-span {
     position: relative;
-    top: 40px;
-    left: -60px;
+    top: 10px;
+    left: -10px;
     color: #ffffff;
   }
   .share-view-count {
     text-align: left;
     position: relative;
     display: inline-block;
-    top: 45px;
-    left: 0px;
+    top: -10px;
+    left: 90px;
     color: #ffffff;
     width: 100px;
     white-space: nowrap;

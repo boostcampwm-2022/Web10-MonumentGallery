@@ -27,6 +27,7 @@ export interface IGalleryMapData {
   totalKeywords: IKeywordMap;
   pages: IGalleryPageData[];
   nodes: number[][];
+  views: number;
 }
 
 export interface IGalleryDataResponse {

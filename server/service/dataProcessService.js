@@ -30,6 +30,7 @@ export function processDataForClient(galleryContent) {
       };
     }),
     nodes: galleryContent.nodes,
+    views: galleryContent.views,
   };
 }
 

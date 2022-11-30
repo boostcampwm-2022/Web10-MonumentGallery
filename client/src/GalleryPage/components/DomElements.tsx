@@ -85,7 +85,7 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
 }
 
 function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const { userId: galleryUserId } = galleryStore();
+  const { data, userId: galleryUserId } = galleryStore();
   const {
     isLoggedIn,
     isShared,
@@ -112,6 +112,14 @@ function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch
       >
         {isShared ? <img src={SharedIcon} /> : <img src={ProtectedIcon} />}
       </button>
+      {isShared && (
+        <>
+          <span data-views={data.views} className="share-span">
+            조회:
+          </span>
+          <span className="share-span share-view-count">{data.views}</span>
+        </>
+      )}
     </div>
   );
 }

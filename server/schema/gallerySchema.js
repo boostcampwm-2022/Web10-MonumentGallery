@@ -35,6 +35,7 @@ const gallerySchema = new Schema({
     },
   ],
   nodes: [[Number]],
+  views: { type: Number, default: 0 },
   lastModified: { type: Date, default: new Date() },
   created: { type: Date, default: new Date() },
 });

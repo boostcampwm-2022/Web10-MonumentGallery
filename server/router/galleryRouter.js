@@ -1,9 +1,13 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
-import { loadGallery, getGalleryHistory } from "../service/dataSaveService.js";
+import {
+  loadGallery,
+  getGalleryHistory,
+  createGalleryFromNotion,
+  loadUserHistory,
+  updateShareState,
+} from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
-import { updateShareState, loadUserGalleryList } from "../model/galleryModel.js";
-import { createGallery } from "../service/galleryService.js";
 import { endConnectionSSE } from "../service/sseService.js";
 
 const router = express.Router();
@@ -21,7 +25,7 @@ router.get(
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGallery(notionAccessToken, period, theme, userId, res);
+    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, userId, res);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
     endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}` });
@@ -61,7 +65,7 @@ router.get(
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGallery(notionAccessToken, period, theme, requestUserID, res);
+    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, requestUserID, res);
 
     const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, requestUserID, galleryID);
     endConnectionSSE(res, { page: `/gallery/${requestUserID}/${galleryID}`, data: result });
@@ -94,7 +98,7 @@ router.get(
   "/history/:userid",
   asyncHandler(async (req, res) => {
     const { userid } = req.params;
-    const history = await loadUserGalleryList(userid);
+    const history = await loadUserHistory(userid);
     const histories = [];
     history.forEach((data, id) => {
       const date = data.toLocaleDateString().slice(0, -1).replaceAll(". ", "-");

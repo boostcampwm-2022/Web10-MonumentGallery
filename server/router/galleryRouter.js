@@ -48,7 +48,7 @@ router.get(
     const { targetUserID, galleryID } = req.params;
 
     const result = await loadGallery(targetUserID, galleryID);
-    res.status(200).json({ gallery: result, userId: targetUserID });
+    res.status(200).json({ gallery: result, userId: targetUserID, page: `/gallery/${userId}/${galleryID}` });
   }),
 );
 
@@ -76,7 +76,7 @@ router.get(
     const { id } = req.params;
 
     const result = await loadLastGallery(id);
-    res.status(200).json({ gallery: result, userId: id });
+    res.status(200).json({ gallery: result, userId: id, page: `/gallery/${id}` });
   }),
 );
 

@@ -31,6 +31,7 @@ export interface IGalleryMapData {
 export interface IGalleryDataResponse {
   gallery: IGalleryMapData;
   userId: string;
+  page?: string;
 }
 
 export interface IHistory {

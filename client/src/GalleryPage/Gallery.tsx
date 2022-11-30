@@ -6,14 +6,12 @@ import Light from "./mapObjects/Light";
 import CollisionPlayerBody from "./mapObjects/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
-import themeStore from "../store/theme.store";
 import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
 import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
-  const { data } = galleryStore();
-  const { theme } = themeStore();
+  const { data, theme } = galleryStore();
 
   return (
     <Canvas

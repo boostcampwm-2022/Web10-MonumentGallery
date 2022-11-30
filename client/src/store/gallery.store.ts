@@ -14,12 +14,13 @@ const galleryStore = create<GalleryStore>((set) => ({
     nodes: [[]],
     pages: [],
     totalKeywords: {},
+    groupKeywords: [],
     theme: THEME.DREAM,
   },
   userId: null,
   theme: THEME.DREAM,
-  setData: (data, userId) => set({data, userId, theme: data.theme}),
-  setTheme: (theme) => set({theme}),
+  setData: (data, userId) => set({ data, userId, theme: data.theme }),
+  setTheme: (theme) => set({ theme }),
 }));
 
 export default galleryStore;

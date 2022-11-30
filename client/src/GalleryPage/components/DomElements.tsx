@@ -224,7 +224,6 @@ function HistorySidebar({
     setResource({ method: "get", url });
     setShow(false);
     setShowHistoryModal(false);
-    window.history.pushState({}, "", `/gallery/${userId}/${history.id}`);
   }
 
   function onHistoryClick(distanceToSelected: number) {

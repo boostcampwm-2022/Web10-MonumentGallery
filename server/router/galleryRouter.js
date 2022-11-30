@@ -1,9 +1,8 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
-import { loadGallery, getGalleryHistory } from "../service/dataSaveService.js";
+import { loadGallery, getGalleryHistory, createGallery } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
-import { updateShareState, loadUserGalleryList } from "../model/galleryModel.js";
-import { createGallery } from "../service/galleryService.js";
+import { updateShareState, findHistoryByID } from "../model/userModel.js";
 import { endConnectionSSE } from "../service/sseService.js";
 
 const router = express.Router();
@@ -94,7 +93,7 @@ router.get(
   "/history/:userid",
   asyncHandler(async (req, res) => {
     const { userid } = req.params;
-    const history = await loadUserGalleryList(userid);
+    const history = await findHistoryByID(userid);
     const histories = [];
     history.forEach((data, id) => {
       const date = data.toLocaleDateString().slice(0, -1).replaceAll(". ", "-");

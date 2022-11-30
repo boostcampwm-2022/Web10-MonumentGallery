@@ -1,7 +1,7 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
 import { getTokenDataFromNotion, saveToken } from "../service/authService.js";
-import { getUserGalleryStatus } from "../service/dataSaveService.js";
+import { getUserGalleryStatus } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { TOKEN_EXPIRES } from "../utils/constants.js";
 

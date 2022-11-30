@@ -95,6 +95,7 @@ async function IncreaseViewCount(ipaddr, galleryData) {
   }
 }
 
+
 export async function getLastGalleryID(userID) {
   const galleryID = await findLastGalleryID(userID);
   if (galleryID === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");

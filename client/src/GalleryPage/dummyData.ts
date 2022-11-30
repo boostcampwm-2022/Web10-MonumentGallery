@@ -11,6 +11,12 @@ const dummyData: IGalleryMapData = {
     카카오: 4,
     취직: 2,
   },
+  groupKeywords: [
+    { position: [20, 0], keyword: "1번방향" },
+    { position: [0, 20], keyword: "2번방향" },
+    { position: [-20, 0], keyword: "3번방향" },
+    { position: [0, -20], keyword: "4번방향" },
+  ],
   pages: [
     {
       position: [20, 0],

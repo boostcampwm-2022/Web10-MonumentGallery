@@ -6,6 +6,8 @@ import galleryStore from "../../store/gallery.store";
 import SyncButtonIcon from "../../assets/images/sync-button-icon.png";
 import URLCreator from "../../utils/URLCreator";
 import userStore from "../../store/user.store";
+import toastStore from "../../store/toast.store";
+import TOAST from "../../components/Toast/ToastList";
 
 interface IOnLoadFunction {
   <T>(a: T): void;
@@ -23,6 +25,8 @@ export default function SyncButton() {
   const { user } = userStore();
   const [isMine, setIsMine] = useState<boolean>(false);
   const [hover, setHover] = useState(false);
+  const { addToast } = toastStore();
+
   useEffect(() => {
     const { id } = user;
     console.log(id, userId);
@@ -39,6 +43,8 @@ export default function SyncButton() {
     history.replaceState(null, "", page);
     setRequested(false);
     setShow(false);
+    const toastMsg = "동기화가 완료되었습니다.";
+    addToast(TOAST.INFO(toastMsg));
   }
   if (isMine) {
     return (

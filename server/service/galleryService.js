@@ -95,9 +95,23 @@ async function IncreaseViewCount(ipaddr, galleryData) {
   }
 }
 
+export async function updateShareState(userID, isShared) {
+  const session = await startSession();
+  try {
+    session.startTransaction();
+    await updateShareStateByID(userID, isShared, session);
+    await session.commitTransaction();
+    session.endSession();
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    console.log(err);
+    throw new InternalServerError("DB 저장 실패");
+  }
+}
 
 export async function getLastGalleryID(userID) {
-  const galleryID = await findLastGalleryID(userID);
+  const galleryID = await findLastGalleryIDByID(userID);
   if (galleryID === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
   return galleryID;
 }
@@ -108,7 +122,7 @@ export async function getGalleryHistory(userID) {
 }
 
 export async function getUserGalleryStatus(userID) {
-  const [lastGalleryID, isShared] = await Promise.all([getLastGalleryID(userID), findShareStatusByID(userID)]);
+  const [lastGalleryID, isShared] = await Promise.all([findLastGalleryIDByID(userID), findShareStatusByID(userID)]);
 
   return { isCreated: lastGalleryID !== null, isShared: isShared ?? false };
 }

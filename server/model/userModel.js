@@ -55,15 +55,15 @@ export async function findShareStatusByID(userID) {
 }
 
 //updateShareState
-export async function updateShareState(userID, isShared) {
+export async function updateShareStateByID(userID, isShared, session) {
   const isExists = await User.exists({ userID });
   if (!isExists) return null;
-  const res = await User.updateOne({ userID }, { isShared });
+  const res = await User.updateOne({ userID }, { isShared }).session(session);
   return res;
 }
 
 //loadLastGalleryID
-export async function findLastGalleryID(userID) {
+export async function findLastGalleryIDByID(userID) {
   const history = await findHistoryByID(userID);
   const [result] = [...history].reduce(
     ([rescentID, rescentDate], [galleryID, date]) => {

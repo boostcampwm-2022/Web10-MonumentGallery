@@ -89,7 +89,7 @@ const pixelFragmentShader = {
     void main() {
       vec4 diffuseColor = vec4( vColor, 1.0 );
       ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-      vec3 specular = vec3( mix(0.1, 0.4, lerp) );
+      vec3 specular = vec3( mix(0.4, 0.1, lerp) );
       float shininess = 120.0;
       float specularStrength = 1.0;
       vec3 normal = vNormal;

@@ -4,8 +4,9 @@ import {
   findUserByID,
   findHistoryByID,
   updateUserHistory,
-  findLastGalleryID,
+  findLastGalleryIDByID,
   findShareStatusByID,
+  updateShareStateByID,
 } from "../model/userModel.js";
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
@@ -20,6 +21,9 @@ function validateGalleryID(galleryID) {
     return false;
   }
   return true;
+}
+export async function loadUserHistory(userID) {
+  return findHistoryByID(userID);
 }
 
 export async function saveGallery(userID, galleryData) {

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import React, { useRef } from "react";
+import React, { useRef, forwardRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import GhostGlb from "../../assets/models/monument_ghost.glb?url";
@@ -25,16 +25,16 @@ type GLTFResult = GLTF & {
 // type ActionName = "mouthAction" | "eye-rightAction" | "ringAction" | "bodyAction" | "eye-leftAction";
 // type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-export function Ghost(props: JSX.IntrinsicElements["group"]) {
-  const ghostRef = useRef<THREE.Group>(null!);
+function Ghost({ ghost }: { ghost: THREE.Group | null }) {
   const { nodes, materials } = useGLTF(GhostGlb) as unknown as GLTFResult;
 
   useFrame(({ clock }) => {
-    ghostRef.current.position.y += Math.sin(clock.getElapsedTime()) * 0.002;
+    if (!ghost) return;
+    ghost.position.y += Math.sin(clock.getElapsedTime()) * 0.002;
   });
 
   return (
-    <group {...props} ref={ghostRef} dispose={null}>
+    <group position={[0, 0, 0]} scale={[0.5, 0.5, 0.5]} dispose={null}>
       <group name="Scene">
         <mesh
           name="mouth"
@@ -79,3 +79,5 @@ export function Ghost(props: JSX.IntrinsicElements["group"]) {
 }
 
 useGLTF.preload(GhostGlb);
+
+export default Ghost;

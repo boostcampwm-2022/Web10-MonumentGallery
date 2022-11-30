@@ -3,7 +3,7 @@ import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
 import Light from "./mapObjects/Light";
-import CollisionPlayerBody from "./mapObjects/CollisionPlayerBody";
+import CollisionPlayerBody from "./components/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
 import themeStore from "../store/theme.store";

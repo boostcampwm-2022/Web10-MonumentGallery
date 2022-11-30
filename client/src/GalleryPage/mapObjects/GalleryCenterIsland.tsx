@@ -4,8 +4,6 @@ import MainWordCloud from "./MainWordCloud";
 import { IKeywordMap, THEME } from "../../@types/gallery";
 import themeStore from "../../store/theme.store";
 import { CENTER_ISLAND_COLORS } from "../../@types/colors";
-import { Ghost } from "../../MainPage/mapObjects/Ghost";
-
 interface GalleryCenterIslandProps {
   keywords: IKeywordMap;
 }
@@ -17,7 +15,6 @@ export default function GalleryCenterIsland({ keywords }: GalleryCenterIslandPro
       <Island islandScale={8} color={(theme && CENTER_ISLAND_COLORS[theme]) || THEME.DREAM} />
       <Monolith />
       <MainWordCloud keywords={keywords} />
-      <Ghost position={[0, 1, 3]} scale={[0.1, 0.1, 0.1]} />
     </group>
   );
 }

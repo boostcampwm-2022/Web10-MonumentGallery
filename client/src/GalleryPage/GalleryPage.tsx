@@ -3,7 +3,7 @@ import Gallery from "./Gallery";
 import DomElements from "./components/DomElements";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { createResource, Resource } from "../utils/suspender";
-import Loading from "./components/Loading";
+import Loading from "../components/CanvasLoading";
 import galleryStore from "../store/gallery.store";
 import { useParams } from "../hooks/useParams";
 import { IGalleryDataResponse } from "../@types/gallery";

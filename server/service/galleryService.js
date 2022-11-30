@@ -14,7 +14,7 @@ import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseSer
 import { getRawContentsFromNotion } from "./getNotionContentService.js";
 import hash from "../utils/hash.js";
 import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
-//DB에서 데이터를 불러오는 로직
+
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
@@ -27,7 +27,6 @@ export async function loadUserHistory(userID) {
 }
 
 export async function saveGallery(userID, galleryData) {
-  //transaction
   const session = await startSession();
   try {
     session.startTransaction();
@@ -42,10 +41,6 @@ export async function saveGallery(userID, galleryData) {
     console.log(err);
     throw new InternalServerError("DB 저장 실패");
   }
-  // const id = await saveGalleryFromDB(userID, galleryData);
-  // if (id === null) throw new InternalServerError("DB 저장 실패");
-  // console.log("db저장 완료");
-  // return id;
 }
 
 export async function loadGallery(requestUserData, userID, galleryID = null) {
@@ -66,10 +61,6 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   IncreaseViewCount(ipaddr, galleryData);
 
   return processDataForClient(galleryData);
-  // const result = await loadGalleryFromDB(requestUserData, userID, galleryID);
-  // if (result.success) return processDataForClient(result.data);
-  // if (result.err === "bad_request") throw new BadRequestError("갤러리를 찾을 수 없습니다!");
-  // throw new NotFoundError(result.err);
 }
 
 async function IncreaseViewCount(ipaddr, galleryData) {

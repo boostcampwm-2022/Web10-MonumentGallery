@@ -1,6 +1,4 @@
-import { startSession } from "mongoose";
 import User from "../schema/userSchema.js";
-//user에 관련된 동작만 하는 기능들
 
 export async function findUserByID(userID) {
   const isExists = await User.exists({ userID });
@@ -10,7 +8,6 @@ export async function findUserByID(userID) {
   return null;
 }
 
-//loadGalleryHistory
 export async function findHistoryByID(userID) {
   const isExists = await User.exists({ userID });
   if (isExists) {
@@ -19,7 +16,7 @@ export async function findHistoryByID(userID) {
   }
   return new Map();
 }
-//updateUserGallery
+
 export async function updateUserHistory(userID, galleryID, session) {
   const isExists = await User.exists({ userID });
   const now = Date.now();
@@ -44,7 +41,6 @@ export async function updateUserHistory(userID, galleryID, session) {
   );
 }
 
-//loadShareStatusFromUser
 export async function findShareStatusByID(userID) {
   const isExists = await User.exists({ userID });
   if (isExists) {
@@ -54,7 +50,6 @@ export async function findShareStatusByID(userID) {
   return null;
 }
 
-//updateShareState
 export async function updateShareStateByID(userID, isShared, session) {
   const isExists = await User.exists({ userID });
   if (!isExists) return null;
@@ -62,7 +57,6 @@ export async function updateShareStateByID(userID, isShared, session) {
   return res;
 }
 
-//loadLastGalleryID
 export async function findLastGalleryIDByID(userID) {
   const history = await findHistoryByID(userID);
   const [result] = [...history].reduce(

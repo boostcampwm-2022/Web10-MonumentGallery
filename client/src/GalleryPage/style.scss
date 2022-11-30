@@ -104,6 +104,11 @@
   }
 }
 .create-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   .make-gallery {
     font-size: 30px;
     margin-bottom: 20px;

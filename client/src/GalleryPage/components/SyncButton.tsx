@@ -57,7 +57,7 @@ export default function SyncButton() {
           </button>
         </div>
 
-        <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
+        <FullScreenModal show={show} css={{ width: "70%", height: "55%", minHeight: "480px" }} setShow={setShow}>
           <SpaceCreater
             eventSourceUrl={eventSourceUrl}
             onSubmit={(period: PeriodType | null, theme: THEME | null) => {

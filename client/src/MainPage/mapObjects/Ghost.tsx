@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import GhostGlb from "../../assets/models/monument_ghost.glb?url";
+import { useFrame } from "@react-three/fiber";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -21,15 +22,19 @@ type GLTFResult = GLTF & {
   };
 };
 
-type ActionName = "mouthAction" | "eye-rightAction" | "ringAction" | "bodyAction" | "eye-leftAction";
+// type ActionName = "mouthAction" | "eye-rightAction" | "ringAction" | "bodyAction" | "eye-leftAction";
 // type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
 export function Ghost(props: JSX.IntrinsicElements["group"]) {
-  const group = useRef<THREE.Group>();
-  const { nodes, materials, animations } = useGLTF(GhostGlb) as unknown as GLTFResult;
-  const { actions } = useAnimations(animations, group);
+  const ghostRef = useRef<THREE.Group>(null!);
+  const { nodes, materials } = useGLTF(GhostGlb) as unknown as GLTFResult;
+
+  useFrame(({ clock }) => {
+    ghostRef.current.position.y += Math.sin(clock.getElapsedTime()) * 0.002;
+  });
+
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group {...props} ref={ghostRef} dispose={null}>
       <group name="Scene">
         <mesh
           name="mouth"
@@ -66,7 +71,6 @@ export function Ghost(props: JSX.IntrinsicElements["group"]) {
           geometry={nodes.eye_left.geometry}
           material={materials["Material.001"]}
           position={[0.25, 0.21, 0.62]}
-          ㄴ
           scale={0.16}
         />
       </group>

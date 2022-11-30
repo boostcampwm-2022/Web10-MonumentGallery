@@ -58,7 +58,7 @@ async function getRootPages(notion, limitTime, type) {
 
   pageResponse.results.forEach(async (result) => {
     if (
-      result.object === "page" &&
+      result.object === type &&
       result.parent.type === "workspace" &&
       Date.parse(result.last_edited_time) > limitTime
     ) {
@@ -94,7 +94,11 @@ async function getPages(notion, limitTime) {
       const nowPage = pageContents[cursorId].childPage[i];
       if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
       pageIds.push(nowPage.id);
-      pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
+      if (nowPage.type === "page") {
+        pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
+      } else {
+        pageContents[nowPage.id] = sumObject(nowPage, await getDataFromDatabase(notion, nowPage.id));
+      }
     }
   }
   // console.log(pageIds);
@@ -320,6 +324,7 @@ async function getDataFromDatabase(notion, databaseId) {
   const databaseChildPage = await notion.databases.query({
     database_id: databaseId,
   });
+
   databaseChildPage.results.forEach((data) => {
     res.childPage.push({
       type: "page",

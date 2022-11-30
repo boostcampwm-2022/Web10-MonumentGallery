@@ -1,6 +1,7 @@
 import { startSession } from "mongoose";
 import Gallery from "../schema/gallerySchema.js";
 import User from "../schema/userSchema.js";
+import hash from "../utils/hash.js";
 
 async function loadGalleryHistory(userID) {
   const isExists = await User.exists({ userID });
@@ -84,10 +85,12 @@ async function loadGallery(ipaddr, userID, galleryID) {
   const { views, viewers } = galleryData;
 
   const now = new Date().toLocaleDateString();
-  const viewed = true;
+  const iphash = hash(ipaddr);
+  const viewed = viewers.get(iphash) === now;
 
   if (!viewed || ipaddr === "development") {
-    await Gallery.updateOne({ galleryID }, { views: views + 1 });
+    viewers.set(iphash, now);
+    await Gallery.updateOne({ galleryID }, { views: views + 1, viewers });
   }
   return { success: true, data: galleryData };
 }

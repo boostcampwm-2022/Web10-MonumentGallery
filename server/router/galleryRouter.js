@@ -1,11 +1,10 @@
 import express from "express";
 import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
-import { processDataForClient } from "../service/dataProcessService.js";
-import { loadGallery, loadLastGallery, getGalleryHistory } from "../service/dataSaveService.js";
+import { loadGallery, getGalleryHistory } from "../service/dataSaveService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { updateShareState, loadUserGalleryList } from "../model/galleryModel.js";
 import { createGallery } from "../service/galleryService.js";
-import { writeMessageSSE, endConnectionSSE } from "../service/sseService.js";
+import { endConnectionSSE } from "../service/sseService.js";
 
 const router = express.Router();
 
@@ -43,11 +42,11 @@ router.get(
   "/gallery/:targetUserID/:galleryID",
   authMiddleware,
   asyncHandler(async (req, res) => {
-    // const userID = req.userid;
+    const requestUserID = req.userid;
     console.log(req.params);
     const { targetUserID, galleryID } = req.params;
 
-    const result = await loadGallery(targetUserID, galleryID);
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID);
     res.status(200).json({ gallery: result, userId: targetUserID });
   }),
 );
@@ -57,15 +56,15 @@ router.get(
   authMiddleware,
   asyncHandler(async (req, res) => {
     req.connection.setTimeout(60 * 5 * 1000); //5분
-    const userId = req.userid;
+    const requestUserID = req.userid;
 
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGallery(notionAccessToken, period, theme, userId, res);
+    const galleryID = await createGallery(notionAccessToken, period, theme, requestUserID, res);
 
-    const result = await loadGallery(userId, galleryID);
-    endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}`, data: result });
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, requestUserID, galleryID);
+    endConnectionSSE(res, { page: `/gallery/${requestUserID}/${galleryID}`, data: result });
   }),
 );
 
@@ -73,9 +72,9 @@ router.get(
   "/gallery/:id",
   authMiddleware,
   asyncHandler(async (req, res) => {
+    const requestUserID = req.userid;
     const { id } = req.params;
-
-    const result = await loadLastGallery(id);
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, id);
     res.status(200).json({ gallery: result, userId: id });
   }),
 );

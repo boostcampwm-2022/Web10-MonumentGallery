@@ -22,10 +22,12 @@ export interface IGalleryPageData {
 }
 
 export interface IGalleryMapData {
+  id: string;
   theme: THEME;
   totalKeywords: IKeywordMap;
   pages: IGalleryPageData[];
   nodes: number[][];
+  views: number;
 }
 
 export interface IGalleryDataResponse {

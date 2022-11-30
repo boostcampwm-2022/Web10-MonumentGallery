@@ -46,6 +46,7 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> 
   useEffect(() => {
     if (data) {
       const { gallery, userId } = data;
+      console.log(data);
       setData(gallery, userId);
       setTheme(gallery.theme);
       return;

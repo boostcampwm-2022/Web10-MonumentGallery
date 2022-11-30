@@ -1,13 +1,12 @@
 import GalleryPageIsland from "./mapObjects/GalleryPageIsland";
 import GalleryCenterIsland from "./mapObjects/GalleryCenterIsland";
 import Bridge from "./mapObjects/Bridge";
+import { Vector3Arr } from "../@types/common";
 import { IGalleryMapData, IGalleryPageData } from "../@types/gallery";
 
 interface GalleryWorldProps {
   data: IGalleryMapData;
 }
-
-type Vector3Arr = [x: number, y: number, z: number];
 
 export default function GalleryWorld({ data }: GalleryWorldProps) {
   const { totalKeywords, groupKeywords, pages, nodes } = data;

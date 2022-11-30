@@ -40,7 +40,7 @@ function getCameraFrontPosition(camera: Camera, object: Object3D, dist: number) 
   return result;
 }
 
-function Float({ isPlaying = true, children } = {}) {
+function Float({ isPlaying = true, children }: FloatProps = {}) {
   const ref = useRef<Group>(null);
   const offset = useRef(Math.random() * 10000);
   const elapsedTime = useRef(offset.current);

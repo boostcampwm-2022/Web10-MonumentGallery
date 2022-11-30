@@ -5,6 +5,7 @@ import {
   loadLastGalleryID as loadLastGalleryIDFromDB,
   loadUserGalleryList as loadUserGalleryListFromDB,
   loadShareStatus as loadSharedStatusFromDB,
+  loadLastGalleryID,
 } from "../model/galleryModel.js";
 import { processDataForClient } from "../service/dataProcessService.js";
 import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
@@ -24,19 +25,19 @@ export async function saveGallery(userID, galleryData) {
   return id;
 }
 
-export async function loadGallery(userID, galleryID = null) {
-  if (galleryID === null) return loadLastGallery(userID);
+export async function loadGallery(requestUserData, userID, galleryID = null) {
+  if (galleryID === null) galleryID = await getLastGalleryID(userID);
   if (!validateGalleryID(galleryID)) throw new BadRequestError("올바른 갤러리 ID가 아닙니다!");
-  const result = await loadGalleryFromDB(userID, galleryID);
+  const result = await loadGalleryFromDB(requestUserData, userID, galleryID);
   if (result.success) return processDataForClient(result.data);
   if (result.err === "bad_request") throw new BadRequestError("갤러리를 찾을 수 없습니다!");
   throw new NotFoundError(result.err);
 }
 
-export async function loadLastGallery(userID) {
-  const result = await loadLastGalleryFromDB(userID);
-  if (result === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
-  return processDataForClient(result);
+export async function getLastGalleryID(userID) {
+  const galleryID = await loadLastGalleryID(userID);
+  if (galleryID === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
+  return galleryID;
 }
 
 export async function getGalleryHistory(userID) {

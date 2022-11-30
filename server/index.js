@@ -13,6 +13,7 @@ import galleryRouter from "./router/galleryRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
 import { startRedis } from "./model/accessTokenStore.js";
+import ipaddrMiddleware from "./middleware/ipAddrMiddleware.js";
 
 dotenv.config();
 const app = express();
@@ -35,6 +36,7 @@ app.use("/vite.svg", express.static("./dist/vite.svg"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
+app.use(ipaddrMiddleware);
 
 // api routing
 app.use("/auth", authRouter);

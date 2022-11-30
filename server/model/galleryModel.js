@@ -1,6 +1,7 @@
 import { startSession } from "mongoose";
 import Gallery from "../schema/gallerySchema.js";
 import User from "../schema/userSchema.js";
+import hash from "../utils/hash.js";
 
 async function loadGalleryHistory(userID) {
   const isExists = await User.exists({ userID });
@@ -69,18 +70,36 @@ async function saveGallery(userID, galleryData) {
   }
 }
 
-async function loadGallery(userID, galleryID) {
+async function loadGallery(requestUserData, userID, galleryID) {
+  const { ipaddr, requestUserID } = requestUserData;
+
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
     return { success: false, err: "bad_request" };
   }
   if ((await User.exists({ userID })) === false) return { success: false, err: "no user" };
 
-  const { history } = await User.findOne({ userID });
+  const user = await User.findOne({ userID });
+  const { history } = user;
   if (!history.has(galleryID)) return { success: false, err: "don't have gallery" };
 
   const galleryData = await Gallery.findById(galleryID);
   if (galleryData === null) return { success: false, err: "no gallery" };
 
+  console.log({ id: userID, requestUserID });
+
+  if (!user.isShared && userID !== requestUserID) return { success: false, err: "not authorized" };
+
+  // 조회수 관련 로직
+  const { views, viewers } = galleryData;
+
+  const now = new Date().toLocaleDateString();
+  const iphash = hash(ipaddr);
+  const viewed = viewers.get(iphash) === now;
+
+  if (iphash && (!viewed || ipaddr === "development")) {
+    viewers.set(iphash, now);
+    await Gallery.updateOne({ _id: galleryData._id }, { views: views + 1, viewers });
+  }
   return { success: true, data: galleryData };
 }
 

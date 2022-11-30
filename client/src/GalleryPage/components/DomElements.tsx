@@ -18,7 +18,7 @@ import userStore from "../../store/user.store";
 import galleryStore from "../../store/gallery.store";
 import axios from "axios";
 import { IHistory } from "../../@types/gallery";
-import { useParams } from "../../hooks/useParams";
+import URLCopy from "../../utils/URLCopy";
 
 export default function DomElements({
   setResource,
@@ -51,7 +51,7 @@ export default function DomElements({
           <SyncButton />
           <ShareButton show={showShareModal} setShow={setShowShareModal} />
         </FloatLayout>
-        <FullScreenModal css={{ width: "230px", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
+        <FullScreenModal css={{ width: "400px", height: "230px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
         </FullScreenModal>
         <HistorySidebar show={showSidebar} setShow={setShowSidebar} setResource={setResource} />
@@ -68,25 +68,52 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
   return (
     <div className="modal share-modal">
       <span>{isShared ? "공유를 중단하시겠습니까?" : "공유를 시작하시겠습니까?"}</span>
-      <button
-        onClick={() => {
-          console.log(isShared);
-          const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
-          axios.post("/api/user/share", { isShared: !isShared }).then(() => {
-            addToast(TOAST.INFO(toastMsg));
-            setShared(!isShared);
-          });
-          onShareButtonClick();
-        }}
-      >
-        {isShared ? "공유 중단" : "공유 시작"}
-      </button>
+      <div className="button__container">
+        <button
+          onClick={() => {
+            console.log(isShared);
+            const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
+            axios
+              .post("/api/user/share", { isShared: !isShared })
+              .then(() => {
+                addToast(TOAST.INFO(toastMsg));
+                setShared(!isShared);
+                if (isShared) {
+                  onShareButtonClick();
+                }
+              })
+              .catch(() => {
+                const toastErrMsg = "에러가 발생했습니다.";
+                addToast(TOAST.ERROR(toastErrMsg));
+              });
+          }}
+        >
+          {isShared ? "공유 중단" : "공유 시작"}
+        </button>
+        {isShared && (
+          <button
+            onClick={async () => {
+              const result = await URLCopy();
+              if (result) {
+                const toastMsg = "이 공간의 링크가 클립보드에 복사되었습니다.";
+                addToast(TOAST.INFO(toastMsg));
+              } else {
+                const toastErrMsg = "에러가 발생했습니다.";
+                addToast(TOAST.ERROR(toastErrMsg));
+              }
+              onShareButtonClick();
+            }}
+          >
+            링크 복사하기
+          </button>
+        )}
+      </div>
     </div>
   );
 }
 
 function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const { userId: galleryUserId } = galleryStore();
+  const { data, userId: galleryUserId } = galleryStore();
   const {
     isLoggedIn,
     isShared,
@@ -113,6 +140,14 @@ function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch
       >
         {isShared ? <img src={SharedIcon} /> : <img src={ProtectedIcon} />}
       </button>
+      {isShared && (
+        <>
+          <span data-views={data.views} className="share-span">
+            조회:
+          </span>
+          <span className="share-span share-view-count">{data.views}</span>
+        </>
+      )}
     </div>
   );
 }
@@ -137,8 +172,7 @@ function HistorySidebar({
   const [selected, setSelected] = useState(0);
   const [canScroll, setCanScroll] = useState(true);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const { userId } = galleryStore();
-  const [, galleryId] = useParams("gallery");
+  const { data, userId } = galleryStore();
   const [histories, setHistories] = useState<IHistory[]>([]);
 
   useLayoutEffect(() => {
@@ -146,7 +180,7 @@ function HistorySidebar({
     axios.get<IHistory[]>(`/api/history/${userId}`).then((res) => {
       if (!res.data) return;
       setHistories(res.data);
-      const idx = res.data.findIndex((history) => history.id === galleryId);
+      const idx = res.data.findIndex((history) => history.id === data.id);
       setScrollOffset(idx);
       setSelected(idx);
     });
@@ -219,10 +253,14 @@ function HistorySidebar({
         </div>
       </div>
       {showHistoryModal && (
-        <FullScreenModal css={{ width: "20%", height: "20%" }} show={showHistoryModal} setShow={setShowHistoryModal}>
+        <FullScreenModal
+          css={{ width: "300px", height: "200px" }}
+          show={showHistoryModal}
+          setShow={setShowHistoryModal}
+        >
           <div className="modal history-modal">
             <div>
-              {histories[selected].id === galleryId ? "현재 히스토리 데이터입니다." : "새로운 데이터를 불러옵니다."}
+              {histories[selected].id === data.id ? "현재 히스토리 데이터입니다." : "새로운 데이터를 불러옵니다."}
             </div>
             <div className="history-modal-data">
               <span>
@@ -256,14 +294,14 @@ function HistoryItem({
   onClick: (distanceToSelected: number) => void;
 }) {
   const [hover, setHover] = useState(false);
-  const [, galleryId] = useParams("gallery");
+  const { data } = galleryStore();
   const offset = useMemo(() => Math.abs(distanceToSelected), [distanceToSelected]);
 
   return (
     <div key={history.id} className="history">
       {(hover || !distanceToSelected) && <span className="history-time">{history.time}</span>}
       <span
-        style={history.id === galleryId ? { backgroundColor: "#ffffff", color: "#222222" } : {}}
+        style={history.id === data.id ? { backgroundColor: "#ffffff", color: "#222222" } : {}}
         className={`history-item history-item-${offset <= 4 ? offset : "plain"}`}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}

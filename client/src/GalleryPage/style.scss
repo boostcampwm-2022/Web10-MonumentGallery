@@ -12,12 +12,19 @@
 
 .share {
   position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 60px;
   left: 40px;
   bottom: 40px;
   .share-hover {
+    position: absolute;
+    width: 200px;
+    top: -20px;
+    left: 30px;
     color: #ffffff;
-    transform: translate(calc(-50% + 30px), 0);
     transition: all ease 2s;
+    transform: translate(-50%, 0);
   }
   .share-button {
     font-size: 20px;
@@ -35,6 +42,38 @@
       transform: translate(0, 15%);
     }
   }
+  .share-span {
+    position: relative;
+    top: 10px;
+    left: -10px;
+    color: #ffffff;
+  }
+  .share-view-count {
+    text-align: left;
+    position: relative;
+    display: inline-block;
+    top: -10px;
+    left: 90px;
+    color: #ffffff;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transform: translate(-50%, 0);
+  }
+
+  [data-views]:hover::after {
+    content: attr(data-views);
+    position: absolute;
+    display: inline;
+    z-index: 999;
+    top: -20px;
+    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.4);
+    border-radius: 8px;
+    padding: 5px 10px;
+  }
 }
 
 .share-modal {
@@ -42,17 +81,23 @@
   flex-wrap: wrap;
   justify-content: space-between;
   height: 100%;
-  & > button {
+  & > .button__container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 19px;
+    justify-content: space-between;
     width: 100%;
-    height: 40px;
-    color: #ffffff;
-    background: #333333;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
+    & > button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 19px;
+      width: 100%;
+      height: 40px;
+      margin: 10px;
+      color: #ffffff;
+      background: #333333;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+    }
   }
 }
 
@@ -104,6 +149,11 @@
   }
 }
 .create-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   .make-gallery {
     font-size: 30px;
     margin-bottom: 20px;

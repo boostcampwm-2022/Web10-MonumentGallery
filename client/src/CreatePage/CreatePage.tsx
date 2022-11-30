@@ -12,7 +12,6 @@ import dummyData from "../GalleryPage/dummyData";
 
 import toastStore from "../store/toast.store";
 import galleryStore from "../store/gallery.store";
-import { createResource, Resource } from "../utils/suspender";
 
 import "./style.scss";
 import { THEME } from "../@types/gallery";

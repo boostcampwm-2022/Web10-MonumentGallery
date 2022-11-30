@@ -1,13 +1,18 @@
 import { DoubleSide, UniformsUtils, UniformsLib } from "three";
 
 export const pixelFragmentShaderUniforms = () => {
-  return UniformsUtils.merge([UniformsLib.lights, { lerp: { value: 1 }, scatterFragScale: { value: 1 } }]);
+  return UniformsUtils.merge([
+    UniformsLib.lights,
+    UniformsLib.fog,
+    { lerp: { value: 1 }, scatterFragScale: { value: 1 } },
+  ]);
 };
 
 const pixelFragmentShader = {
   side: DoubleSide,
   vertexColors: true,
   lights: true,
+  fog: true,
   vertexShader: /* glsl */ `
     attribute vec3 pivot;
     attribute vec3 vertexPosition;
@@ -21,6 +26,7 @@ const pixelFragmentShader = {
     varying vec3 vNormal;
     varying vec3 vViewPosition;
     #include <color_pars_vertex>
+    #include <fog_pars_vertex>
 
     vec4 getQuaternion(vec4 axisAngle, float amount) {
       vec3 axis = axisAngle.xyz;
@@ -63,6 +69,10 @@ const pixelFragmentShader = {
       vec4 modelViewPosition = modelViewMatrix * vec4( newPosition, 1.0 );
       vViewPosition = - modelViewPosition.xyz;
       gl_Position = projectionMatrix * modelViewPosition;
+
+      #ifdef USE_FOG
+        vFogDepth = - modelViewPosition.z;
+      #endif
     }`,
   fragmentShader: /* glsl */ `
     #undef USE_SHADOWMAP
@@ -71,6 +81,7 @@ const pixelFragmentShader = {
     varying vec3 vNormal;
     #include <common>
     #include <color_pars_fragment>
+    #include <fog_pars_fragment>
     #include <bsdfs>
     #include <lights_pars_begin>
     #include <lights_phong_pars_fragment>
@@ -92,6 +103,8 @@ const pixelFragmentShader = {
       vec3 specularResult = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
       vec3 outgoingLight = diffuseResult + specularResult;
       gl_FragColor = vec4(outgoingLight, 1);
+
+      #include <fog_fragment>
     }`,
 };
 

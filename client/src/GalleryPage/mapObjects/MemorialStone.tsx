@@ -149,6 +149,7 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
       }
     };
   }, []);
+
   return (
     <group position={[position[0], 0, position[1]]} scale={textSize}>
       <Pedestal scale={0.5} color={stoneColor} />
@@ -173,6 +174,7 @@ export default function MemorialStones({ subtitles }: MemorialStonesProps) {
   const stoneInfoList = useMemo(() => {
     return calculateMemorialStonePosition(subtitles);
   }, []);
+
   return (
     <>
       {stoneInfoList.map((stoneInfo, i) => {

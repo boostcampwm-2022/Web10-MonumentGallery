@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Color, Vector3, Quaternion, Mesh, Camera, Object3D } from "three";
 import { useThree, useFrame, MeshProps } from "@react-three/fiber";
+import { Float } from "@react-three/drei";
 import { useSpring, animated, Interpolation } from "@react-spring/three";
 
 import PixelFragmentGeometry from "./pixelFragmentGeometry";
@@ -109,7 +110,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
 
   // why ts + react-spring + react-three/fiber is so messy!
   return (
-    <>
+    <Float>
       <animated.mesh
         {...props}
         position={position as unknown as Vector3}
@@ -125,6 +126,6 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
           uniforms-scatterFragScale-value={scatterFragScale}
         />
       </animated.mesh>
-    </>
+    </Float>
   );
 }

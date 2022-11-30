@@ -19,6 +19,7 @@ import galleryStore from "../../store/gallery.store";
 import axios from "axios";
 import { IHistory } from "../../@types/gallery";
 import { useParams } from "../../hooks/useParams";
+import URLCopy from "../../utils/URLCopy";
 
 export default function DomElements({
   setResource,
@@ -51,7 +52,7 @@ export default function DomElements({
           <SyncButton />
           <ShareButton show={showShareModal} setShow={setShowShareModal} />
         </FloatLayout>
-        <FullScreenModal css={{ width: "230px", height: "130px" }} show={showShareModal} setShow={setShowShareModal}>
+        <FullScreenModal css={{ width: "400px", height: "230px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
         </FullScreenModal>
         <HistorySidebar show={showSidebar} setShow={setShowSidebar} setResource={setResource} />
@@ -68,19 +69,46 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
   return (
     <div className="modal share-modal">
       <span>{isShared ? "공유를 중단하시겠습니까?" : "공유를 시작하시겠습니까?"}</span>
-      <button
-        onClick={() => {
-          console.log(isShared);
-          const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
-          axios.post("/api/user/share", { isShared: !isShared }).then(() => {
-            addToast(TOAST.INFO(toastMsg));
-            setShared(!isShared);
-          });
-          onShareButtonClick();
-        }}
-      >
-        {isShared ? "공유 중단" : "공유 시작"}
-      </button>
+      <div className="button__container">
+        <button
+          onClick={() => {
+            console.log(isShared);
+            const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
+            axios
+              .post("/api/user/share", { isShared: !isShared })
+              .then(() => {
+                addToast(TOAST.INFO(toastMsg));
+                setShared(!isShared);
+                if (isShared) {
+                  onShareButtonClick();
+                }
+              })
+              .catch((e) => {
+                const toastErrMsg = "에러가 발생했습니다.";
+                addToast(TOAST.ERROR(toastErrMsg));
+              });
+          }}
+        >
+          {isShared ? "공유 중단" : "공유 시작"}
+        </button>
+        {isShared && (
+          <button
+            onClick={async () => {
+              const result = await URLCopy();
+              if (result) {
+                const toastMsg = "이 공간의 링크가 클립보드에 복사되었습니다.";
+                addToast(TOAST.INFO(toastMsg));
+              } else {
+                const toastErrMsg = "에러가 발생했습니다.";
+                addToast(TOAST.ERROR(toastErrMsg));
+              }
+              onShareButtonClick();
+            }}
+          >
+            링크 복사하기
+          </button>
+        )}
+      </div>
     </div>
   );
 }

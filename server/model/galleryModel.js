@@ -98,7 +98,7 @@ async function loadGallery(requestUserData, userID, galleryID) {
 
   if (!viewed || ipaddr === "development") {
     viewers.set(iphash, now);
-    await Gallery.updateOne({ galleryID }, { views: views + 1, viewers });
+    await Gallery.updateOne({ _id: galleryData._id }, { views: views + 1, viewers });
   }
   return { success: true, data: galleryData };
 }

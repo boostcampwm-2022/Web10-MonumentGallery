@@ -3,7 +3,7 @@ import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js"
 import {
   loadGallery,
   getGalleryHistory,
-  createGallery,
+  createGalleryFromNotion,
   loadUserHistory,
   updateShareState,
 } from "../service/galleryService.js";
@@ -25,7 +25,7 @@ router.get(
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGallery(notionAccessToken, period, theme, userId, res);
+    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, userId, res);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
     endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}` });
@@ -65,7 +65,7 @@ router.get(
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGallery(notionAccessToken, period, theme, requestUserID, res);
+    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, requestUserID, res);
 
     const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, requestUserID, galleryID);
     endConnectionSSE(res, { page: `/gallery/${requestUserID}/${galleryID}`, data: result });

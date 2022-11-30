@@ -15,7 +15,6 @@ import { getRawContentsFromNotion } from "./getNotionContentService.js";
 import hash from "../utils/hash.js";
 import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
 
-
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
     return false;
@@ -118,7 +117,7 @@ export async function getUserGalleryStatus(userID) {
   return { isCreated: lastGalleryID !== null, isShared: isShared ?? false };
 }
 
-export async function createGallery(notionAccessToken, period, theme, userID, res) {
+export async function createGalleryFromNotion(notionAccessToken, period, theme, userID, res) {
   createConnectionSSE(res);
 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 25, data: {} }), res);

@@ -5,6 +5,7 @@ export function createConnectionSSE(res) {
     Connection: "keep-alive",
     charset: "UTF-8",
     "Transfer-Encoding": "chunked",
+    "X-Accel-Buffering": "no",
   });
   res.write("data: " + JSON.stringify({ kind: "시작", progress: 0, data: {} }) + "\n\n");
 }

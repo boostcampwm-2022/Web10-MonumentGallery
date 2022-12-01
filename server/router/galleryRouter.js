@@ -50,7 +50,7 @@ router.get(
     console.log(req.params);
     const { targetUserID, galleryID } = req.params;
 
-    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID)
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID);
     res.status(200).json({ gallery: result, userId: targetUserID, page: `/gallery/${targetUserID}/${galleryID}` });
   }),
 );

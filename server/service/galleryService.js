@@ -1,5 +1,10 @@
 import { startSession } from "mongoose";
-import { saveGallery as saveGalleryFromDB, findGalleryByID, updateGalleryView } from "../model/galleryModel.js";
+import {
+  saveGallery as saveGalleryFromDB,
+  findGalleryByID,
+  updateGalleryView,
+  deleteByID,
+} from "../model/galleryModel.js";
 import {
   findUserByID,
   findHistoryByID,
@@ -7,6 +12,7 @@ import {
   findLastGalleryIDByID,
   findShareStatusByID,
   updateShareStateByID,
+  deleteUserHistoryByID,
 } from "../model/userModel.js";
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
@@ -115,6 +121,29 @@ export async function getUserGalleryStatus(userID) {
   const [lastGalleryID, isShared] = await Promise.all([findLastGalleryIDByID(userID), findShareStatusByID(userID)]);
 
   return { isCreated: lastGalleryID !== null, isShared: isShared ?? false };
+}
+
+export async function deleteUserHistory(users) {
+  const session = await startSession();
+  try {
+    session.startTransaction();
+    await Promise.all(
+      users.map(async (user) => {
+        user.history.forEach(async (val, key) => {
+          if (!(await deleteByID(key))) throw NotFoundError("갤러리를 찾을 수 없습니다.");
+        });
+        if (!(await deleteUserHistoryByID(user._id))) throw NotFoundError("존재하지 않는 유저입니다.");
+        return user._id;
+      }),
+    );
+    await session.commitTransaction();
+    session.endSession();
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    console.log(err);
+    throw new InternalServerError("DB 저장 실패");
+  }
 }
 
 export async function createGalleryFromNotion(notionAccessToken, period, theme, userID, res) {

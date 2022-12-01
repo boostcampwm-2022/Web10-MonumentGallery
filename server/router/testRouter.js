@@ -29,16 +29,25 @@ router.get(
 router.get(
   "/setdummy",
   asyncHandler(async (req, res) => {
-    for (let i = 0; i < 10000; i++) {
-      const nowUser = userDummyData;
-      userDummyData.userID = i.toString();
-      await User.create(nowUser);
+    const tmp = [];
+    for (let i = 87; i < 10000; i++) tmp.push(i);
+    await Promise.all(
+      tmp.map(async (val) => {
+        const nowUser = userDummyData;
+        userDummyData.userID = val;
+        await User.create(nowUser);
+        return val;
+      }),
+    );
+    //   const nowUser = userDummyData;
+    //   userDummyData.userID = i.toString();
+    //   await User.create(nowUser);
 
-      for (let j = 0; j < 100; j++) {
-        await saveGallery(i.toString(), galleryDummyData);
-      }
-    }
-    res.send("success");
+    //   for (let j = 0; j < 100; j++) {
+    //     await saveGallery(i.toString(), galleryDummyData);
+    //   }
+    // }
+    res.send(tmp);
   }),
 );
 

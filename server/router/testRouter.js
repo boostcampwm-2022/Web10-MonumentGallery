@@ -8,12 +8,17 @@ import Gallery from "../schema/gallerySchema.js";
 import User from "../schema/userSchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
+import { deleteUserHistory } from "../service/galleryService.js";
 const router = express.Router();
 
 router.get("/crontab", async (req, res) => {
+  const yesterday = Date.now() - 1000 * 60 * 60 * 24;
+  // const users = await User.find({ isShared: false, lastShareModified: { $lte: yesterday } });
+  // 대충 일정 수 받았다고 가정
   const users = await User.find();
-  console.log(users);
-  res.send(users);
+  // console.log(users);
+  await deleteUserHistory(users);
+  res.send(await User.find());
 });
 
 router.get("/testShared", (req, res) => {

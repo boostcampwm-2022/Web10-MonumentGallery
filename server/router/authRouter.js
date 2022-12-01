@@ -17,7 +17,7 @@ router.get(
     const code = req.query.code;
     if (code === undefined) {
       // return res.status(401).send({ result: "failed", reason: "Notion OAuth 인증에 실패했습니다!" });
-      res.redirect("/");
+      return res.redirect("/");
     }
     const tokenData = await getTokenDataFromNotion(code);
     const jwtToken = saveToken(tokenData);

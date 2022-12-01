@@ -4,22 +4,24 @@ import infoIcon from "../../assets/images/toast-icon-info.svg";
 import warningIcon from "../../assets/images/toast-icon-warning.svg";
 
 const TOAST = {
-  SUCCESS(description = "This is a success toast component") {
+  SUCCESS(description = "This is a success toast component", autoDeleteTime = 2000) {
     return {
       id: Math.floor(Math.random() * 100001 + 1),
       type: "SUCCESS",
       description,
       backgroundColor: "#5cb85c",
       icon: checkIcon,
+      autoDeleteTime,
     };
   },
-  ERROR(description = "This is a error toast component") {
+  ERROR(description = "This is a error toast component", autoDeleteTime = 2000) {
     return {
       id: Math.floor(Math.random() * 100001 + 1),
       type: "ERROR",
       description,
       backgroundColor: "#d9534f",
       icon: errorIcon,
+      autoDeleteTime,
     };
   },
   INFO(description = "This is a info toast component", autoDeleteTime = 2000) {
@@ -32,13 +34,14 @@ const TOAST = {
       autoDeleteTime,
     };
   },
-  WARNING(description = "This is a warning toast component") {
+  WARNING(description = "This is a warning toast component", autoDeleteTime = 2000) {
     return {
       id: Math.floor(Math.random() * 100001 + 1),
       type: "WARNING",
       description,
       backgroundColor: "#f0ad4e",
       icon: warningIcon,
+      autoDeleteTime,
     };
   },
 };

@@ -13,7 +13,7 @@ import { getImagePixelsFromPages } from "./imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseService.js";
 import { getRawContentsFromNotion } from "./getNotionContentService.js";
 import hash from "../utils/hash.js";
-import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
+import { BadRequestError, NotFoundError, ForbiddenError, InternalServerError } from "../utils/httpError.js";
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
@@ -38,7 +38,7 @@ export async function saveGallery(userID, galleryData) {
     await session.abortTransaction();
     session.endSession();
     console.log(err);
-    throw new InternalServerError("DB 저장 실패");
+    throw new InternalServerError("DB 저장 실패(갤러리 저장 실패)");
   }
 }
 
@@ -48,7 +48,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   const { ipaddr, requestUserID } = requestUserData;
 
   const user = await findUserByID(userID);
-  if (!user) throw NotFoundError("존재하지 않는 사용자입니다.");
+  if (!user) throw new NotFoundError("존재하지 않는 사용자입니다.");
 
   const { history } = user;
   if (!history.has(galleryID)) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
@@ -56,13 +56,16 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   const galleryData = await findGalleryByID(galleryID);
   if (galleryData === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
 
-  console.log({ id: userID, requestUserID });
-  IncreaseViewCount(ipaddr, galleryData);
+  if (!user.isShared && userID !== requestUserID) {
+    throw new ForbiddenError("비공개된 갤러리에 접근할 권한이 없습니다!");
+  }
+
+  await increaseViewCount(ipaddr, galleryData);
 
   return processDataForClient(galleryData);
 }
 
-async function IncreaseViewCount(ipaddr, galleryData) {
+async function increaseViewCount(ipaddr, galleryData) {
   const { views, viewers } = galleryData;
   const now = new Date().toLocaleDateString();
   const iphash = hash(ipaddr);
@@ -79,8 +82,8 @@ async function IncreaseViewCount(ipaddr, galleryData) {
     } catch (err) {
       await session.abortTransaction();
       session.endSession();
+      console.log("조회수 카운트 실패!");
       console.log(err);
-      throw new InternalServerError("DB 저장 실패");
     }
   }
 }

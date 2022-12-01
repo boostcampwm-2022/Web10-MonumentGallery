@@ -19,6 +19,7 @@ const pixelFragmentShader = {
     attribute vec4 localRotation;
     attribute vec4 globalRotation;
     attribute float globalDist;
+    attribute float pickedTriangle;
 
     uniform float lerp;
     uniform float scatterFragScale;
@@ -63,7 +64,9 @@ const pixelFragmentShader = {
       float triPositionLength = mix(length(pivot), globalDist, lerp);
       vec3 newTriPosition = triPositionLength * newTriPositionDirection;
 
-      vec3 newPosition = newLocalPosition * mix(1.0, scatterFragScale, lerp) + newTriPosition;
+      float scale = pickedTriangle == 1.0 ? scatterFragScale * 5.0 : 0.0;
+
+      vec3 newPosition = newLocalPosition * mix(1.0, scale, lerp) + newTriPosition;
 
       // vec4 modelViewPosition = modelViewMatrix * vec4( position.xy, globalDist, 1.0 );
       vec4 modelViewPosition = modelViewMatrix * vec4( newPosition, 1.0 );

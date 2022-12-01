@@ -40,6 +40,13 @@ export async function updateUserHistory(userID, galleryID, session) {
   );
 }
 
+export async function deleteUserHistoryByID(_id, session) {
+  const isExists = await User.exists({ _id: _id });
+  if (!isExists) return null;
+  await User.findByIdAndUpdate(_id, { history: new Map() }).session(session);
+  return _id;
+}
+
 export async function findShareStatusByID(userID) {
   const isExists = await User.exists({ userID });
   if (isExists) {

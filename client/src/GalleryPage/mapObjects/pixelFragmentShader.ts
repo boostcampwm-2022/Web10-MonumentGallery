@@ -87,9 +87,9 @@ const pixelFragmentShader = {
     #include <lights_phong_pars_fragment>
 
     void main() {
-      vec4 diffuseColor = vec4( vColor, 1.0 );
+      vec4 diffuseColor = vec4( 0.05, 0.05, 0.05, 1.0 );
       ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-      vec3 specular = vec3( mix(0.4, 0.1, lerp) );
+      vec3 specular = vec3( mix(0.1, 0.7, lerp) );
       float shininess = 120.0;
       float specularStrength = 1.0;
       vec3 normal = vNormal;
@@ -101,7 +101,7 @@ const pixelFragmentShader = {
 
       vec3 diffuseResult = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
       vec3 specularResult = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
-      vec3 outgoingLight = diffuseResult + specularResult;
+      vec3 outgoingLight = vColor + diffuseResult + specularResult;
       gl_FragColor = vec4(outgoingLight, 1);
 
       #include <fog_fragment>

@@ -71,7 +71,6 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
       <div className="button__container">
         <button
           onClick={() => {
-            console.log(isShared);
             const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
             axios
               .post("/api/user/share", { isShared: !isShared })

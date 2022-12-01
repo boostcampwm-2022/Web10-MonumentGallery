@@ -8,18 +8,39 @@ import Gallery from "../schema/gallerySchema.js";
 import User from "../schema/userSchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
-import { deleteUserHistory } from "../service/galleryService.js";
+import { deleteUserHistory, saveGallery } from "../service/galleryService.js";
+import { asyncHandler } from "../utils/utils.js";
+import userDummyData from "../model/userDummyData.js";
+import galleryDummyData from "../model/galleryDummyData.js";
 const router = express.Router();
 
-router.get("/crontab", async (req, res) => {
-  const yesterday = Date.now() - 1000 * 60 * 60 * 24;
-  // const users = await User.find({ isShared: false, lastShareModified: { $lte: yesterday } });
-  // 대충 일정 수 받았다고 가정
-  const users = await User.find();
-  // console.log(users);
-  await deleteUserHistory(users);
-  res.send(await User.find());
-});
+router.get(
+  "/crontab",
+  asyncHandler(async (req, res) => {
+    const yesterday = Date.now() - 1000 * 60 * 60 * 24;
+    // const users = await User.find({ isShared: false, lastShareModified: { $lte: yesterday } });
+    // 대충 일정 수 받았다고 가정
+    const users = await User.find();
+    // console.log(users);
+    await deleteUserHistory(users);
+    res.send(await User.find());
+  }),
+);
+router.get(
+  "/setdummy",
+  asyncHandler(async (req, res) => {
+    for (let i = 0; i < 10000; i++) {
+      const nowUser = userDummyData;
+      userDummyData.userID = i.toString();
+      await User.create(nowUser);
+
+      for (let j = 0; j < 100; j++) {
+        await saveGallery(i.toString(), galleryDummyData);
+      }
+    }
+    res.send("success");
+  }),
+);
 
 router.get("/testShared", (req, res) => {
   res.send({ isShared: true });

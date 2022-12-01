@@ -1,5 +1,5 @@
 import express from "express";
-import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
+import { authMiddleware, catchAuthError } from "../middlewares/authMiddleware.js";
 import { getTokenDataFromNotion, saveToken } from "../service/authService.js";
 import { getUserGalleryStatus } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";

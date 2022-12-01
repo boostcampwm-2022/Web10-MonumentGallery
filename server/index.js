@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
-import { authMiddleware, catchAuthError } from "./middleware/authMiddleware.js";
+import { authMiddleware, catchAuthError } from "./middlewares/authMiddleware.js";
 import authRouter from "./router/authRouter.js";
 import redirectRouter from "./router/redirectRouter.js";
 import pageRouter from "./router/pageRouter.js";
@@ -13,7 +13,7 @@ import galleryRouter from "./router/galleryRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
 import { startRedis } from "./model/accessTokenStore.js";
-import ipaddrMiddleware from "./middleware/ipAddrMiddleware.js";
+import ipaddrMiddleware from "./middlewares/ipaddrMiddleware.js";
 
 dotenv.config();
 const app = express();

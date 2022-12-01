@@ -67,7 +67,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
 
 async function increaseViewCount(ipaddr, galleryData) {
   const { views, viewers } = galleryData;
-  const now = new Date().toLocaleDateString();
+  const now = new Date().toLocaleDateString("ko-KR");
   const iphash = hash(ipaddr);
   const viewed = viewers.get(iphash) === now;
 

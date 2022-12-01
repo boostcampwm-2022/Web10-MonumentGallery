@@ -102,8 +102,8 @@ router.get(
     const history = await loadUserHistory(userid);
     const histories = [];
     history.forEach((data, id) => {
-      const date = data.toLocaleDateString().slice(0, -1).replaceAll(". ", "-");
-      histories.push({ id, date, time: data.toLocaleTimeString() });
+      const date = data.toLocaleDateString("ko-KR").slice(0, -1).replaceAll(". ", "-");
+      histories.push({ id, date, time: data.toLocaleTimeString("ko-KR") });
     });
     res.status(200).json(histories);
   }),

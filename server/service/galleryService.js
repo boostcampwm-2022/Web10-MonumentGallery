@@ -79,8 +79,8 @@ async function increaseViewCount(ipaddr, galleryData) {
     } catch (err) {
       await session.abortTransaction();
       session.endSession();
+      console.log("조회수 카운트 실패!");
       console.log(err);
-      throw new InternalServerError("DB 저장 실패(조회수 카운트 실패)");
     }
   }
 }

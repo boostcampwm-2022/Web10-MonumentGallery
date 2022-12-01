@@ -41,10 +41,11 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> 
   const [useSampleData, setUseSampleData] = useState(false);
   const [isInitialized, setInitialize] = useState(false);
   const { applyGallery, initializeGallery } = useGalleryHistorySave();
-  const { addToast } = toastStore();
+  const { addToast, removeToast } = toastStore();
 
-  const { data } = resource.read();
+  const { data, error } = resource.read();
 
+  // 데이터가 존재할 때 실제 데이터 적용
   useEffect(() => {
     if (!data) return;
 
@@ -55,6 +56,7 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> 
     } else applyGallery(gallery, userId, page);
   }, [data]);
 
+  // 데이터가 존재하지 않을 때 샘플 데이터 적용
   useEffect(() => {
     if (data || !useSampleData) return;
 
@@ -66,6 +68,7 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> 
     addToast(TOAST.INFO("E 키를 다시 눌러 마우스를 표시합니다.", 1000 * 10));
   }, [data === null && useSampleData]);
 
+  // 데이터를 불러오지 못했을 때 타임아웃 메시지 띄우기
   useEffect(() => {
     if (data || useSampleData) return;
     if (remainTime <= 0) {
@@ -79,6 +82,15 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> 
     };
   }, [remainTime, useSampleData]);
 
+  // 데이터를 불러오지 못했을 때 에러 메시지 띄우기
+  useEffect(() => {
+    if (!error) return;
+    const errorToast = TOAST.ERROR(error.message);
+    addToast(errorToast);
+    return () => removeToast(errorToast);
+  }, [error]);
+
+  // 뒤로가기, 앞으로가기 이벤트 바인딩
   useEffect(() => {
     // popstateevent
     function popState(e: PopStateEvent) {

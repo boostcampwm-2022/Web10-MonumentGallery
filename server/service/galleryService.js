@@ -13,7 +13,7 @@ import { getImagePixelsFromPages } from "./imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseService.js";
 import { getRawContentsFromNotion } from "./getNotionContentService.js";
 import hash from "../utils/hash.js";
-import { BadRequestError, NotFoundError, InternalServerError } from "../utils/httpError.js";
+import { BadRequestError, NotFoundError, ForbiddenError, InternalServerError } from "../utils/httpError.js";
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
@@ -56,7 +56,10 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   const galleryData = await findGalleryByID(galleryID);
   if (galleryData === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
 
-  console.log({ id: userID, requestUserID });
+  if (!user.isShared && userID !== requestUserID) {
+    throw new ForbiddenError("비공개된 갤러리에 접근할 권한이 없습니다!");
+  }
+
   await increaseViewCount(ipaddr, galleryData);
 
   return processDataForClient(galleryData);

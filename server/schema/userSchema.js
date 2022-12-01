@@ -1,4 +1,7 @@
 import { model, Schema } from "mongoose";
+//필요한 인덱스
+//userID
+//(lastShareModified, isShared) vs (isShared, lastShareModified)
 
 const userSchema = new Schema({
   userID: { type: String, required: true, unique: true },

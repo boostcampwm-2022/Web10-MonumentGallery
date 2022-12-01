@@ -6,12 +6,12 @@ import {
   deleteByID,
 } from "../model/galleryModel.js";
 import {
-  findUserByID,
-  findHistoryByID,
-  updateUserHistory,
-  findLastGalleryIDByID,
-  findShareStatusByID,
-  updateShareStateByID,
+  findUserByUserID,
+  findHistoryByUserID,
+  updateUserHistoryByUserID,
+  findLastGalleryIDByUserID,
+  findShareStatusByUserID,
+  updateShareStateByUserID,
   deleteUserHistoryByID,
 } from "../model/userModel.js";
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
@@ -28,7 +28,7 @@ function validateGalleryID(galleryID) {
   return true;
 }
 export async function loadUserHistory(userID) {
-  return findHistoryByID(userID);
+  return findHistoryByUserID(userID);
 }
 
 export async function saveGallery(userID, galleryData) {
@@ -36,7 +36,7 @@ export async function saveGallery(userID, galleryData) {
   try {
     session.startTransaction();
     const galleryID = await saveGalleryFromDB(galleryData, session);
-    await updateUserHistory(userID, galleryID, session);
+    await updateUserHistoryByUserID(userID, galleryID, session);
     await session.commitTransaction();
     session.endSession();
     return galleryID;
@@ -53,7 +53,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   if (!validateGalleryID(galleryID)) throw new BadRequestError("올바른 갤러리 ID가 아닙니다!");
   const { ipaddr, requestUserID } = requestUserData;
 
-  const user = await findUserByID(userID);
+  const user = await findUserByUserID(userID);
   if (!user) throw NotFoundError("존재하지 않는 사용자입니다.");
 
   const { history } = user;
@@ -95,7 +95,7 @@ export async function updateShareState(userID, isShared) {
   const session = await startSession();
   try {
     session.startTransaction();
-    await updateShareStateByID(userID, isShared, session);
+    await updateShareStateByUserID(userID, isShared, session);
     await session.commitTransaction();
     session.endSession();
   } catch (err) {
@@ -107,18 +107,21 @@ export async function updateShareState(userID, isShared) {
 }
 
 export async function getLastGalleryID(userID) {
-  const galleryID = await findLastGalleryIDByID(userID);
+  const galleryID = await findLastGalleryIDByUserID(userID);
   if (galleryID === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
   return galleryID;
 }
 
 export async function getGalleryHistory(userID) {
-  const historyMap = await findHistoryByID(userID);
+  const historyMap = await findHistoryByUserID(userID);
   return Object.fromEntries([...historyMap]);
 }
 
 export async function getUserGalleryStatus(userID) {
-  const [lastGalleryID, isShared] = await Promise.all([findLastGalleryIDByID(userID), findShareStatusByID(userID)]);
+  const [lastGalleryID, isShared] = await Promise.all([
+    findLastGalleryIDByUserID(userID),
+    findShareStatusByUserID(userID),
+  ]);
 
   return { isCreated: lastGalleryID !== null, isShared: isShared ?? false };
 }

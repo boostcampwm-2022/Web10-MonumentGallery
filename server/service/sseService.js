@@ -10,6 +10,7 @@ export function createConnectionSSE(res) {
 }
 
 export function writeMessageSSE(msg, res) {
+  console.log(msg);
   res.write("data: " + msg + "\n\n");
 }
 

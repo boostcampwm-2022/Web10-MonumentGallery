@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { Color, Vector3, Quaternion, Mesh, Camera, Object3D } from "three";
-import { useThree, useFrame, MeshProps } from "@react-three/fiber";
+import { useState, useEffect, useRef, useMemo, ReactNode } from "react";
+import { Color, Vector3, Quaternion, Mesh, Camera, Object3D, Group } from "three";
+import { useThree, useFrame, MeshProps, GroupProps } from "@react-three/fiber";
+// import { Float } from "@react-three/drei";
 import { useSpring, animated, Interpolation } from "@react-spring/three";
 
 import PixelFragmentGeometry from "./pixelFragmentGeometry";
@@ -12,6 +13,11 @@ interface PictureFragmentsProps extends MeshProps {
   pixels: IColor[][];
   size?: number;
   scatterRadius?: number;
+}
+
+interface FloatProps extends GroupProps {
+  isPlaying?: boolean;
+  children?: ReactNode;
 }
 
 function getCameraRotation(camera: Camera, object: Object3D) {
@@ -29,11 +35,25 @@ function getCameraFrontPosition(camera: Camera, object: Object3D, dist: number) 
   const result = camera.position.clone().addScaledVector(zBasis, -dist);
 
   if (object.parent) {
-    const parentWorldPos = new Vector3();
-    object.parent.getWorldPosition(parentWorldPos);
-    result.addScaledVector(parentWorldPos, -1);
+    return object.worldToLocal(result);
   }
   return result;
+}
+
+function Float({ isPlaying = true, children }: FloatProps = {}) {
+  const ref = useRef<Group>(null);
+  const offset = useRef(Math.random() * 10000);
+  const elapsedTime = useRef(offset.current);
+
+  useFrame((_, delta) => {
+    if (!isPlaying || !ref.current) return;
+    elapsedTime.current += delta;
+    ref.current.rotation.x = Math.cos(elapsedTime.current / 8) * 0.2;
+    ref.current.rotation.y = Math.sin(elapsedTime.current / 20) * 0.2;
+    ref.current.rotation.z = Math.sin(elapsedTime.current / 8) * 0.2;
+  });
+
+  return <group ref={ref}>{children}</group>;
 }
 
 export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, ...props }: PictureFragmentsProps) {
@@ -109,7 +129,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
 
   // why ts + react-spring + react-three/fiber is so messy!
   return (
-    <>
+    <Float isPlaying={!activate}>
       <animated.mesh
         {...props}
         position={position as unknown as Vector3}
@@ -125,6 +145,6 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
           uniforms-scatterFragScale-value={scatterFragScale}
         />
       </animated.mesh>
-    </>
+    </Float>
   );
 }

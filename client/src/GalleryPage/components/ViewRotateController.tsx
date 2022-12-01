@@ -60,7 +60,7 @@ function ViewRotateControler({ camera, dom, toggleKey = "KeyE", speed = 0.002 }:
 
     function handleKey(e: KeyboardEvent) {
       if (e.code === toggleKey) togglePointerLock();
-      if (e.code === "KeyZ") console.log(targetCamera);
+      if (e.code === "KeyZ") console.log(gl);
     }
     function handlePointerLock() {
       setLocked(_document.pointerLockElement === targetDom);

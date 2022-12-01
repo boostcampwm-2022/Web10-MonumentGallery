@@ -1,9 +1,9 @@
 import "./style.scss";
 import { THEME } from "../../@types/gallery";
-import themeStore from "../../store/theme.store";
+import galleryStore from "../../store/gallery.store";
 
 export default function ThemeSeletor() {
-  const { theme, setTheme } = themeStore();
+  const { theme, setTheme } = galleryStore();
 
   return (
     <div className="select-box">

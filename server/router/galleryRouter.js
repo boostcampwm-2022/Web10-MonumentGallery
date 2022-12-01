@@ -50,8 +50,8 @@ router.get(
     console.log(req.params);
     const { targetUserID, galleryID } = req.params;
 
-    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID);
-    res.status(200).json({ gallery: result, userId: targetUserID });
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID)
+    res.status(200).json({ gallery: result, userId: targetUserID, page: `/gallery/${targetUserID}/${galleryID}` });
   }),
 );
 
@@ -78,8 +78,9 @@ router.get(
   asyncHandler(async (req, res) => {
     const requestUserID = req.userid;
     const { id } = req.params;
+
     const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, id);
-    res.status(200).json({ gallery: result, userId: id });
+    res.status(200).json({ gallery: result, userId: id, page: `/gallery/${id}` });
   }),
 );
 

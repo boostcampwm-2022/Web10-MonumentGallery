@@ -1,17 +1,20 @@
-import "./style.scss";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
+
 import Gallery from "./Gallery";
 import DomElements from "./components/DomElements";
-import React, { Suspense, useEffect, useMemo, useState } from "react";
-import { createResource, Resource } from "../utils/suspender";
 import Loading from "./components/Loading";
-import galleryStore from "../store/gallery.store";
-import { useParams } from "../hooks/useParams";
-import { IGalleryDataResponse } from "../@types/gallery";
-import themeStore from "../store/theme.store";
-import dummyData from "./dummyData";
-import toastStore from "../store/toast.store";
-import TOAST from "../components/Toast/ToastList";
 import FullScreenModal from "../components/modal/FullScreenModal";
+import TOAST from "../components/Toast/ToastList";
+
+import { useParams } from "../hooks/useParams";
+import { useGalleryHistorySave } from "../hooks/useGalleryHistorySave";
+import toastStore from "../store/toast.store";
+
+import { createResource, Resource } from "../utils/suspender";
+
+import { IGalleryDataResponse } from "../@types/gallery";
+import dummyData from "./dummyData";
+import "./style.scss";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);
@@ -24,42 +27,44 @@ export default function GalleryPage() {
     return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
   }
   return (
-    <>
-      <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
-        <div className="canvas-outer">
-          <GalleryLoader resource={createResource(resource)} />
-        </div>
-        <DomElements setResource={setResource} />
-      </Suspense>
-    </>
+    <Suspense fallback={<Loading text="데이터를 가져오는 중입니다" />}>
+      <div className="canvas-outer">
+        <GalleryLoader resource={createResource(resource)} />
+      </div>
+      <DomElements setResource={setResource} />
+    </Suspense>
   );
 }
 
 function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> }) {
   const [remainTime, setRemainTime] = useState(5);
   const [useSampleData, setUseSampleData] = useState(false);
-  const { setData } = galleryStore();
-  const { setTheme } = themeStore();
+  const [isInitialized, setInitialize] = useState(false);
+  const { applyGallery, initializeGallery } = useGalleryHistorySave();
   const { addToast } = toastStore();
 
   const { data } = resource.read();
+
   useEffect(() => {
-    if (data) {
-      const { gallery, userId } = data;
-      console.log(data);
-      setData(gallery, userId);
-      setTheme(gallery.theme);
-      return;
-    }
-    if (useSampleData) {
-      setData(dummyData, "");
-      addToast(TOAST.INFO("데이터가 존재하지 않아 샘플 월드를 랜더링합니다", 5000));
-      addToast(TOAST.INFO("WASD 키로 캐릭터를 움직입니다.", 1000 * 60));
-      addToast(TOAST.INFO("left shift 및 space로 상하움직임을 제어합니다.", 1000 * 60));
-      addToast(TOAST.INFO("E 키눌러 마우스로 화면전환을 할 수 있습니다.", 1000 * 60));
-      addToast(TOAST.INFO("E 키를 다시 눌러 마우스를 표시합니다.", 1000 * 60));
-    }
-  }, [useSampleData, data]);
+    if (!data) return;
+
+    const { gallery, userId, page } = data;
+    if (!isInitialized) {
+      initializeGallery(gallery, userId);
+      setInitialize(true);
+    } else applyGallery(gallery, userId, page);
+  }, [data]);
+
+  useEffect(() => {
+    if (data || !useSampleData) return;
+
+    applyGallery(dummyData, "");
+    addToast(TOAST.INFO("데이터가 존재하지 않아 샘플 월드를 랜더링합니다", 5000));
+    addToast(TOAST.INFO("WASD 키로 캐릭터를 움직입니다.", 1000 * 10));
+    addToast(TOAST.INFO("left shift 및 space로 상하움직임을 제어합니다.", 1000 * 10));
+    addToast(TOAST.INFO("E 키눌러 마우스로 화면전환을 할 수 있습니다.", 1000 * 10));
+    addToast(TOAST.INFO("E 키를 다시 눌러 마우스를 표시합니다.", 1000 * 10));
+  }, [data === null && useSampleData]);
 
   useEffect(() => {
     if (data || useSampleData) return;
@@ -73,6 +78,19 @@ function GalleryLoader({ resource }: { resource: Resource<IGalleryDataResponse> 
       clearTimeout(timeout);
     };
   }, [remainTime, useSampleData]);
+
+  useEffect(() => {
+    // popstateevent
+    function popState(e: PopStateEvent) {
+      if (e.state && e.state.data !== undefined && e.state.userId !== undefined) {
+        applyGallery(e.state.data, e.state.userId);
+      }
+    }
+    window.addEventListener("popstate", popState);
+    return () => {
+      window.removeEventListener("popstate", popState);
+    };
+  }, []);
 
   if (!data && !useSampleData) {
     return (

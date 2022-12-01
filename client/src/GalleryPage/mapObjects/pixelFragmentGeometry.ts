@@ -6,6 +6,7 @@ import {
   Float32BufferAttribute,
   BufferAttribute,
   InterleavedBufferAttribute,
+  MathUtils,
 } from "three";
 
 type IColor = Color | string | number;
@@ -19,6 +20,7 @@ class PixelFragmentGeometry extends BufferGeometry {
   cellSize: number;
   width: number;
   height: number;
+  scatterFragScale: number;
   constructor(pixels: IColor[][], size = 1, scatterRadius = 3) {
     super();
 
@@ -31,6 +33,7 @@ class PixelFragmentGeometry extends BufferGeometry {
     this.cellSize = size / max;
     this.width = this.columns * this.cellSize;
     this.height = this.rows * this.cellSize;
+    this.scatterFragScale = 0.6 * Math.sqrt(max / 8);
 
     const positions = new Array(this.rows * this.columns * 6 * 3).fill(0);
     const normals = [];
@@ -183,12 +186,14 @@ class PixelFragmentGeometry extends BufferGeometry {
       const vertexPosition = new Vector3().fromBufferAttribute(vertexPositions, i);
       const localQuaternion = this.#getQuaternion(localRotations, i, lerp);
       const newLocalPosition = vertexPosition.applyQuaternion(localQuaternion);
+      const newLocalScale = MathUtils.lerp(1, this.scatterFragScale, lerp);
+      newLocalPosition.multiplyScalar(newLocalScale);
 
       // local triangle position rotation
       const pivot = new Vector3().fromBufferAttribute(pivots, i);
       const triangleQuaternion = this.#getQuaternion(globalRotations, i, lerp);
       const length = pivot.length();
-      const newLength = length * (1 - lerp) + globalDists.getX(i) * lerp;
+      const newLength = MathUtils.lerp(length, globalDists.getX(i), lerp);
       const newTriPosition = pivot.applyQuaternion(triangleQuaternion).setLength(newLength);
 
       const newPosition = new Vector3().addVectors(newLocalPosition, newTriPosition);

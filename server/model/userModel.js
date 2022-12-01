@@ -32,7 +32,6 @@ export async function updateUserHistory(userID, galleryID, session) {
       {
         userID,
         isShared: false,
-        lastShareModified: now,
         lastModified: now,
         history,
       },
@@ -53,7 +52,7 @@ export async function findShareStatusByID(userID) {
 export async function updateShareStateByID(userID, isShared, session) {
   const isExists = await User.exists({ userID });
   if (!isExists) return null;
-  const res = await User.updateOne({ userID }, { isShared }).session(session);
+  const res = await User.updateOne({ userID }, { isShared, lastShareModified: Date.now() }).session(session);
   return res;
 }
 

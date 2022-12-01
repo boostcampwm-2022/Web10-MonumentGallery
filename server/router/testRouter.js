@@ -5,9 +5,16 @@ import { getRawContentsFromNotion } from "../service/getNotionContentService.js"
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 import Gallery from "../schema/gallerySchema.js";
+import User from "../schema/userSchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
 const router = express.Router();
+
+router.get("/crontab", async (req, res) => {
+  const users = await User.find();
+  console.log(users);
+  res.send(users);
+});
 
 router.get("/testShared", (req, res) => {
   res.send({ isShared: true });

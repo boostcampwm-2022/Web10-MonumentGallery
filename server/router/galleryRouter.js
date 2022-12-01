@@ -1,5 +1,5 @@
 import express from "express";
-import { authMiddleware, catchAuthError } from "../middleware/authMiddleware.js";
+import { authMiddleware, catchAuthError } from "../middlewares/authMiddleware.js";
 import {
   loadGallery,
   getGalleryHistory,
@@ -50,7 +50,7 @@ router.get(
     console.log(req.params);
     const { targetUserID, galleryID } = req.params;
 
-    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID)
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID);
     res.status(200).json({ gallery: result, userId: targetUserID, page: `/gallery/${targetUserID}/${galleryID}` });
   }),
 );

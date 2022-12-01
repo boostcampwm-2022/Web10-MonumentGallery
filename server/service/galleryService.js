@@ -38,7 +38,7 @@ export async function saveGallery(userID, galleryData) {
     await session.abortTransaction();
     session.endSession();
     console.log(err);
-    throw new InternalServerError("DB 저장 실패");
+    throw new InternalServerError("DB 저장 실패(갤러리 저장 실패)");
   }
 }
 
@@ -48,7 +48,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   const { ipaddr, requestUserID } = requestUserData;
 
   const user = await findUserByID(userID);
-  if (!user) throw NotFoundError("존재하지 않는 사용자입니다.");
+  if (!user) throw new NotFoundError("존재하지 않는 사용자입니다.");
 
   const { history } = user;
   if (!history.has(galleryID)) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
@@ -57,12 +57,12 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   if (galleryData === null) throw new NotFoundError("갤러리를 찾을 수 없습니다!");
 
   console.log({ id: userID, requestUserID });
-  IncreaseViewCount(ipaddr, galleryData);
+  await increaseViewCount(ipaddr, galleryData);
 
   return processDataForClient(galleryData);
 }
 
-async function IncreaseViewCount(ipaddr, galleryData) {
+async function increaseViewCount(ipaddr, galleryData) {
   const { views, viewers } = galleryData;
   const now = new Date().toLocaleDateString();
   const iphash = hash(ipaddr);
@@ -80,7 +80,7 @@ async function IncreaseViewCount(ipaddr, galleryData) {
       await session.abortTransaction();
       session.endSession();
       console.log(err);
-      throw new InternalServerError("DB 저장 실패");
+      throw new InternalServerError("DB 저장 실패(조회수 카운트 실패)");
     }
   }
 }

@@ -35,7 +35,7 @@ export default function MainPage() {
           <Canvas
             shadows
             className="canvas-inner"
-            camera={{ fov: 75, near: 0.1, far: 100, position: [10, 13, 10], rotation: [0, Math.PI / 4, 0, "YXZ"] }}
+            camera={{ fov: 75, near: 0.1, far: 100, position: [10, 15, 10], rotation: [0, Math.PI / 4, 0, "YXZ"] }}
             style={{ backgroundColor: (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM }}
           >
             <MainWorld />

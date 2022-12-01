@@ -21,10 +21,11 @@ export default function GalleryWorld({ data }: GalleryWorldProps) {
   return (
     <>
       <GalleryCenterIsland keywords={totalKeywords} />
-      {pages.map((pageData: IGalleryPageData, i: number) => {
+      {/* {pages.map((pageData: IGalleryPageData, i: number) => {
         const id = `${pageData.title}__${i}`;
         return <GalleryPageIsland {...pageData} key={id} />;
-      })}
+      })} */}
+      <GalleryPageIsland {...pages[0]} />
       {nodes.map((nodeData: number[]) => {
         const start = getIslandPosition(nodeData[0]);
         const end = getIslandPosition(nodeData[1]);

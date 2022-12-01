@@ -1,9 +1,9 @@
 import * as THREE from "three";
 export default function Plane() {
   return (
-    <mesh rotation-x={-Math.PI * 0.5} scale={[100, 100, 100]}>
+    <mesh rotation-x={-Math.PI * 0.5} scale={[10, 10, 10]}>
       <planeGeometry />
-      <meshStandardMaterial color="greenyellow" side={THREE.DoubleSide} />
+      <meshStandardMaterial color="black" side={THREE.DoubleSide} />
     </mesh>
   );
 }

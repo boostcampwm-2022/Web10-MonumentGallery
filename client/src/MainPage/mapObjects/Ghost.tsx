@@ -51,18 +51,18 @@ function Ghost({ ghostParent }: { ghostParent: THREE.Group | null }) {
   const ghostRef = useRef<THREE.Group>(null);
   const [animationTrigged, setAnimationTrigged] = useState(false);
   const { spring, ready, playing } = useTriggeredSpring(animationTrigged, {
-    tension: 1000,
-    friction: 150,
-    precision: 0.2,
+    tension: 50,
+    friction: 10,
+    precision: 0.1,
   });
 
   const [curRotation, setCurRotation] = useState<DIRECTION>(DIRECTION.S);
   const [destRotation, setDestRotation] = useState<DIRECTION>(DIRECTION.S);
   const [distRotation, setDistRotation] = useState(0);
-  // 변화값
+
   const rotation = useMemo<Interpolation<number, number>>(
     () => spring.to([0, 1], [curRotation[1], curRotation[1] + distRotation]),
-    [curRotation, distRotation],
+    [animationTrigged],
   );
 
   function getDirection(directionVector: [x: number, z: number]) {
@@ -88,6 +88,11 @@ function Ghost({ ghostParent }: { ghostParent: THREE.Group | null }) {
   }
 
   useFrame(({ clock }) => {
+    // const timer = clock.getElapsedTime();
+    // if ((timer * 1000) % 10 === 0) {
+    //   return;
+    // }
+
     if (!ghostParent) return;
     if (!ghostRef.current) return;
     const { x, y, z } = camera.position;
@@ -104,21 +109,28 @@ function Ghost({ ghostParent }: { ghostParent: THREE.Group | null }) {
       2. 애니메이션이 재생중이면 트리거하면 안됨
     */
 
-    console.log({ direction, ready, playing });
-
     if (!direction) {
-      setAnimationTrigged(false);
       ghostRef.current.position.y += Math.sin(clock.getElapsedTime() * 5) * 0.004;
-      setCurRotation(destRotation);
       return;
     }
 
-    if (curRotation === direction) return;
+    if (curRotation === direction) {
+      console.log("같은 방향입니다.");
+      return;
+    }
+
+    if (!playing) {
+      console.log("애니메이션 종료");
+      setAnimationTrigged(false);
+      setCurRotation(destRotation);
+    }
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setDistRotation(GHOST_ROTATE_ANIMATION[curRotation[0]][direction[0]]);
     setDestRotation(direction);
+
+    if (animationTrigged) return;
     setAnimationTrigged(true);
   });
 
@@ -127,7 +139,7 @@ function Ghost({ ghostParent }: { ghostParent: THREE.Group | null }) {
       <group ref={collisionRef}>
         <TPVCollisionPlayerBody position={[0, 0, 0]} />
       </group>
-      <animated.group rotation-y={rotation} position={[0, 0, 0]} ref={ghostRef} scale={[0.5, 0.5, 0.5]} dispose={null}>
+      <animated.group rotation-y={rotation} position={[0, 0, 0]} ref={ghostRef} scale={[2, 2, 2]} dispose={null}>
         <group name="Scene">
           <mesh
             name="mouth"

@@ -12,6 +12,7 @@ import userStore from "../store/user.store";
 
 import FloatLayout from "../layouts/FloatLayout";
 import "./style.scss";
+import testStore from "../store/test.store";
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
@@ -50,5 +51,16 @@ export default function MainPage() {
         <CreateModal />
       </FullScreenModal>
     </>
+  );
+}
+
+function Test() {
+  const { getTest } = testStore();
+  const data = getTest();
+
+  return (
+    <div>
+      <span>{JSON.stringify(data)}</span>
+    </div>
   );
 }

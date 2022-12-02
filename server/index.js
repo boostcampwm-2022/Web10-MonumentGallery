@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
-import { authMiddleware, catchAuthError } from "./middleware/authMiddleware.js";
+import { authMiddleware, catchAuthError } from "./middlewares/authMiddleware.js";
 import authRouter from "./router/authRouter.js";
 import redirectRouter from "./router/redirectRouter.js";
 import pageRouter from "./router/pageRouter.js";
@@ -13,6 +13,7 @@ import galleryRouter from "./router/galleryRouter.js";
 import { HttpError } from "./utils/httpError.js";
 import { HTTP_STATUS } from "./utils/constants.js";
 import { startRedis } from "./model/accessTokenStore.js";
+import ipaddrMiddleware from "./middlewares/ipaddrMiddleware.js";
 
 dotenv.config();
 const app = express();
@@ -28,17 +29,10 @@ const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
 
-app.use("/assets", express.static("./dist/assets"));
-app.use("/reset.css", express.static("./dist/reset.css"));
-app.use("/vite.svg", express.static("./dist/vite.svg"));
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-
-// auth middleware
-app.use(["/test/getData", "/create", "/auth/check", "/api/*"], authMiddleware);
-app.use(["/test/getData", "/api/*"], catchAuthError);
+app.use(ipaddrMiddleware);
 
 // api routing
 app.use("/auth", authRouter);
@@ -61,6 +55,9 @@ if (process.env.NODE_ENV === "development") {
 if (process.env.NODE_ENV === "production") {
   console.log("prod!");
   app.use("/", pageRouter);
+  app.use("/assets", express.static("./dist/assets"));
+  app.use("/reset.css", express.static("./dist/reset.css"));
+  app.use("/vite.svg", express.static("./dist/vite.svg"));
 }
 
 // error handler

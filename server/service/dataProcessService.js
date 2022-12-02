@@ -4,20 +4,21 @@ import axios from "axios";
 export async function processDataFromRawContent(rawContent, theme) {
   const keywordData = await getKeywordFromFastAPI(rawContent);
   const grouppedPage = getGroups(keywordData);
-  console.log("keywords : ", keywordData);
-  console.log("groupPage : ", grouppedPage);
+  // console.log(rawContent);
+  // console.log("keywords : ", keywordData);
+  // console.log("groupPage : ", grouppedPage);
   const positionData = getPositions(grouppedPage);
-  console.log(positionData.pages);
-  console.log(positionData.nodes);
-  const res = attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
-
-  return attachAllDataForDB(rawContent, keywordData, theme, positionData.pages, positionData.nodes);
+  // console.log(positionData.pages);
+  // console.log(positionData.nodes);
+  return attachAllDataForDB(rawContent, keywordData, theme, positionData);
 }
 
 export function processDataForClient(galleryContent) {
   return {
+    id: galleryContent._id,
     theme: galleryContent.theme,
     totalKeywords: getKeywordsAsDictionary(galleryContent.totalKeywords),
+    groupKeywords: galleryContent.groupKeywords,
     pages: galleryContent.pages.map((page) => {
       return {
         position: page.position,
@@ -25,17 +26,20 @@ export function processDataForClient(galleryContent) {
         title: page.title,
         subtitle: page.subtitle,
         links: page.links,
+        imagePixel: page.imagePixel,
       };
     }),
     nodes: galleryContent.nodes,
+    views: galleryContent.views,
   };
 }
 
-function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes) {
+function attachAllDataForDB(rawContent, notionKeyword, theme, positionData) {
   return {
     theme: theme,
     totalKeywords: getTop30Keywords(notionKeyword.totalKeywords),
-    pages: positions.map((page) => {
+    groupKeywords: positionData.groupKeywords,
+    pages: positionData.pages.map((page) => {
       return {
         position: page.position,
         keywords: getTop30Keywords(notionKeyword.ppPages[page.id].keywords),
@@ -61,9 +65,10 @@ function attachAllDataForDB(rawContent, notionKeyword, theme, positions, nodes) 
           }),
         ],
         links: rawContent[page.id].links,
+        imagePixel: rawContent[page.id].imagePixel,
       };
     }),
-    nodes,
+    nodes: positionData.nodes,
   };
 }
 
@@ -119,7 +124,7 @@ function getFastAPIFormData(rawContent) {
   //data를 fastapi 서버로 보내기 용이한 형태로 가공
   return Object.keys(rawContent).reduce(
     (acc, cur) => {
-      console.log(cur);
+      // console.log(cur);
       acc.pages[cur] = {
         title: rawContent[cur].title,
         h1: rawContent[cur].h1,
@@ -135,7 +140,7 @@ function getFastAPIFormData(rawContent) {
 
 function getGroups(keywords) {
   const sortedTotalKeywords = sortKeywords(keywords.totalKeywords);
-  console.log(sortedTotalKeywords);
+  // console.log(sortedTotalKeywords);
 
   if (sortedTotalKeywords.length < 3) return {};
 
@@ -171,17 +176,23 @@ function getPositions(groups) {
   //중심 좌표 (0,0)
   let pages = [];
   let nodes = [];
+  let groupKeywords = [];
 
   Object.keys(groups).forEach((keyword, idx) => {
     const nowPositionData = getSquarePositions(groups[keyword], idx, pages.length);
-    console.log(nowPositionData.pages, nowPositionData.nodes);
+    // console.log(nowPositionData.pages, nowPositionData.nodes);
+    let start = pages.length;
     pages = [...pages, ...nowPositionData.pages];
     nodes = [...nodes, ...nowPositionData.nodes];
+    groupKeywords = [
+      ...groupKeywords,
+      ...[{ keyword: keyword, position: pages.length > start ? pages[start].position : [0, 0] }],
+    ];
   });
-
   return {
     pages,
     nodes,
+    groupKeywords: groupKeywords,
   };
 }
 

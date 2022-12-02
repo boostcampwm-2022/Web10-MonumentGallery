@@ -8,7 +8,8 @@
     "server": "cross-env NODE_ENV=production node index.js",
     "server-dev": "cross-env NODE_ENV=development nodemon index.js",
     "client": "cd ../client && npm run dev",
-    "dev": "concurrently \"npm run server-dev\" \"npm run client\"",
+    "python": "cd ../python && uvicorn main:app --reload",
+    "dev": "concurrently \"npm run server-dev\" \"npm run client\" \"npm run python\"",
     "prod": "cd ../client && npm run build && cd ../server && npm run server",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix"

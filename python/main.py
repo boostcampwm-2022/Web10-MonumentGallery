@@ -82,10 +82,13 @@ def preprocess_text(notionData:NotionData):
 @app.post("/preprocess/image")
 def preprocess_image(imgUrlData:ImageURLData):    
     img = Image.open(io.BytesIO(request.urlopen(imgUrlData.url).read()))
-    resized_img = img.resize((10, 10))
+    resized_img = img.resize((imgUrlData.width, imgUrlData.height))
     converted_img = resized_img.convert("RGB")
     pixels = list(converted_img.getdata())
-    hex_pixels = [ rgb_to_hex(pixel) for pixel in pixels ] 
+    hex_pixels = []
+
+    for i in range(0,imgUrlData.height):
+        hex_pixels.append([ rgb_to_hex(pixel) for pixel in pixels[imgUrlData.width * i : imgUrlData.width * (i+1) ] ] )
     return hex_pixels
 
 def rgb_to_hex(rgb):

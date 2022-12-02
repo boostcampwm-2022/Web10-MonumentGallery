@@ -27,19 +27,16 @@ export default function AnimatedTitle({ text, animator }: AnimatedTitleProps) {
   const color: Interpolation<number, COLORS> = spring.to([0, 1], [COLORS.SKY400, COLORS[randomColors]]);
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
-  if (ready || playing)
-    return (
-      <>
-        <animated.group ref={textGroupRef} position-y={textY}>
-          <animated.mesh rotation-y={rotation} scale={textScale}>
-            <Text font={MapoFlowerIsland} color="black" fontSize={0.1} anchorX="center" anchorY="middle">
-              {text}
-            </Text>
-          </animated.mesh>
-        </animated.group>
-        <Balloon positionY={balloonY} scale={balloonScale} color={color} />
-      </>
-    );
-
-  return null;
+  return (
+    <group visible={!!(ready || playing)}>
+      <animated.group ref={textGroupRef} position-y={textY}>
+        <animated.mesh rotation-y={rotation} scale={textScale}>
+          <Text font={MapoFlowerIsland} color="black" fontSize={0.1} anchorX="center" anchorY="middle">
+            {text}
+          </Text>
+        </animated.mesh>
+      </animated.group>
+      <Balloon positionY={balloonY} scale={balloonScale} color={color} />
+    </group>
+  );
 }

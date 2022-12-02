@@ -18,31 +18,3 @@
   width: 120px;
   height: 120px;
 }
-
-.create-modal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  .make-gallery {
-    font-size: 30px;
-    margin-bottom: 20px;
-  }
-  & > button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 19px;
-    width: 60%;
-    height: 50px;
-    color: #ffffff;
-    background: #333333;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    img {
-      line-height: 20px;
-      margin-right: 12px;
-    }
-  }
-}

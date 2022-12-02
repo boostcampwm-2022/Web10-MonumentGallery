@@ -2,7 +2,6 @@ import { IGalleryMapData } from "../@types/gallery";
 
 // dummy data
 const dummyData: IGalleryMapData = {
-  uuid: "#24adaf",
   theme: "SPRING",
   totalKeywords: {
     부스트캠프: 2,
@@ -12,17 +11,35 @@ const dummyData: IGalleryMapData = {
     카카오: 4,
     취직: 2,
   },
+  groupKeywords: [
+    { position: [20, 0], keyword: "1번방향" },
+    { position: [0, 20], keyword: "2번방향" },
+    { position: [-20, 0], keyword: "3번방향" },
+    { position: [0, -20], keyword: "4번방향" },
+  ],
   pages: [
     {
       position: [20, 0],
       title: "이것은 타이틀이다",
       subtitle: [
         { text: "이것은 h1타이틀", hType: "h1" },
-        { text: "이것도 h1타이틀", hType: "h1" },
-        { text: "쏜애플 사랑해요", hType: "h2" },
+        { text: "긴 제목은 흘러내립니다", hType: "h1" },
+        { text: "쏜애플 사랑해요요요", hType: "h2" },
         {
           text: "가나다라마바사아자차카타파하ABCDEFGHIJKLMNOPQRSTUVWXYZ",
           hType: "h2",
+        },
+        {
+          text: "별빛바다",
+          hType: "h2",
+        },
+        {
+          text: "기억",
+          hType: "h2",
+        },
+        {
+          text: "별",
+          hType: "h3",
         },
       ],
       keywords: {

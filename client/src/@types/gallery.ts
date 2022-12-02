@@ -1,6 +1,10 @@
 export interface IKeywordMap {
   [keyword: string]: number;
 }
+export interface IGroupKeywordData {
+  keyword: string;
+  position: number[];
+}
 
 export interface IGalleryPageSubTitle {
   text: string;
@@ -22,11 +26,25 @@ export interface IGalleryPageData {
 }
 
 export interface IGalleryMapData {
-  uuid: string;
+  id?: string;
   theme: THEME;
   totalKeywords: IKeywordMap;
+  groupKeywords: IGroupKeywordData[];
   pages: IGalleryPageData[];
   nodes: number[][];
+  views?: number;
+}
+
+export interface IGalleryDataResponse {
+  gallery: IGalleryMapData;
+  userId: string;
+  page?: string;
+}
+
+export interface IHistory {
+  id: string;
+  date: string;
+  time: string;
 }
 
 export const THEME = {

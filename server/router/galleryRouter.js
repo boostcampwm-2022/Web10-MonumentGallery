@@ -1,33 +1,34 @@
 import express from "express";
-import axios from "axios";
-import { asyncHandler } from "../utils/utils.js";
-import { getRawContentsFromNotion } from "../service/getNotionContentService.js";
-import { processDataFromRawContent, processDataForClient } from "../service/dataProcessService.js";
+import { authMiddleware, catchAuthError } from "../middlewares/authMiddleware.js";
 import {
-  saveGallery,
   loadGallery,
-  loadLastGallery,
   getGalleryHistory,
-  getLastGalleryID,
-} from "../service/dataSaveService.js";
+  createGalleryFromNotion,
+  loadUserHistory,
+  updateShareState,
+} from "../service/galleryService.js";
+import { asyncHandler } from "../utils/utils.js";
+import { endConnectionSSE } from "../service/sseService.js";
 
 const router = express.Router();
 
-router.post(
-  "/gallery",
+router.get(
+  "/gallery/create",
+  authMiddleware,
+  catchAuthError,
   asyncHandler(async (req, res) => {
+    req.connection.setTimeout(60 * 5 * 1000); //5분
     //duration= 2w||1m||3m||1y
-    const userID = req.userid;
-    const notionAccessToken = req.accessToken;
+    console.log("page making start");
+    const userId = req.userid;
     const nowTime = Date.now();
+    const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
-    const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
-    const galleryID = await saveGallery(userID, processedNotionContent);
+    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, userId, res);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
-    res.status(200).json({ page: `/gallery/${userID}/${galleryID}` });
+    endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}` });
   }),
 );
 
@@ -43,34 +44,68 @@ router.get(
 
 router.get(
   "/gallery/:targetUserID/:galleryID",
+  authMiddleware,
   asyncHandler(async (req, res) => {
-    // const userID = req.userid;
+    const requestUserID = req.userid;
     console.log(req.params);
     const { targetUserID, galleryID } = req.params;
 
-    const result = await loadGallery(targetUserID, galleryID);
-    res.status(200).json(processDataForClient(result));
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, targetUserID, galleryID);
+    res.status(200).json({ gallery: result, userId: targetUserID, page: `/gallery/${targetUserID}/${galleryID}` });
+  }),
+);
+
+router.get(
+  "/gallery/sync",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    req.connection.setTimeout(60 * 5 * 1000); //5분
+    const requestUserID = req.userid;
+
+    const notionAccessToken = req.accessToken;
+    const { period = "all", theme = "dream" } = req.query;
+
+    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, requestUserID, res);
+
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, requestUserID, galleryID);
+    endConnectionSSE(res, { page: `/gallery/${requestUserID}/${galleryID}`, data: result });
   }),
 );
 
 router.get(
   "/gallery/:id",
+  authMiddleware,
   asyncHandler(async (req, res) => {
+    const requestUserID = req.userid;
     const { id } = req.params;
-    console.log("hey!", id);
 
-    const result = await loadLastGallery(id);
-    res.status(200).json(result);
+    const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, id);
+    res.status(200).json({ gallery: result, userId: id, page: `/gallery/${id}` });
+  }),
+);
+
+router.post(
+  "/user/share",
+  authMiddleware,
+  catchAuthError,
+  asyncHandler(async (req, res) => {
+    const { isShared } = req.body;
+    await updateShareState(req.userid, isShared);
+    res.status(200).json();
   }),
 );
 
 router.get(
-  "/user/lastGallery",
+  "/history/:userid",
   asyncHandler(async (req, res) => {
-    const userID = req.userid;
-
-    const result = await getLastGalleryID(userID);
-    res.status(200).json({ result });
+    const { userid } = req.params;
+    const history = await loadUserHistory(userid);
+    const histories = [];
+    history.forEach((data, id) => {
+      const date = data.toLocaleDateString("ko-KR").slice(0, -1).replaceAll(". ", "-");
+      histories.push({ id, date, time: data.toLocaleTimeString("ko-KR") });
+    });
+    res.status(200).json(histories);
   }),
 );
 

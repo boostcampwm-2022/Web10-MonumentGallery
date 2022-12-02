@@ -82,9 +82,9 @@ function textPreProcessing(text: string) {
   const letters = text.split("");
   let visibleLetters: string[] = [];
   let invisibleLetters: string[] = [];
-  if (letters.length > 20) {
-    visibleLetters = letters.slice(0, 20);
-    invisibleLetters = letters.slice(20);
+  if (letters.length > 10) {
+    visibleLetters = letters.slice(0, 10);
+    invisibleLetters = letters.slice(10);
   } else {
     visibleLetters = letters;
   }
@@ -95,15 +95,15 @@ function getStyleByTitleType(type: string) {
   let stoneColor = "";
   switch (type) {
     case "h1":
-      textSize = 1;
+      textSize = 0.6;
       stoneColor = COLORS.BROWN200;
       break;
     case "h2":
-      textSize = 0.7;
+      textSize = 0.4;
       stoneColor = COLORS.BROWN100;
       break;
     case "h3":
-      textSize = 0.5;
+      textSize = 0.3;
       stoneColor = COLORS.BROWN50;
       break;
     default:
@@ -127,41 +127,37 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
   const subtitleRef = useRef<Object3D>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (!subtitleRef.current) return;
-      subtitleRef.current.position.y -= 1;
-      if (subtitleRef.current.position.y < 0) {
-        if (invisibleLetters.length > 0) {
-          const letter = visibleLetters.pop();
-          if (letter) {
-            invisibleLetters.push(letter);
-          }
-          const newLetter = invisibleLetters.shift();
-          if (newLetter) {
-            visibleLetters.unshift(newLetter);
-          }
-        } else {
-          const letter = visibleLetters.pop();
-          if (letter) {
-            visibleLetters.unshift(letter);
-          }
+    const needAnimation = invisibleLetters.length > 0 ? true : false;
+    let animation: ReturnType<typeof setInterval>;
+    if (needAnimation) {
+      animation = setInterval(() => {
+        if (!subtitleRef.current) return;
+        const letter = visibleLetters.pop();
+        if (letter) {
+          invisibleLetters.push(letter);
+        }
+        const newLetter = invisibleLetters.shift();
+        if (newLetter) {
+          visibleLetters.unshift(newLetter);
         }
         setPText(visibleLetters.join(" "));
-        subtitleRef.current.position.y = 0;
-      }
-    }, 300);
+      }, 300);
+    }
     return () => {
-      clearInterval(interval);
+      if (needAnimation) {
+        clearInterval(animation);
+      }
     };
   }, []);
+
   return (
     <group position={[position[0], 0, position[1]]} scale={textSize}>
       <Pedestal scale={0.5} color={stoneColor} />
-      <mesh ref={subtitleMeshRef} position-y={2}>
+      <mesh ref={subtitleMeshRef} position-y={textSize * (visibleLetters.length / 2) + 0.5}>
         <Text
           ref={subtitleRef}
           font={MapoFont}
-          fontSize={textSize * 0.7}
+          fontSize={textSize}
           color={"black"}
           maxWidth={0.1}
           textAlign={"center"}
@@ -178,6 +174,7 @@ export default function MemorialStones({ subtitles }: MemorialStonesProps) {
   const stoneInfoList = useMemo(() => {
     return calculateMemorialStonePosition(subtitles);
   }, []);
+
   return (
     <>
       {stoneInfoList.map((stoneInfo, i) => {

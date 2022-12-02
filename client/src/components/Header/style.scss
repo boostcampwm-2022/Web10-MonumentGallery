@@ -4,11 +4,56 @@
   padding: 15px;
   width: 100vw;
   .logo {
+    position: fixed;
+    z-index: 1;
     color: #ffffff;
     font-size: 25px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   }
   .header-right-elem {
     display: flex;
+    position: inherit;
+    z-index: 1;
+    .userinfo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #3c3c3c;
+      font-family: "Nato-sans";
+      margin-right: 10px;
+    }
+    .skeleton {
+      border-radius: 4px;
+      background-color: #dfdfdf;
+      margin-right: 10px;
+    }
+    .skeleton-avatar {
+      width: 25px;
+      height: 25px;
+    }
+    .skeleton-name {
+      width: 60px;
+      height: 20px;
+    }
+    .skeleton-logout {
+      width: 50px;
+      height: 20px;
+    }
+
+    .userinfo-avatar {
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+    }
+    .userinfo-name {
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .userinfo-button {
+      color: #3c3c3c;
+      padding: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+    }
   }
 }

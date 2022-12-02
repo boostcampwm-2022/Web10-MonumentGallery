@@ -1,29 +1,47 @@
 import useSelectorComponent from "../Selector";
-import SuspenseButton from "../buttons/SuspenseButton";
+import ProgressBar from "../ProgressBar";
+
 import styles from "./style.module.scss";
-import { Resource } from "../../utils/suspender";
 import { THEME } from "../../@types/gallery";
-import themeStore from "../../store/theme.store";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
+
+const ModalName = {
+  create: "갤러리 만들기",
+  sync: "갤러리 동기화하기",
+};
+
+const ButtonName = {
+  create: "생성하기",
+  sync: "동기화하기",
+};
 
 interface IOnLoadFunction {
   <T>(a: T): void;
 }
 
 interface SpaceCreaterProps {
-  resource: Resource | null;
+  eventSourceUrl: string;
   onSubmit: (period: PeriodType | null, theme: THEME | null) => void;
   onLoad: IOnLoadFunction;
+  requested: boolean;
+  setRequested: React.Dispatch<React.SetStateAction<boolean>>;
+  type?: "create" | "sync";
 }
 
-export default function SpaceCreater({ resource, onSubmit, onLoad }: SpaceCreaterProps) {
+export default function SpaceCreater({
+  eventSourceUrl,
+  onSubmit,
+  onLoad,
+  requested,
+  setRequested,
+  type = "create",
+}: SpaceCreaterProps) {
   const [period, PeriodSelectorWrapper, PeriodSelectorItem] = useSelectorComponent<PeriodType>("all");
   const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent<THEME>(THEME.DREAM);
-  const { setTheme } = themeStore();
   return (
     <div className="create-modal">
-      <span className="make-gallery">갤러리 만들기</span>
+      <span className="make-gallery">{ModalName[type]}</span>
       <PeriodSelectorWrapper title="기간">
         <PeriodSelectorItem value="all">전체</PeriodSelectorItem>
         <PeriodSelectorItem value="2w">14일</PeriodSelectorItem>
@@ -48,25 +66,18 @@ export default function SpaceCreater({ resource, onSubmit, onLoad }: SpaceCreate
           겨울
         </ThemeSelectorItem>
       </ThemeSelectorWrapper>
-      <SuspenseButton
-        fallback="생성중..."
-        name="생성하기"
-        resource={resource}
-        onClick={() => {
-          setTheme(theme);
-          onSubmit(period, theme);
-        }}
-      >
-        <Data resource={resource} onLoad={onLoad} />
-      </SuspenseButton>
+      {requested ? (
+        <ProgressBar eventSourceUrl={eventSourceUrl} onLoad={onLoad as IOnLoadFunction} />
+      ) : (
+        <button
+          onClick={() => {
+            setRequested(true);
+            onSubmit(period, theme);
+          }}
+        >
+          {ButtonName[type]}
+        </button>
+      )}
     </div>
   );
-}
-
-function Data({ resource, onLoad }: { resource: Resource | null; onLoad: IOnLoadFunction }) {
-  const res = resource?.read({});
-  console.log(res);
-  if (!res || res?.error) return <>에러가 발생했습니다.</>;
-  onLoad(res.data);
-  return null;
 }

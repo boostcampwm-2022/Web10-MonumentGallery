@@ -5,8 +5,13 @@ import { getRawContentsFromNotion } from "../service/getNotionContentService.js"
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 import Gallery from "../schema/gallerySchema.js";
-
+import { getImagePixelsFromPages } from "../service/imageProcessService.js";
+import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
 const router = express.Router();
+
+router.get("/testShared", (req, res) => {
+  res.send({ isShared: true });
+});
 
 router.get("/testPost", (req, res) => {
   const username = `${Math.floor(Math.random() * 100000)}`;
@@ -42,19 +47,21 @@ router.get("/getData", async (req, res) => {
   const { period = "all", theme = "dream" } = req.query;
 
   const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
-  console.log(notionRawContent);
-  const processedNotionContent = await processDataFromRawContent(notionRawContent, theme);
-  console.log(processedNotionContent);
-  console.log(processedNotionContent.pages);
+  // console.log(notionRawContent);
+  const notionContentImage = await getImagePixelsFromPages(notionRawContent);
+  console.log(notionContentImage);
+  const processedNotionContent = await processDataFromRawContent(notionContentImage, theme);
+  // console.log(processedNotionContent);
+  // console.log(processedNotionContent.pages);
 
-  await Gallery.create(processedNotionContent)
-    .then((e) => {
-      console.log("success");
-    })
-    .catch((err) => {
-      console.log(err);
-      console.log("failed");
-    });
+  // await Gallery.create(processedNotionContent)
+  //   .then((e) => {
+  //     console.log("success");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     console.log("failed");
+  //   });
 
   const allData = await Gallery.find();
   console.log(allData);
@@ -93,6 +100,127 @@ router.get("/pytest/image", (req, res) => {
     })
     .catch((err) => console.log(err));
 });
+
+const sse = {};
+
+router.get("/sse/integration/:id", (req, res) => {
+  getConnectionSSE(req.params.id, res);
+  setTimeout(() => {
+    writeMessageSSE(req.params.id, "hi");
+  }, 1000);
+  setTimeout(() => {
+    endConnectionSSE(req.params.id);
+  }, 2000);
+});
+
+router.get("/sse/connection/:id", (req, res) => {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+  sse[req.params.id] = res;
+
+  res.write("connected\n\n");
+});
+
+router.get("/sse/:id", (req, res) => {
+  setTimeout(() => {
+    sse[req.params.id].write("hello\n\n");
+  }, 1000);
+  setTimeout(() => {
+    sse[req.params.id].write("hello2\n\n");
+  }, 2000);
+  setTimeout(() => {
+    sse[req.params.id].write("hello3\n\n");
+  }, 3000);
+  setTimeout(() => {
+    sse[req.params.id].write("hello4\n\n");
+  }, 4000);
+  setTimeout(() => {
+    sse[req.params.id].write("end\n\n");
+    sse[req.params.id].end();
+  }, 5000);
+  res.send("success");
+  // const id = new Date().toLocaleTimeString();
+  // Sends a SSE every 3 seconds on a single connection.
+  // setInterval(function () {
+  //   emitSSE(res, id, new Date().toLocaleTimeString());
+  // }, 3000);
+
+  // emitSSE(res, id, new Date().toLocaleTimeString());
+});
+let clients = [];
+function eventsHandler(request, response, next) {
+  const { period, theme } = request.query;
+  console.log("test:", period, theme);
+  const headers = {
+    "Content-Type": "text/event-stream",
+    Connection: "keep-alive",
+    "Cache-Control": "no-cache",
+    charset: "UTF-8",
+    "Transfer-Encoding": "chunked",
+  };
+  response.writeHead(200, headers);
+
+  const clientId = Date.now();
+
+  const newClient = {
+    id: clientId,
+    response,
+  };
+
+  clients.push(newClient);
+
+  console.log(`${clientId} Connection opened!`);
+
+  request.on("close", () => {
+    console.log(`${clientId} Connection closed!`);
+    clients = clients.filter((client) => client.id !== clientId);
+  });
+  setTimeout(() => {
+    const response = {
+      kind: "노션에서 데이터 가져오기",
+      progress: 10,
+      data: {},
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 1000);
+  setTimeout(() => {
+    const response = {
+      kind: "자연어 처리하기",
+      progress: 40,
+      data: {},
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 3000);
+  setTimeout(() => {
+    const response = {
+      kind: "DB에 저장하기",
+      progress: 70,
+      data: {},
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 5000);
+  setTimeout(() => {
+    const response = {
+      kind: "완료",
+      progress: 100,
+      data: { page: "/gallery/a3fb0ee0-7379-4ae7-aada-c4eff877c0de/903c2514-3ddc-4d20-9daf-06577bcd7b15" },
+    };
+    clients.forEach((client) => {
+      client.response.write(`data: ${JSON.stringify(response)}\n\n`);
+    });
+  }, 7000);
+}
+
+router.get("/sse", eventsHandler);
 
 export default router;
 
@@ -188,5 +316,7 @@ const mockData = {
 };
 
 const mockImageUrlData = {
-  url: "https://grigostore.shop/file_data/grigostore/2021/09/22/29a2131b07160b2413021277862c2259.png",
+  url: "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
+  width: 50,
+  height: 50,
 };

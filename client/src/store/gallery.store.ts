@@ -3,18 +3,24 @@ import { IGalleryMapData, THEME } from "../@types/gallery";
 
 interface GalleryStore {
   data: IGalleryMapData;
-  setData: (data: IGalleryMapData) => void;
+  userId: string | null;
+  theme: THEME | null;
+  setData: (gallery: IGalleryMapData, userId: string) => void;
+  setTheme: (theme: THEME) => void;
 }
 
 const galleryStore = create<GalleryStore>((set) => ({
   data: {
-    uuid: "",
     nodes: [[]],
     pages: [],
     totalKeywords: {},
+    groupKeywords: [],
     theme: THEME.DREAM,
   },
-  setData: (data) => set(() => ({ data })),
+  userId: null,
+  theme: THEME.DREAM,
+  setData: (data, userId) => set({ data, userId, theme: data.theme }),
+  setTheme: (theme) => set({ theme }),
 }));
 
 export default galleryStore;

@@ -1,8 +1,9 @@
 ## 🎆프로젝트 소개
 <img width="1280" alt="monument gallery" src="https://user-images.githubusercontent.com/32293736/205430959-b6713512-819c-4075-a103-c720b7629285.png">
 
-데모 : [https://monumentgallery.ddns.net/]
-저희의 고민들 : [Monument Gallery Notion](https://boostcamp7-monolith.notion.site/9f4676461cae4b9aac688ad1eee9895f?v=bea1335a7c3049b2b769d74320f56e2f)
+**데모** : https://monumentgallery.ddns.net/
+
+**저희의 고민들** : [Monument Gallery Notion](https://boostcamp7-monolith.notion.site/9f4676461cae4b9aac688ad1eee9895f?v=bea1335a7c3049b2b769d74320f56e2f)
 
 ### 🪦 **당신의 기록들을 작품으로 만들어드립니다!**
 노션 API를 이용해 사용자의 노션 글, 그림 데이터들을 받아오고 3D 공간 안에서 시각화 해주는 프로젝트입니다.

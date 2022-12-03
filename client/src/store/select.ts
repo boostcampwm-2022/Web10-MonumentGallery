@@ -15,6 +15,7 @@ type Selector<T> = Promise<T> & {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const selectors = new Map<string, Selector<any>>();
 
+// https://github.com/pmndrs/jotai/blob/main/src/react/useAtomValue.ts#L12
 const use = <T>(promise: Selector<T>): T => {
   if (promise.status === STATUS.PENDING) {
     throw promise;

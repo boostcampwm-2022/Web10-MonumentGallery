@@ -32,6 +32,7 @@ const use = <T>(promise: Selector<T>): T => {
       },
       (err) => {
         promise.status = STATUS.REJECTED;
+        document.dispatchEvent(new CustomEvent("error-reason", { detail: err }));
         promise.reason = err;
       },
     );

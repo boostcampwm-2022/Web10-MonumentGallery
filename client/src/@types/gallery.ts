@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 export interface IKeywordMap {
   [keyword: string]: number;
 }
@@ -55,3 +57,9 @@ export const THEME = {
   WINTER: "WINTER",
 } as const;
 export type THEME = typeof THEME[keyof typeof THEME];
+
+export type GalleryLoadErrorEvent = Event & {
+  detail?: AxiosError<GalleryLoadError>;
+};
+
+type GalleryLoadError = { reason: string };

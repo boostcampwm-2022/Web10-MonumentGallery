@@ -9,10 +9,8 @@ export const loginSelector = () =>
     get: () => axios({ method: "get", url: "/auth/check" }),
   });
 
-export const gallerySelector = (url?: string) => {
-  console.log(url);
-  return select<AxiosResponse<IGalleryDataResponse>>({
+export const gallerySelector = (url?: string) =>
+  select<AxiosResponse<IGalleryDataResponse>>({
     key: `gallery selector ${url}`,
     get: () => axios({ method: "get", url }),
   });
-};

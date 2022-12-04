@@ -10,7 +10,7 @@ import Gallery from "./Gallery";
 export default function ErrorPage() {
   const { applyGallery } = useGalleryHistorySave();
   const [useSampleData, setUseSampleData] = useState(false);
-  const [remainTime, setRemainTime] = useState(50000);
+  const [remainTime, setRemainTime] = useState(5);
   const { addToast } = toastStore();
 
   useEffect(() => {

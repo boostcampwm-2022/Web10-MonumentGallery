@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import Ghost from "./Ghost";
 import { useKeyMovement } from "../../hooks/useKeyMovement";
 import type { Group } from "three";
+import { Box } from "@react-three/drei";
 
 const _vector3 = new Vector3();
 

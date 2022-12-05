@@ -8,7 +8,6 @@ export default function MainWorld() {
   return (
     <Physics gravity={[0, -30, 0]}>
       <Light />
-      <gridHelper args={[100, 100, 0]} />
       <Player />
       <Plane />
     </Physics>

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Box } from "@react-three/drei";
+import { Box, Stats } from "@react-three/drei";
 
 import MainWorld from "./MainWorld";
 
@@ -17,12 +17,14 @@ export default function MainCanvas() {
     <Canvas
       shadows
       className="canvas-inner"
-      camera={{ fov: 75, near: 0.1, far: 100, position: [5, 5, 5], rotation: [0, Math.PI / 4, 0, "YXZ"] }}
+      camera={{ zoom: 50, fov: 35, position: [10, 15, 10], rotation: [-Math.PI / 4, Math.PI / 4, 0, "YXZ"] }}
+      orthographic
     >
       <color attach="background" args={[backgroundColor]} />
       <MainWorld />
       <axesHelper />
       <Box position={[2, 0, 0]} />
+      <Stats />
     </Canvas>
   );
 }

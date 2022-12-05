@@ -1,7 +1,9 @@
 import { Physics } from "@react-three/rapier";
 import Light from "../GalleryPage/mapObjects/Light";
-import Monument from "./mapObjects/Monument";
+
+import Player from "./mapObjects/Player";
 import Plane from "./mapObjects/Plane";
+import Monument from "./mapObjects/Monument";
 
 const MockMonumentData = {
   userName: "고세연",
@@ -11,13 +13,11 @@ const MockMonumentData = {
 
 export default function MainWorld() {
   return (
-    <>
-      <Physics gravity={[0, -30, 0]}>
-        <Light />
-        {/* <gridHelper args={[100, 100, 0]} /> */}
-        <Monument data={MockMonumentData} />
-        <Plane />
-      </Physics>
-    </>
+    <Physics gravity={[0, 0, 0]}>
+      <Light />
+      <Player />
+      <Plane />
+      <Monument data={MockMonumentData} />
+    </Physics>
   );
 }

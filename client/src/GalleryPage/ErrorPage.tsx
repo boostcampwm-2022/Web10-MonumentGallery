@@ -3,7 +3,7 @@ import FullScreenModal from "../components/modal/FullScreenModal";
 import TOAST from "../components/Toast/ToastList";
 import { useGalleryHistorySave } from "../hooks/useGalleryHistorySave";
 import toastStore from "../store/toast.store";
-import Loading from "./components/Loading";
+import Loading from "../components/CanvasLoading";
 import dummyData from "./dummyData";
 import Gallery from "./Gallery";
 
@@ -11,7 +11,7 @@ export default function ErrorPage() {
   const { applyGallery } = useGalleryHistorySave();
   const [useSampleData, setUseSampleData] = useState(false);
   const [remainTime, setRemainTime] = useState(5);
-  const { addToast } = toastStore();
+  const addToast = toastStore((store) => store.addToast);
 
   useEffect(() => {
     if (!useSampleData) return;

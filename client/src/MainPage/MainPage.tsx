@@ -1,23 +1,29 @@
-import React, { Suspense, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import "./style.scss";
+import { Suspense, useState } from "react";
 
 import Loading from "./Loading";
+import MainCanvas from "./MainCanvas";
 import CreateModal from "./components/CreateModal";
+import CanvasLoading from "../components/CanvasLoading";
 import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
 
-import { CheckLoggedIn } from "../hooks/useLoggedIn";
 import userStore from "../store/user.store";
-
 import FloatLayout from "../layouts/FloatLayout";
-import "./style.scss";
-import MainWorld from "./MainWorld";
-import { OrbitControls } from "@react-three/drei";
+
+function CreateMonumentButton({ showModal }: { showModal: () => void }) {
+  const isLoggedIn = userStore((store) => store.isLoggedIn);
+
+  return (
+    <button className={isLoggedIn ? "my-monument-btn" : "upload-btn"} type="button" onClick={showModal}>
+      {isLoggedIn ? "My Monument" : "Upload"}
+    </button>
+  );
+}
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
-  const { isLoggedIn } = userStore();
 
   function showModal() {
     setShow(true);
@@ -26,30 +32,16 @@ export default function MainPage() {
   return (
     <>
       <div className="canvas-outer">
-        <Canvas
-          className="canvas-inner"
-          camera={{ fov: 75, near: 0.1, far: 100, position: [10, 15, 10], rotation: [0, Math.PI / 4, 0, "YXZ"] }}
-        >
-          <MainWorld />
-          <axesHelper />
-        </Canvas>
+        <Suspense fallback={<CanvasLoading />}>
+          <MainCanvas />
+        </Suspense>
       </div>
-
       <Suspense fallback={<Loading />}>
-        <CheckLoggedIn />
         <FloatLayout>
           <Header>
             <UserInfo />
           </Header>
-          {isLoggedIn ? (
-            <button className="my-monument-btn" type="button" onClick={showModal}>
-              My Monument
-            </button>
-          ) : (
-            <button className="upload-btn" type="button" onClick={showModal}>
-              Upload
-            </button>
-          )}
+          <CreateMonumentButton showModal={showModal} />
         </FloatLayout>
       </Suspense>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>

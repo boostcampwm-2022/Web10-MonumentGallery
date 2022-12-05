@@ -15,6 +15,7 @@ interface MonumentProps {
 
 export default function Monument({ data }: MonumentProps) {
   const { userName, titles, galleryURL } = data;
+
   return (
     <>
       <Text position={[0, 7, 0]} rotation={[0, Math.PI / 4, 0]} font={MapoFlowerIsland} fontSize={0.5} color="black">

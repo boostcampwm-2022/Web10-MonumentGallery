@@ -3,7 +3,8 @@ import { THEME } from "../../@types/gallery";
 import galleryStore from "../../store/gallery.store";
 
 export default function ThemeSeletor() {
-  const { theme, setTheme } = galleryStore();
+  const theme = galleryStore((store) => store.theme);
+  const setTheme = galleryStore((store) => store.setTheme);
 
   return (
     <div className="select-box">

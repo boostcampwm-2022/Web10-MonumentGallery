@@ -63,7 +63,6 @@ export function Portal({ link, position }: PortalProps) {
           <mesh castShadow receiveShadow geometry={nodes.Plane002_1.geometry} material={materials["Material.003"]} />
           <mesh castShadow receiveShadow geometry={nodes.Plane002_2.geometry} material={materials["Material.002"]} />
           <group position={[0, 0.92, 0]}>
-            <mesh castShadow receiveShadow geometry={nodes.Plane003_1.geometry} material={materials.Material} />
             <mesh castShadow receiveShadow geometry={nodes.Plane003_2.geometry} material={materials["Material.004"]} />
             <mesh castShadow receiveShadow geometry={nodes.Plane003_3.geometry} material={materials["Material.003"]} />
           </group>

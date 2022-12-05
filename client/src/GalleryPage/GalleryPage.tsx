@@ -1,24 +1,24 @@
-import React, { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import Gallery from "./Gallery";
+import ErrorPage from "./ErrorPage";
 import DomElements from "./components/DomElements";
-import Loading from "./components/Loading";
+import Loading from "../components/CanvasLoading";
+import ErrorBoundary from "../components/common/ErrorBoundary";
+import TOAST from "../components/Toast/ToastList";
 
 import { useParams } from "../hooks/useParams";
 import { useGalleryHistorySave } from "../hooks/useGalleryHistorySave";
 
-import "./style.scss";
 import galleryStore from "../store/gallery.store";
-import ErrorBoundary from "../components/common/ErrorBoundary";
-import ErrorPage from "./ErrorPage";
 import toastStore from "../store/toast.store";
 import { GalleryLoadErrorEvent } from "../@types/gallery";
-import TOAST from "../components/Toast/ToastList";
+import "./style.scss";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);
   const [requestUrl, setRequestUrl] = useState(getRequestUrl());
-  const { addToast } = toastStore();
+  const addToast = toastStore((store) => store.addToast);
 
   function getRequestUrl() {
     const END_POINT = "/api/gallery";
@@ -33,7 +33,7 @@ export default function GalleryPage() {
       console.log(reason);
     }
     document.addEventListener("error-reason", errorHandler);
-    () => document.removeEventListener("error-reason", errorHandler);
+    return () => document.removeEventListener("error-reason", errorHandler);
   }, []);
 
   return (
@@ -53,7 +53,7 @@ export default function GalleryPage() {
 function GalleryLoader({ url }: { url: string }) {
   const [isInitialized, setInitialize] = useState(false);
   const { applyGallery, initializeGallery } = useGalleryHistorySave();
-  const { getData } = galleryStore();
+  const getData = galleryStore((store) => store.getData);
 
   const data = getData(url);
 

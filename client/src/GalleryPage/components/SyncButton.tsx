@@ -28,23 +28,22 @@ export default function SyncButton() {
   const [isMine, setIsMine] = useState<boolean>(false);
   const [hover, setHover] = useState(false);
 
-  const { user } = userStore();
-  const { userId } = galleryStore();
+  const id = userStore((store) => store.user.id);
+  const galleryUserId = galleryStore((store) => store.userId);
   const { applyGallery } = useGalleryHistorySave();
-  const { addToast } = toastStore();
+  const addToast = toastStore((store) => store.addToast);
 
   useEffect(() => {
-    const { id } = user;
-    if (id === userId) {
+    if (id === galleryUserId) {
       setIsMine(true);
     }
-  }, [userId]);
+  }, [galleryUserId]);
 
   function showModal() {
     setShow(true);
   }
   function onLoad({ data, page }: IOnLoadFunctionParams): void {
-    applyGallery(data, userId ?? "", page);
+    applyGallery(data, galleryUserId ?? "", page);
     setRequested(false);
     setShow(false);
     const toastMsg = "동기화가 완료되었습니다.";

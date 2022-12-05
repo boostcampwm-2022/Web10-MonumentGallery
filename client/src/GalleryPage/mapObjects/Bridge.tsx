@@ -24,7 +24,7 @@ export default function Bridge({ start, end, width = 1.5, height = 0.4 }: Bridge
   const bridgePosition = new Vector3().lerpVectors(startPosition, endPosition, 0.5);
   bridgePosition.y -= height * 0.6;
   const rotation = new Quaternion().setFromUnitVectors(new Vector3(1, 0, 0), directionVector);
-  const { theme } = galleryStore();
+  const theme = galleryStore((store) => store.theme);
 
   return (
     <mesh position={bridgePosition} quaternion={rotation}>

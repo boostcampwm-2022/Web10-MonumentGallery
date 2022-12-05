@@ -102,7 +102,7 @@ function MovementController({ camera, speed = 1 }: MovementControllerProps) {
   const isPressed = useKeyMovement();
   const { camera: defaultCamera } = useThree();
   const targetCamera = camera || defaultCamera;
-  
+
   function runMovement(delta: number) {
     const [front, right] = getCameraXZAxis(targetCamera);
     const moveVector = new Vector3();

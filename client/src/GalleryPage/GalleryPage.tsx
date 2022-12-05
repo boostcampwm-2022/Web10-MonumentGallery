@@ -10,6 +10,7 @@ import TOAST from "../components/Toast/ToastList";
 import { useParams } from "../hooks/useParams";
 import { useGalleryHistorySave } from "../hooks/useGalleryHistorySave";
 
+import galleryStore from "../store/gallery.store";
 import toastStore from "../store/toast.store";
 import { GalleryLoadErrorEvent } from "../@types/gallery";
 import "./style.scss";
@@ -17,7 +18,7 @@ import "./style.scss";
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);
   const [requestUrl, setRequestUrl] = useState(getRequestUrl());
-  const { addToast } = toastStore();
+  const addToast = toastStore((store) => store.addToast);
 
   function getRequestUrl() {
     const END_POINT = "/api/gallery";
@@ -52,7 +53,7 @@ export default function GalleryPage() {
 function GalleryLoader({ url }: { url: string }) {
   const [isInitialized, setInitialize] = useState(false);
   const { applyGallery, initializeGallery } = useGalleryHistorySave();
-  const { getData } = galleryStore();
+  const getData = galleryStore((store) => store.getData);
 
   const data = getData(url);
 

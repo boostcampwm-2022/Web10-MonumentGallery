@@ -12,7 +12,8 @@ import { THEME } from "../@types/gallery";
 import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
-  const { data, theme } = galleryStore();
+  const data = galleryStore((store) => store.data);
+  const theme = galleryStore((store) => store.theme);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
 
   return (

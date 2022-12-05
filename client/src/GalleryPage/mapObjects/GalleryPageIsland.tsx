@@ -24,7 +24,7 @@ export default function GalleryPageIsland({
   const [x, z] = position;
   const [collision, setCollision] = useState(false);
   const springs = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
-  const { theme } = galleryStore();
+  const theme = galleryStore((store) => store.theme);
 
   return (
     <RigidBody type="fixed" colliders={false} position={[x, 0, z]}>

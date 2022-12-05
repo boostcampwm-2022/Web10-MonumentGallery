@@ -51,6 +51,7 @@ function Float({ isPlaying = true, children }: FloatProps = {}) {
     ref.current.rotation.x = Math.cos(elapsedTime.current / 8) * 0.2;
     ref.current.rotation.y = Math.sin(elapsedTime.current / 20) * 0.2;
     ref.current.rotation.z = Math.sin(elapsedTime.current / 8) * 0.2;
+    ref.current.position.y = Math.sin(elapsedTime.current / 12);
   });
 
   return <group ref={ref}>{children}</group>;
@@ -110,8 +111,8 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
     const worldDestPosition = destPosition.clone();
     if (meshRef.current?.parent) worldDestPosition.applyMatrix4(meshRef.current.parent.matrixWorld);
 
-    const relativePosition = new Vector3().subVectors(worldDestPosition, camera.position).normalize();
-    if (zBasis.dot(relativePosition) < 0) {
+    const relativePosition = new Vector3().subVectors(worldDestPosition, camera.position);
+    if (zBasis.dot(relativePosition) < 0 || relativePosition.length() > scatterRadius * 2) {
       setActivate(false);
     }
   });

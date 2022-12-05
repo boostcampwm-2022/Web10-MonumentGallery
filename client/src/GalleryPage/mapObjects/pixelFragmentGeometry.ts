@@ -3,6 +3,7 @@ import {
   Color,
   Vector3,
   Quaternion,
+  Uint8BufferAttribute,
   Float32BufferAttribute,
   BufferAttribute,
   InterleavedBufferAttribute,
@@ -44,10 +45,14 @@ class PixelFragmentGeometry extends BufferGeometry {
     const globalRotationQuaternions = [];
     const globalScatteredDistances = [];
     const colors = [];
+    const pickedTriangles = [];
 
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.columns; x++) {
-        const { uv, pivot, vertexPosition, localRot, globalRot, globalDist } = this.#setAttributes(x, y);
+        const { uv, pivot, vertexPosition, localRot, globalRot, globalDist, pickedTriangle } = this.#setAttributes(
+          x,
+          y,
+        );
 
         const normal = [];
         const color = [];
@@ -65,6 +70,7 @@ class PixelFragmentGeometry extends BufferGeometry {
         globalRotationQuaternions.push(...globalRot);
         globalScatteredDistances.push(...globalDist);
         colors.push(...color);
+        pickedTriangles.push(...pickedTriangle);
       }
     }
 
@@ -77,6 +83,7 @@ class PixelFragmentGeometry extends BufferGeometry {
     this.setAttribute("globalRotation", new Float32BufferAttribute(globalRotationQuaternions, 4));
     this.setAttribute("globalDist", new Float32BufferAttribute(globalScatteredDistances, 1));
     this.setAttribute("color", new Float32BufferAttribute(colors, 3));
+    this.setAttribute("pickedTriangle", new Float32BufferAttribute(pickedTriangles, 1));
 
     this.syncronizeVertex(1);
   }
@@ -96,11 +103,13 @@ class PixelFragmentGeometry extends BufferGeometry {
     const globalRot = this.#makeRandomAxisAngle();
     let globalDist = (Math.random() * 0.35 + 0.65) * this.scatterRadius;
     if (Math.random() < 0.05) globalDist = (Math.random() * 0.35 + 0.3) * this.scatterRadius;
+    const pickedTriangle = Math.random() < 100 / (this.rows * this.columns);
 
     return {
       localRot: this.#makeTriple<number>(localRot),
       globalRot: this.#makeTriple<number>(globalRot),
       globalDist: [globalDist, globalDist, globalDist],
+      pickedTriangle: [+pickedTriangle, +pickedTriangle, +pickedTriangle],
     };
   }
   #setUpperTriangleAttributes(x: number, y: number) {
@@ -153,6 +162,7 @@ class PixelFragmentGeometry extends BufferGeometry {
       globalRot: [...upper.globalRot, ...lower.globalRot],
       globalDist: [...upper.globalDist, ...lower.globalDist],
       vertexPosition: [...upper.vertexPosition, ...lower.vertexPosition],
+      pickedTriangle: [...upper.pickedTriangle, ...lower.pickedTriangle],
     };
   }
   #makeRandomAxisAngle() {
@@ -180,13 +190,15 @@ class PixelFragmentGeometry extends BufferGeometry {
     const globalRotations = this.attributes.globalRotation;
     const pivots = this.attributes.pivot;
     const globalDists = this.attributes.globalDist;
+    const pickedTriangles = this.attributes.pickedTriangle;
 
     for (let i = 0; i < positions.count; i++) {
       // local vertex position rotation
       const vertexPosition = new Vector3().fromBufferAttribute(vertexPositions, i);
       const localQuaternion = this.#getQuaternion(localRotations, i, lerp);
       const newLocalPosition = vertexPosition.applyQuaternion(localQuaternion);
-      const newLocalScale = MathUtils.lerp(1, this.scatterFragScale, lerp);
+      const fragScale = pickedTriangles.getX(i) ? this.scatterFragScale * 5 : 0;
+      const newLocalScale = MathUtils.lerp(1, fragScale, lerp);
       newLocalPosition.multiplyScalar(newLocalScale);
 
       // local triangle position rotation

@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
@@ -33,7 +32,6 @@ export default function Gallery() {
         <ViewRotateController />
         <GalleryWorld data={data} />
       </Physics>
-      <Stats />
     </Canvas>
   );
 }

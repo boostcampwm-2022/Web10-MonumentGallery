@@ -1,19 +1,19 @@
-import React, { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import Gallery from "./Gallery";
+import ErrorPage from "./ErrorPage";
 import DomElements from "./components/DomElements";
 import Loading from "./components/Loading";
+import ErrorBoundary from "../components/common/ErrorBoundary";
+import TOAST from "../components/Toast/ToastList";
 
 import { useParams } from "../hooks/useParams";
 import { useGalleryHistorySave } from "../hooks/useGalleryHistorySave";
 
 import "./style.scss";
 import galleryStore from "../store/gallery.store";
-import ErrorBoundary from "../components/common/ErrorBoundary";
-import ErrorPage from "./ErrorPage";
 import toastStore from "../store/toast.store";
 import { GalleryLoadErrorEvent } from "../@types/gallery";
-import TOAST from "../components/Toast/ToastList";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);
@@ -33,7 +33,7 @@ export default function GalleryPage() {
       console.log(reason);
     }
     document.addEventListener("error-reason", errorHandler);
-    () => document.removeEventListener("error-reason", errorHandler);
+    return () => document.removeEventListener("error-reason", errorHandler);
   }, []);
 
   return (

@@ -36,7 +36,6 @@ export default function MainPage() {
           <MainCanvas />
         </Suspense>
       </div>
-
       <Suspense fallback={<Loading />}>
         <FloatLayout>
           <Header>

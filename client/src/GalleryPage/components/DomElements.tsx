@@ -172,7 +172,7 @@ function HistorySidebar({
       setScrollOffset(idx);
       setSelected(idx);
     });
-  }, [userId]);
+  }, [userId, data]);
 
   useEffect(() => {
     if (canScroll) return;

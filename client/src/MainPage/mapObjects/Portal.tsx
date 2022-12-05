@@ -60,12 +60,11 @@ export function Portal({ link, position }: PortalProps) {
     >
       <animated.mesh scale={animatedScale}>
         <group position={position} rotation={[0, Math.PI / 4, 0]} dispose={null}>
-          <mesh geometry={nodes.Plane002_1.geometry} material={materials["Material.003"]} />
-          <mesh geometry={nodes.Plane002_2.geometry} material={materials["Material.002"]} />
+          <mesh castShadow receiveShadow geometry={nodes.Plane002_1.geometry} material={materials["Material.003"]} />
+          <mesh castShadow receiveShadow geometry={nodes.Plane002_2.geometry} material={materials["Material.002"]} />
           <group position={[0, 0.92, 0]}>
-            <mesh geometry={nodes.Plane003_1.geometry} material={materials.Material} />
-            <mesh geometry={nodes.Plane003_2.geometry} material={materials["Material.004"]} />
-            <mesh geometry={nodes.Plane003_3.geometry} material={materials["Material.003"]} />
+            <mesh castShadow receiveShadow geometry={nodes.Plane003_2.geometry} material={materials["Material.004"]} />
+            <mesh castShadow receiveShadow geometry={nodes.Plane003_3.geometry} material={materials["Material.003"]} />
           </group>
         </group>
       </animated.mesh>

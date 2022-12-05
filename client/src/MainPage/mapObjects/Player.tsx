@@ -55,7 +55,7 @@ function Player() {
     setPrevRotation(ghostRotation.clone());
     setCurrentRotation(newRotation);
     spring.start({ from: 0, to: 1 });
-  }, [moveDirection, currentRotation]);
+  }, [moveDirection]);
 
   useFrame(({ camera }, frame) => {
     if (!ghostRef.current || !rigidRef.current) return;

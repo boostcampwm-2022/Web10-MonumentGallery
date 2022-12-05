@@ -5,7 +5,7 @@ import audioStore from "../store/audio.store";
 export function useGalleryHistorySave() {
   const setData = galleryStore((store) => store.setData);
   const setSourceUrl = audioStore((store) => store.setSourceUrl);
-  
+
   function applyGallery(data: IGalleryMapData, userId: string, url: string | null = null) {
     setData(data, userId);
     setSourceUrl(data.theme);

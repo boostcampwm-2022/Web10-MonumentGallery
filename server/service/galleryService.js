@@ -195,16 +195,19 @@ function getRandomIndex(searchState) {
   while (checkValidIndex(searchState, res) && start !== res) {
     res = (res + 1) % 5;
   }
-  if (start === res) console.log("오링"); //데이터 다 씀!
+  if (checkValidIndex(searchState, res) && start === res) console.log("오링"); //데이터 다 씀!
   return res;
 }
 export async function searchGalleryRandom(searchState) {
   // console.log(searchState);
   const nowIdx = getRandomIndex(searchState);
+  // console.log(nowIdx);
+
   const randomDate = getRandomDate();
   if (!(nowIdx in searchState)) searchState[nowIdx] = { start: randomDate, last: randomDate, curved: false };
 
   const users = await findAllUserRandom(nowIdx, searchState[nowIdx].last, 15);
+  // console.log(users);
   const gallerys = await Promise.all(
     users.map(async (user) => {
       const [lastGalleryID] = [...user.history].reduce(
@@ -215,7 +218,13 @@ export async function searchGalleryRandom(searchState) {
         [null, 0],
       );
       //map에 null들어가면 어케 되려나
-      return await findGalleryByID(lastGalleryID);
+      const gallery = await findGalleryByID(lastGalleryID);
+
+      return {
+        userName: user.userName,
+        titles: gallery.pages.slice(0, 3).map((page) => page.title),
+        galleryURL: `/gallery/${user.userID}/${lastGalleryID}`,
+      };
     }),
   );
 

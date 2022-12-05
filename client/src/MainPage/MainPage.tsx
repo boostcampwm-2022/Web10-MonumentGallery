@@ -13,7 +13,6 @@ import userStore from "../store/user.store";
 import FloatLayout from "../layouts/FloatLayout";
 import "./style.scss";
 import MainWorld from "./MainWorld";
-import { OrbitControls } from "@react-three/drei";
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);

@@ -8,7 +8,7 @@ import Gallery from "../schema/gallerySchema.js";
 import User from "../schema/userSchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
-import { deleteUserHistory, saveGallery } from "../service/galleryService.js";
+import { deleteUserHistory, saveGallery, searchGalleryRandom } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
 import userDummyData from "../model/userDummyData.js";
 import galleryDummyData from "../model/galleryDummyData.js";
@@ -24,23 +24,26 @@ function getRandomDate() {
   //2022년 12월 5일부터 현 시간까지
   return getRandomInt(1670224522812, Date.now());
 }
+function makeJsonToBase64(json) {
+  return Buffer.from(JSON.stringify(json)).toString("base64").replace(/[=]/g, "");
+}
 
+function decodeBase64(base64) {
+  return Buffer.from(base64, "base64").toString("utf8");
+}
+
+function makeBase64ToBase64URL(base64) {
+  return base64.replace(/[+]/g, "-").replace(/[/]/g, "_");
+}
+function makeBase64URLToBase64(base64URL) {
+  return base64URL.replace(/[-]/g, "+").replace(/[_]/g, "/");
+}
 router.get(
   "/getDataIdx",
   asyncHandler(async (req, res) => {
-    // const users = await User.find({
-    //   randIdx: getRandomInt(0, 10),
-    //   seq: { $gt: 349 },
-    //   lastModified: { $gt: 0 },
-    //   isShared: false,
-    // })
-    //   .sort({ seq: 1 })
-    //   .limit(15);
-    const now = Date.now();
-    console.log(now);
-    console.log(getRandomInt(0, now));
-    const data = await findAllUserRandom(getRandomInt(0, 10), getRandomDate(), 15);
-    console.log(data);
+    const cookieState = req.cookies.searchState ? decodeBase64(makeBase64URLToBase64(req.cookies.searchState)) : null;
+    const { searchState, gallerys } = await searchGalleryRandom(JSON.parse(cookieState ?? "{}"));
+    res.cookie("searchState", makeBase64ToBase64URL(makeJsonToBase64(searchState)));
     res.send("good");
   }),
 );

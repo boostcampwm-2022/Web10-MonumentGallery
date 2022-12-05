@@ -13,6 +13,7 @@ import {
   findShareStatusByUserID,
   updateShareStateByUserID,
   deleteUserHistoryByID,
+  findAllUserRandom,
 } from "../model/userModel.js";
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
@@ -170,3 +171,62 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
 
   return galleryID;
 }
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+}
+function getRandomDate() {
+  //2022년 12월 5일부터 현 시간까지
+  // return getRandomInt(1670224522812, Date.now());
+  return getRandomInt(0, Date.now());
+}
+function checkValidIndex(searchState, idx) {
+  if (!(idx in searchState)) return false;
+  const { start, last, curved } = searchState[idx];
+  return start <= last && curved;
+}
+function getRandomIndex(searchState) {
+  let res = getRandomInt(0, 5);
+  const start = res;
+  if (checkValidIndex(searchState, res)) res = (res + 1) % 5;
+
+  while (checkValidIndex(searchState, res) && start !== res) {
+    res = (res + 1) % 5;
+  }
+  if (start === res) console.log("오링"); //데이터 다 씀!
+  return res;
+}
+export async function searchGalleryRandom(searchState) {
+  // console.log(searchState);
+  const nowIdx = getRandomIndex(searchState);
+  const randomDate = getRandomDate();
+  if (!(nowIdx in searchState)) searchState[nowIdx] = { start: randomDate, last: randomDate, curved: false };
+
+  const users = await findAllUserRandom(nowIdx, searchState[nowIdx].last, 15);
+  const gallerys = await Promise.all(
+    users.map(async (user) => {
+      const [lastGalleryID] = [...user.history].reduce(
+        ([rescentID, rescentDate], [galleryID, date]) => {
+          if (rescentDate < date) return [galleryID, date];
+          return [rescentID, rescentDate];
+        },
+        [null, 0],
+      );
+      //map에 null들어가면 어케 되려나
+      return await findGalleryByID(lastGalleryID);
+    }),
+  );
+
+  if (users.length > 0) searchState[nowIdx].last = Date.parse(users.at(-1).lastModified);
+  if (users.length < 15) {
+    searchState[nowIdx].curved = true;
+    searchState[nowIdx].last = 0;
+  }
+  // console.log(searchState, "\n");
+  return { searchState, gallerys };
+}
+
+//search
+//{'0' : {start: Date, last : Date(가장 마지막으로 불러온 것), curved: 끝도달 여부}}

@@ -12,6 +12,8 @@ import userStore from "../store/user.store";
 
 import FloatLayout from "../layouts/FloatLayout";
 import "./style.scss";
+import MainWorld from "./MainWorld";
+import { OrbitControls } from "@react-three/drei";
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
@@ -24,8 +26,12 @@ export default function MainPage() {
   return (
     <>
       <div className="canvas-outer">
-        <Canvas className="canvas-inner">
-          <mesh></mesh>
+        <Canvas
+          className="canvas-inner"
+          camera={{ fov: 75, near: 0.1, far: 100, position: [10, 15, 10], rotation: [0, Math.PI / 4, 0, "YXZ"] }}
+        >
+          <MainWorld />
+          <axesHelper />
         </Canvas>
       </div>
 

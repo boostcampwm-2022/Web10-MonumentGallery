@@ -12,8 +12,38 @@ import { deleteUserHistory, saveGallery } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
 import userDummyData from "../model/userDummyData.js";
 import galleryDummyData from "../model/galleryDummyData.js";
+import { findAllUserRandom } from "../model/userModel.js";
 const router = express.Router();
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+}
+function getRandomDate() {
+  //2022년 12월 5일부터 현 시간까지
+  return getRandomInt(1670224522812, Date.now());
+}
+
+router.get(
+  "/getDataIdx",
+  asyncHandler(async (req, res) => {
+    // const users = await User.find({
+    //   randIdx: getRandomInt(0, 10),
+    //   seq: { $gt: 349 },
+    //   lastModified: { $gt: 0 },
+    //   isShared: false,
+    // })
+    //   .sort({ seq: 1 })
+    //   .limit(15);
+    const now = Date.now();
+    console.log(now);
+    console.log(getRandomInt(0, now));
+    const data = await findAllUserRandom(getRandomInt(0, 10), getRandomDate(), 15);
+    console.log(data);
+    res.send("good");
+  }),
+);
 router.get(
   "/crontab",
   asyncHandler(async (req, res) => {
@@ -29,25 +59,32 @@ router.get(
 router.get(
   "/setdummy",
   asyncHandler(async (req, res) => {
-    const tmp = [];
-    for (let i = 87; i < 10000; i++) tmp.push(i);
-    await Promise.all(
-      tmp.map(async (val) => {
-        const nowUser = userDummyData;
-        userDummyData.userID = val;
-        await User.create(nowUser);
-        return val;
-      }),
-    );
-    //   const nowUser = userDummyData;
-    //   userDummyData.userID = i.toString();
-    //   await User.create(nowUser);
+    // const tmp = [];
+    // for (let i = 800000; i < 1000000; i++) tmp.push(i);
+    // await Promise.all(
+    //   tmp.map(async (val) => {
+    //     const nowUser = userDummyData;
+    //     userDummyData.userID = val.toString();
+    //     userDummyData.randIdx = getRandomInt(0, 10);
+    //     userDummyData.seq = val;
+    //     await User.create(nowUser);
+    //     // const galleryID = await Gallery.create(galleryDummyData);
+    //     // const history = { galleryID: Date.now() };
+    //     // await User.findOneAndUpdate({ userID: val }, { history });
+    //     // await saveGallery(userDummyData.userID, galleryDummyData);
+    //     return val;
+    //   }),
+    // );
+    const nowUser = userDummyData;
+    userDummyData.userID = "-2";
+    userDummyData.lastModified = 0;
+    await User.create(nowUser);
 
     //   for (let j = 0; j < 100; j++) {
     //     await saveGallery(i.toString(), galleryDummyData);
     //   }
     // }
-    res.send(tmp);
+    res.send("good");
   }),
 );
 

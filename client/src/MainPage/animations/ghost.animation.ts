@@ -1,0 +1,78 @@
+const GHOST_ROTATE_ANIMATION = {
+  N: {
+    NE: -Math.PI / 4,
+    E: -Math.PI / 2,
+    SE: (-Math.PI / 4) * 3,
+    NW: Math.PI / 4,
+    W: Math.PI / 2,
+    SW: (Math.PI / 4) * 3,
+    S: Math.PI,
+  },
+  NE: {
+    E: -Math.PI / 4,
+    SE: -Math.PI / 2,
+    S: (-Math.PI / 4) * 3,
+    N: Math.PI / 4,
+    NW: (Math.PI / 4) * 2,
+    W: (Math.PI / 4) * 3,
+    SW: Math.PI,
+  },
+  E: {
+    SE: -Math.PI / 4,
+    S: -Math.PI / 2,
+    SW: (-Math.PI / 4) * 3,
+    NE: Math.PI / 4,
+    N: (Math.PI / 4) * 2,
+    NW: (Math.PI / 4) * 3,
+    W: Math.PI,
+  },
+  SE: {
+    S: -Math.PI / 4,
+    SW: -Math.PI / 2,
+    W: (-Math.PI / 4) * 3,
+    E: Math.PI / 4,
+    NE: (Math.PI / 4) * 2,
+    N: (Math.PI / 4) * 3,
+    NW: Math.PI,
+  },
+  S: {
+    SW: -Math.PI / 4,
+    W: -Math.PI / 2,
+    NW: (-Math.PI / 4) * 3,
+    SE: Math.PI / 4,
+    E: (Math.PI / 4) * 2,
+    NE: (Math.PI / 4) * 3,
+    N: Math.PI,
+  },
+  SW: {
+    W: -Math.PI / 4,
+    NW: -Math.PI / 2,
+    N: (-Math.PI / 4) * 3,
+    S: Math.PI / 4,
+    SE: (Math.PI / 4) * 2,
+    E: (Math.PI / 4) * 3,
+    NE: Math.PI,
+  },
+  W: {
+    NW: -Math.PI / 4,
+    N: -Math.PI / 2,
+    NE: (-Math.PI / 4) * 3,
+    SW: Math.PI / 4,
+    S: (Math.PI / 4) * 2,
+    SE: (Math.PI / 4) * 3,
+    E: Math.PI,
+  },
+  NW: {
+    N: -Math.PI / 4,
+    NE: -Math.PI / 2,
+    E: (-Math.PI / 4) * 3,
+    W: Math.PI / 4,
+    SW: (Math.PI / 4) * 2,
+    S: (Math.PI / 4) * 3,
+    SE: Math.PI,
+  },
+} as const;
+
+export default GHOST_ROTATE_ANIMATION;
+
+// export type GHOST_ROTATE_ANIMATION = typeof GHOST_ROTATE_ANIMATION[keyof typeof GHOST_ROTATE_ANIMATION];

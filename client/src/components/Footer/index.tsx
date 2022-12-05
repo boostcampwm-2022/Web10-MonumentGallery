@@ -18,6 +18,23 @@ export default function Footer() {
     console.log({ theme, isPlaying });
   }, [theme, isPlaying]);
 
+  useEffect(() => {
+    function onFkeyDown(e: KeyboardEvent) {
+      if (e.code !== "KeyF") return;
+      onFullScreen();
+    }
+    document.addEventListener("keydown", onFkeyDown);
+    return () => document.removeEventListener("keydown", onFkeyDown);
+  }, []);
+
+  function onFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      return;
+    }
+    document.exitFullscreen();
+  }
+
   return (
     <div className="footer">
       <span className="footer-text">© Monument Gallery</span>
@@ -41,7 +58,7 @@ export default function Footer() {
       <button className="footer-element">
         <img height={24} src={ScreenShotIcon} />
       </button>
-      <button className="footer-element">
+      <button className="footer-element" onClick={onFullScreen}>
         <img height={24} src={ExpandIcon} />
       </button>
     </div>

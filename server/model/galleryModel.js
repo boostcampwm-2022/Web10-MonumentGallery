@@ -12,3 +12,10 @@ export async function findGalleryByID(galleryID) {
 export async function updateGalleryView(galleryID, viewers, views, session) {
   await Gallery.updateOne({ _id: galleryID }, { views: views + 1, viewers }).session(session);
 }
+
+export async function deleteByID(galleryID) {
+  const isExists = await Gallery.exists({ _id: galleryID });
+  if (!isExists) return null;
+  await Gallery.findByIdAndDelete(galleryID);
+  return galleryID;
+}

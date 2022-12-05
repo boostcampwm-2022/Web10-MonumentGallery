@@ -1,15 +1,27 @@
 // dummy data
 export default {
-  uuid: "#24adaf",
+  // uuid: "#24adaf",
   theme: "DREAM",
-  totalKeywords: {
-    부스트캠프: 2,
-    쏜애플: 3,
-    사랑해요: 1,
-    네이버: 4,
-    카카오: 4,
-    취직: 2,
-  },
+  // totalKeywords: {
+  //   부스트캠프: 2,
+  //   쏜애플: 3,
+  //   사랑해요: 1,
+  //   네이버: 4,
+  //   카카오: 4,
+  //   취직: 2,
+  // },
+  totalKeywords: [
+    {
+      keyword: "부스트캠프",
+      freq: 1,
+    },
+  ],
+  groupKeywords: [
+    { position: [20, 0], keyword: "1번방향" },
+    { position: [0, 20], keyword: "2번방향" },
+    { position: [-20, 0], keyword: "3번방향" },
+    { position: [0, -20], keyword: "4번방향" },
+  ],
   pages: [
     {
       position: [20, 0],
@@ -19,11 +31,17 @@ export default {
         { text: "이것도 h1타이틀", type: "h1" },
         { text: "쏜애플 사랑해요", type: "h2" },
       ],
-      keywords: {
-        부스트캠프: 2,
-        쏜애플: 3,
-        사랑해요: 1,
-      },
+      // keywords: {
+      //   부스트캠프: 2,
+      //   쏜애플: 3,
+      //   사랑해요: 1,
+      // },
+      keywords: [
+        {
+          keyword: "부스트캠프",
+          freq: 1,
+        },
+      ],
       links: {
         href: "https://www.naver.com",
       },
@@ -44,11 +62,17 @@ export default {
         { text: "이것도 h1타이틀", type: "h1" },
         { text: "쏜애플 사랑해요", type: "h2" },
       ],
-      keywords: {
-        부스트캠프: 2,
-        쏜애플: 3,
-        사랑해요: 1,
-      },
+      // keywords: {
+      //   부스트캠프: 2,
+      //   쏜애플: 3,
+      //   사랑해요: 1,
+      // },
+      keywords: [
+        {
+          keyword: "부스트캠프",
+          freq: 1,
+        },
+      ],
     },
     {
       position: [-20, 0],
@@ -58,11 +82,17 @@ export default {
         { text: "이것도 h1타이틀", type: "h1" },
         { text: "쏜애플 사랑해요", type: "h2" },
       ],
-      keywords: {
-        부스트캠프: 2,
-        쏜애플: 3,
-        사랑해요: 1,
-      },
+      // keywords: {
+      //   부스트캠프: 2,
+      //   쏜애플: 3,
+      //   사랑해요: 1,
+      // },
+      keywords: [
+        {
+          keyword: "부스트캠프",
+          freq: 1,
+        },
+      ],
     },
     {
       position: [0, -20],
@@ -72,20 +102,32 @@ export default {
         { text: "이거는 h2타이틀", type: "h2" },
         { text: "쏜애플 사랑해요", type: "h2" },
       ],
-      keywords: {
-        부스트캠프: 2,
-        쏜애플: 3,
-        사랑해요: 1,
-      },
+      // keywords: {
+      //   부스트캠프: 2,
+      //   쏜애플: 3,
+      //   사랑해요: 1,
+      // },
+      keywords: [
+        {
+          keyword: "부스트캠프",
+          freq: 1,
+        },
+      ],
     },
     {
       position: [40, 0],
       title: "이것은 첫번쨰랑 이어진 타이틀이다",
       subtitle: [{ text: "부스트캠프 사랑해요", type: "h2" }],
-      keywords: {
-        부스트캠프: 1,
-        사랑해요: 1,
-      },
+      //   keywords: {
+      //     부스트캠프: 1,
+      //     사랑해요: 1,
+      //   },
+      keywords: [
+        {
+          keyword: "부스트캠프",
+          freq: 1,
+        },
+      ],
     },
   ],
   nodes: [

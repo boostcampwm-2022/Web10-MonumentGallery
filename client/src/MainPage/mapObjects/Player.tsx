@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Vector3, Quaternion, Euler } from "three";
 import { useFrame } from "@react-three/fiber";
-import { OrthographicCamera } from "@react-three/drei";
 import { useSpring } from "@react-spring/three";
 import { CapsuleCollider, RigidBody, RigidBodyApi } from "@react-three/rapier";
 
@@ -57,8 +56,6 @@ function Player() {
     setCurrentRotation(newRotation);
     spring.start({ from: 0, to: 1 });
   }, [moveDirection, currentRotation]);
-
-  // console.log(ghostRef.current?.parent);
 
   useFrame(({ camera }, frame) => {
     if (!ghostRef.current || !rigidRef.current) return;

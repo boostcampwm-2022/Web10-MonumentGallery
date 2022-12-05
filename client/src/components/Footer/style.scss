@@ -32,4 +32,13 @@
     color: #717171;
     margin-right: 20px;
   }
+  .footer-volume {
+    -webkit-appearance: none;
+    width: 70px;
+    height: 4px;
+    border-radius: 8px;
+    outline: none;
+    transition: background 450ms ease-in;
+    accent-color: #ffffff;
+  }
 }

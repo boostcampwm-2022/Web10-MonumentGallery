@@ -5,11 +5,14 @@ import ScreenShotIcon from "../../assets/images/viewfinder.png";
 import PlayIcon from "../../assets/images/play.png";
 import PauseIcon from "../../assets/images/pause.png";
 import galleryStore from "../../store/gallery.store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useAudio from "../../hooks/useAudio";
+import audioStore from "../../store/audio.store";
 
 export default function Footer() {
   const { theme } = galleryStore();
-  const [isPlaying, setIsPlaying] = useState(true);
+  const { isPlaying, setIsPlaying, volume, setVolume } = audioStore();
+  useAudio();
 
   useEffect(() => {
     console.log({ theme, isPlaying });
@@ -26,6 +29,15 @@ export default function Footer() {
       <button className="footer-element" onClick={() => setIsPlaying(!isPlaying)}>
         {isPlaying ? <img height={24} src={PauseIcon} /> : <img height={24} src={PlayIcon} />}
       </button>
+      <input
+        className="footer-volume"
+        style={{
+          background: `linear-gradient(to right, #9e9e9e 0%, #9e9e9e ${volume}%, #ececec ${volume}%, #ececec 100%)`,
+        }}
+        type="range"
+        value={volume}
+        onChange={(e) => setVolume(+e.target.value)}
+      />
       <button className="footer-element">
         <img height={24} src={ScreenShotIcon} />
       </button>

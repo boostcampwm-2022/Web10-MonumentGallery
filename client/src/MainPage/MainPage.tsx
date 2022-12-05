@@ -8,6 +8,7 @@ import CanvasLoading from "../components/CanvasLoading";
 import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
+import Footer from "../components/Footer";
 
 import userStore from "../store/user.store";
 import FloatLayout from "../layouts/FloatLayout";
@@ -42,6 +43,7 @@ export default function MainPage() {
             <UserInfo />
           </Header>
           <CreateMonumentButton showModal={showModal} />
+          <Footer />
         </FloatLayout>
       </Suspense>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>

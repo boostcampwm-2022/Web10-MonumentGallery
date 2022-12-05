@@ -1,10 +1,12 @@
 import "./style.scss";
 import { THEME } from "../../@types/gallery";
 import galleryStore from "../../store/gallery.store";
+import audioStore from "../../store/audio.store";
 
 export default function ThemeSeletor() {
   const theme = galleryStore((store) => store.theme);
   const setTheme = galleryStore((store) => store.setTheme);
+  const setSourceUrl = audioStore((store) => store.setSourceUrl);
 
   return (
     <div className="select-box">
@@ -20,6 +22,7 @@ export default function ThemeSeletor() {
             className="select-box__option"
             onClick={() => {
               setTheme(THEME.DREAM);
+              setSourceUrl(THEME.DREAM);
             }}
           >
             {THEME.DREAM}
@@ -30,6 +33,7 @@ export default function ThemeSeletor() {
             className="select-box__option"
             onClick={() => {
               setTheme(THEME.SPRING);
+              setSourceUrl(THEME.SPRING);
             }}
           >
             {THEME.SPRING}
@@ -41,6 +45,7 @@ export default function ThemeSeletor() {
             htmlFor="2"
             onClick={() => {
               setTheme(THEME.SUMMER);
+              setSourceUrl(THEME.SUMMER);
             }}
           >
             {THEME.SUMMER}
@@ -52,6 +57,7 @@ export default function ThemeSeletor() {
             htmlFor="2"
             onClick={() => {
               setTheme(THEME.AUTUMN);
+              setSourceUrl(THEME.AUTUMN);
             }}
           >
             {THEME.AUTUMN}
@@ -63,6 +69,7 @@ export default function ThemeSeletor() {
             htmlFor="3"
             onClick={() => {
               setTheme(THEME.WINTER);
+              setSourceUrl(THEME.WINTER);
             }}
           >
             {THEME.WINTER}

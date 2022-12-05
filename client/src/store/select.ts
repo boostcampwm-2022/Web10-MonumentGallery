@@ -24,7 +24,7 @@ const use = <T>(promise: Selector<T>): T => {
   } else if (promise.status === STATUS.REJECTED) {
     throw promise.reason;
   } else {
-    promise.status === STATUS.PENDING;
+    promise.status = STATUS.PENDING;
     promise.then(
       (val) => {
         promise.status = STATUS.FULFILLED;

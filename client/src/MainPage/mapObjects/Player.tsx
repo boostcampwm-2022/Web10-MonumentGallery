@@ -14,7 +14,7 @@ function Player() {
   const ghostRef = useRef<Group>(null);
   const speed = 10;
 
-  function getMoveVector(delta: number) {
+  function getMoveVector() {
     let front = 0;
     let right = 0;
     if (isPressed("Front")) front--;
@@ -26,11 +26,16 @@ function Player() {
     return _vector3;
   }
 
-  useFrame((_, delta) => {
+  useFrame(({ camera }, delta) => {
     if (!ghostRef.current) return;
+    const ghostPos = ghostRef.current.position;
 
     const moveVector = getMoveVector(delta);
-    ghostRef.current.position.addScaledVector(moveVector, speed * delta);
+    ghostPos.addScaledVector(moveVector, speed * delta);
+    camera.position.copy(ghostPos);
+    camera.position.x += 10;
+    camera.position.y += 15;
+    camera.position.z += 10;
   });
 
   return (

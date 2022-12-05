@@ -21,9 +21,14 @@ export default function Monument({ data }: MonumentProps) {
         {userName}
       </Text>
       <Monolith rotation={[0, Math.PI / 4, 0]} />
-      {titles[0] && <TextRing text={titles[0]} position={[0, 1, 0]} scale={[0.7, 0.7, 0.7]} />}
-      {titles[1] && <TextRing text={titles[1]} position={[0, 2, 0]} scale={[0.6, 0.6, 0.6]} />}
-      {titles[2] && <TextRing text={titles[2]} position={[0, 3, 0]} scale={[0.5, 0.5, 0.5]} />}
+      {titles.map((title, i) => (
+        <TextRing
+          key={title + i}
+          text={title}
+          position={[0, 1 + i, 0]}
+          scale={[0.7 - 0.1 * i, 0.7 - 0.1 * i, 0.7 - 0.1 * i]}
+        />
+      ))}
       <Portal link={galleryURL} position={[1, 0.2, 1]} />
     </>
   );

@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Vector3, Quaternion, Euler } from "three";
 import { useFrame } from "@react-three/fiber";
-import { useSpring, animated, Interpolation } from "@react-spring/three";
+import { OrthographicCamera } from "@react-three/drei";
+import { useSpring } from "@react-spring/three";
+import { CapsuleCollider, RigidBody, RigidBodyApi } from "@react-three/rapier";
 
 import Ghost from "./Ghost";
 import { useKeyMovement } from "../../hooks/useKeyMovement";
@@ -43,7 +45,8 @@ function Player() {
   });
 
   const ghostRef = useRef<Group>(null);
-  const speed = 10;
+  const rigidRef = useRef<RigidBodyApi>(null);
+  const speed = 6;
 
   useEffect(() => {
     if (!ghostRef.current) return;
@@ -55,25 +58,42 @@ function Player() {
     spring.start({ from: 0, to: 1 });
   }, [moveDirection, currentRotation]);
 
-  useFrame(({ camera }, delta) => {
-    if (!ghostRef.current) return;
-    const ghostPos = ghostRef.current.position;
+  // console.log(ghostRef.current?.parent);
+
+  useFrame(({ camera }, frame) => {
+    if (!ghostRef.current || !rigidRef.current) return;
+    const ghostPosition = ghostRef.current.position;
     const ghostRotation = ghostRef.current.quaternion;
 
-    ghostPos.addScaledVector(moveDirection, speed * delta);
-    camera.position.copy(ghostPos);
+    ghostPosition.addScaledVector(moveDirection, speed * frame);
+
+    camera.position.copy(ghostPosition);
     camera.position.x += 10;
     camera.position.y += 15;
     camera.position.z += 10;
 
     _quaternion.copy(prevRotation).slerp(currentRotation, spring.get());
     ghostRotation.copy(_quaternion);
+    rigidRef.current.setTranslation(ghostPosition);
   });
 
   return (
-    <animated.group position-y={2} ref={ghostRef}>
-      <Ghost />
-    </animated.group>
+    <>
+      <group ref={ghostRef} position-y={2}>
+        <Ghost />
+      </group>
+      <RigidBody
+        ref={rigidRef}
+        position-y={2}
+        colliders={false}
+        mass={1}
+        type="dynamic"
+        lockTranslations
+        enabledRotations={[false, false, false]}
+      >
+        <CapsuleCollider args={[1, 1]} />
+      </RigidBody>
+    </>
   );
 }
 

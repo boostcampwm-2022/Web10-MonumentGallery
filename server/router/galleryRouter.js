@@ -6,11 +6,24 @@ import {
   createGalleryFromNotion,
   loadUserHistory,
   updateShareState,
+  searchGalleryRandom,
 } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { endConnectionSSE } from "../service/sseService.js";
+import { decodeBase64TOJSON, encodeBase64FromJSON } from "../utils/base64.js";
 
 const router = express.Router();
+
+router.get(
+  "/gallery/all",
+  asyncHandler(async (req, res) => {
+    const cookieState = decodeBase64TOJSON(req.cookies.searchState);
+    const { searchState, gallerys } = await searchGalleryRandom(cookieState);
+
+    res.cookie("searchState", encodeBase64FromJSON(searchState));
+    res.status(200).json(gallerys);
+  }),
+);
 
 router.get(
   "/gallery/create",

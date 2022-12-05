@@ -13,8 +13,5 @@ export function useGalleryHistorySave() {
     console.log("initialized", { data, userId });
     window.history.replaceState({ data, userId }, "");
   }
-  return {
-    applyGallery,
-    initializeGallery,
-  };
+  return { applyGallery, initializeGallery };
 }

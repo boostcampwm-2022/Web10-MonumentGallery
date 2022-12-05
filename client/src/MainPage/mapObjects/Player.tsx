@@ -32,6 +32,7 @@ function Player() {
     if (isPressed("Back")) front++;
     if (isPressed("Right")) right++;
     if (isPressed("Left")) right--;
+
     return new Vector3(right, 0, front).normalize();
   }, [isPressed("Front"), isPressed("Back"), isPressed("Left"), isPressed("Right")]);
   const [prevRotation, setPrevRotation] = useState(new Quaternion());
@@ -65,8 +66,7 @@ function Player() {
     ghostPosition.addScaledVector(moveDirection, speed * frame);
 
     camera.position.copy(ghostPosition);
-    camera.position.x += 10;
-    camera.position.y += 15;
+    camera.position.y += 10;
     camera.position.z += 10;
 
     _quaternion.copy(prevRotation).slerp(currentRotation, spring.get());

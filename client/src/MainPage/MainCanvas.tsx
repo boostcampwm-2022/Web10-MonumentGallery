@@ -17,13 +17,12 @@ export default function MainCanvas() {
     <Canvas
       shadows
       className="canvas-inner"
-      camera={{ zoom: 50, fov: 35, position: [10, 15, 10], rotation: [-Math.PI / 4, Math.PI / 4, 0, "YXZ"] }}
+      camera={{ zoom: 50, fov: 35, position: [0, 10, 10], rotation: [-Math.PI / 4, 0, 0, "YXZ"] }}
       orthographic
     >
       <color attach="background" args={[backgroundColor]} />
       <MainWorld />
       <axesHelper />
-      <Box position={[2, 0, 0]} />
       <Stats />
     </Canvas>
   );

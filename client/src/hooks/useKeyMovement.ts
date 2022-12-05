@@ -55,11 +55,13 @@ export function useKeyMovement() {
     function keyDown(e: KeyboardEvent) {
       const movementKey = mapMovementKey(e.code);
       if (movementKey === null) return;
+      if (getKeyState(movementKey) === true) return;
       controlKeyState({ type: "keydown", code: movementKey });
     }
     function keyUp(e: KeyboardEvent) {
       const movementKey = mapMovementKey(e.code);
       if (movementKey === null) return;
+      if (getKeyState(movementKey) === false) return;
       controlKeyState({ type: "keyup", code: movementKey });
     }
     function allRelease() {
@@ -75,7 +77,7 @@ export function useKeyMovement() {
       document.removeEventListener("keyup", keyUp);
       window.removeEventListener("blur", allRelease);
     };
-  }, []);
+  }, [keyState]);
 
   return getKeyState;
 }

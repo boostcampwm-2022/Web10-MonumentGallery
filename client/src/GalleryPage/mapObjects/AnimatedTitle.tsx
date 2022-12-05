@@ -4,6 +4,7 @@ import { animated, Interpolation } from "@react-spring/three";
 
 import Balloon from "./Balloon";
 import { useBillboard } from "../../hooks/useBillboard";
+import { useFrame } from "@react-three/fiber";
 import { generateRandomPastelColors } from "../../utils/random";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 
@@ -26,7 +27,7 @@ export default function AnimatedTitle({ text, animator }: AnimatedTitleProps) {
   const randomColors = useMemo<keyof typeof COLORS>(() => generateRandomPastelColors()[0], []);
   const color: Interpolation<number, COLORS> = spring.to([0, 1], [COLORS.SKY400, COLORS[randomColors]]);
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
-
+  
   return (
     <group visible={!!(ready || playing)}>
       <animated.group ref={textGroupRef} position-y={textY}>

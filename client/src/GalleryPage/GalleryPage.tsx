@@ -3,17 +3,16 @@ import { Suspense, useEffect, useState } from "react";
 import Gallery from "./Gallery";
 import ErrorPage from "./ErrorPage";
 import DomElements from "./components/DomElements";
-import Loading from "./components/Loading";
+import Loading from "../components/CanvasLoading";
 import ErrorBoundary from "../components/common/ErrorBoundary";
 import TOAST from "../components/Toast/ToastList";
 
 import { useParams } from "../hooks/useParams";
 import { useGalleryHistorySave } from "../hooks/useGalleryHistorySave";
 
-import "./style.scss";
-import galleryStore from "../store/gallery.store";
 import toastStore from "../store/toast.store";
 import { GalleryLoadErrorEvent } from "../@types/gallery";
+import "./style.scss";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);

@@ -21,14 +21,9 @@ import { IHistory } from "../../@types/gallery";
 import URLCopy from "../../utils/URLCopy";
 
 export default function DomElements({
-  setResource,
+  setRequestUrl,
 }: {
-  setResource: React.Dispatch<
-    React.SetStateAction<{
-      method: string;
-      url: string;
-    }>
-  >;
+  setRequestUrl: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { locked } = lockStore();
   const [showShareModal, setShowShareModal] = useState(false);
@@ -54,7 +49,7 @@ export default function DomElements({
         <FullScreenModal css={{ width: "400px", height: "230px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
         </FullScreenModal>
-        <HistorySidebar show={showSidebar} setShow={setShowSidebar} setResource={setResource} />
+        <HistorySidebar show={showSidebar} setShow={setShowSidebar} setRequestUrl={setRequestUrl} />
       </div>
       <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
     </>
@@ -154,16 +149,11 @@ function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch
 function HistorySidebar({
   show,
   setShow,
-  setResource,
+  setRequestUrl,
 }: {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  setResource: React.Dispatch<
-    React.SetStateAction<{
-      method: string;
-      url: string;
-    }>
-  >;
+  setRequestUrl: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const historyRef = useRef<HTMLDivElement>(null);
   const historyListRef = useRef<HTMLDivElement>(null);
@@ -220,7 +210,7 @@ function HistorySidebar({
   function setGalleryDataFromHistory() {
     const history = histories[selected];
     const url = `/api/gallery/${userId}/${history.id}`;
-    setResource({ method: "get", url });
+    setRequestUrl(url);
     setShow(false);
     setShowHistoryModal(false);
   }

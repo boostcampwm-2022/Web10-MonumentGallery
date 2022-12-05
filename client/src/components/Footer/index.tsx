@@ -70,7 +70,13 @@ export default function Footer() {
         value={volume}
         onChange={(e) => setVolume(+e.target.value)}
       />
-      <button className="footer-element">
+      <button
+        className="footer-element"
+        onClick={(e) => {
+          document.dispatchEvent(new CustomEvent("save-screenshot"));
+          e.currentTarget.blur();
+        }}
+      >
         <img height={24} src={ScreenShotIcon} />
       </button>
       <button className="footer-element" onClick={onFullScreen}>

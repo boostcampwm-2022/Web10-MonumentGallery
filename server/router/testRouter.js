@@ -43,6 +43,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const cookieState = req.cookies.searchState ? decodeBase64(makeBase64URLToBase64(req.cookies.searchState)) : null;
     const { searchState, gallerys } = await searchGalleryRandom(JSON.parse(cookieState ?? "{}"));
+    console.log(gallerys);
     res.cookie("searchState", makeBase64ToBase64URL(makeJsonToBase64(searchState)));
     res.send("good");
   }),
@@ -68,6 +69,7 @@ router.get(
       tmp.map(async (val) => {
         const nowUser = userDummyData;
         userDummyData.userID = val.toString();
+        userDummyData.userName = val.toString();
         userDummyData.randIdx = getRandomInt(0, 10);
         userDummyData.lastModified = Date.now() - 10000 + getRandomInt(0, 10000);
         await User.create(nowUser);

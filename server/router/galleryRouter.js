@@ -21,11 +21,12 @@ router.get(
     //duration= 2w||1m||3m||1y
     console.log("page making start");
     const userId = req.userid;
+    const userName = req.username;
     const nowTime = Date.now();
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, userId, res);
+    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, userId, userName, res);
 
     console.log(`총 처리 시간: ${Date.now() - nowTime}`);
     endConnectionSSE(res, { page: `/gallery/${userId}/${galleryID}` });
@@ -61,11 +62,18 @@ router.get(
   asyncHandler(async (req, res) => {
     req.connection.setTimeout(60 * 5 * 1000); //5분
     const requestUserID = req.userid;
-
+    const requestUserName = req.username;
     const notionAccessToken = req.accessToken;
     const { period = "all", theme = "dream" } = req.query;
 
-    const galleryID = await createGalleryFromNotion(notionAccessToken, period, theme, requestUserID, res);
+    const galleryID = await createGalleryFromNotion(
+      notionAccessToken,
+      period,
+      theme,
+      requestUserID,
+      requestUserName,
+      res,
+    );
 
     const result = await loadGallery({ ipaddr: req.ipaddr, requestUserID }, requestUserID, galleryID);
     endConnectionSSE(res, { page: `/gallery/${requestUserID}/${galleryID}`, data: result });

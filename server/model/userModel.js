@@ -17,7 +17,7 @@ export async function findHistoryByUserID(userID) {
   return new Map();
 }
 
-export async function updateUserHistoryByUserID(userID, galleryID, session) {
+export async function updateUserHistoryByUserID(userID, userName, galleryID, session) {
   const isExists = await User.exists({ userID });
   const now = Date.now();
 
@@ -31,8 +31,8 @@ export async function updateUserHistoryByUserID(userID, galleryID, session) {
     [
       {
         userID,
+        userName,
         isShared: false,
-        lastModified: now,
         history,
       },
     ],
@@ -88,7 +88,7 @@ export async function findAllUserRandom(randIdx, lastModified = 0, limit) {
   return await User.find({
     randIdx,
     lastModified: { $gt: lastModified },
-    isShared: false,
+    isShared: true,
   })
     .sort({ lastModified: 1 })
     .limit(limit);

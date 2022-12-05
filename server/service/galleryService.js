@@ -32,12 +32,12 @@ export async function loadUserHistory(userID) {
   return findHistoryByUserID(userID);
 }
 
-export async function saveGallery(userID, galleryData) {
+export async function saveGallery(userID, userName, galleryData) {
   const session = await startSession();
   try {
     session.startTransaction();
     const galleryID = await saveGalleryFromDB(galleryData, session);
-    await updateUserHistoryByUserID(userID, galleryID, session);
+    await updateUserHistoryByUserID(userID, userName, galleryID, session);
     await session.commitTransaction();
     session.endSession();
     return galleryID;
@@ -150,7 +150,7 @@ export async function deleteUserHistory(users) {
   }
 }
 
-export async function createGalleryFromNotion(notionAccessToken, period, theme, userID, res) {
+export async function createGalleryFromNotion(notionAccessToken, period, theme, userID, userName, res) {
   createConnectionSSE(res);
 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 25, data: {} }), res);
@@ -166,7 +166,7 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
   writeMessageSSE(JSON.stringify({ kind: "키워드 추출 완료", progress: 70, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 저장 중...", progress: 80, data: {} }), res);
-  const galleryID = await saveGallery(userID, processedNotionContent);
+  const galleryID = await saveGallery(userID, userName, processedNotionContent);
   writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 저장 완료", progress: 85, data: {} }), res);
 
   return galleryID;

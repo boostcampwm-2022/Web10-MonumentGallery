@@ -1,4 +1,3 @@
-import { useReducer, useEffect } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { Vector3, Camera } from "three";
 

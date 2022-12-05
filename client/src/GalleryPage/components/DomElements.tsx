@@ -10,8 +10,6 @@ import ProtectedIcon from "../../assets/images/protected.svg";
 import ThemeSeletor from "../../components/ThemeSelector";
 import UserInfo from "../../components/Header/UserInfo";
 import FullScreenModal from "../../components/modal/FullScreenModal";
-import { CheckLoggedIn } from "../../hooks/useLoggedIn";
-import UserInfoSkeleton from "../../components/Header/UserInfoSkeleton";
 import toastStore from "../../store/toast.store";
 import TOAST from "../../components/Toast/ToastList";
 import userStore from "../../store/user.store";
@@ -34,10 +32,7 @@ export default function DomElements({
       <div hidden={locked}>
         <FloatLayout>
           <Header>
-            <Suspense fallback={<UserInfoSkeleton />}>
-              <CheckLoggedIn />
-              <UserInfo />
-            </Suspense>
+            <UserInfo />
             <ThemeSeletor />
             <button>
               <img width={24} src={HistoryIcon} onClick={() => setShowSidebar(!showSidebar)} />

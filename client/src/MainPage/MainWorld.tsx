@@ -1,7 +1,7 @@
 import { Physics } from "@react-three/rapier";
 import Light from "../GalleryPage/mapObjects/Light";
 
-import Ghost from "./mapObjects/Ghost";
+import Player from "./mapObjects/Player";
 import { useRef } from "react";
 import TPVMovementController from "./components/TPVMovementController";
 import Plane from "./mapObjects/Plane";
@@ -14,7 +14,7 @@ export default function MainWorld() {
         <TPVMovementController speed={10} />
         {/* <gridHelper args={[100, 100, 0]} /> */}
         <group ref={ghostParentRef}>
-          <Ghost ghostParent={ghostParentRef.current} />
+          <Player ghostParent={ghostParentRef.current} />
         </group>
         <Plane />
       </Physics>

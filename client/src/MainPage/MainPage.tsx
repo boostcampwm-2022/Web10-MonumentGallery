@@ -9,7 +9,6 @@ import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
 
-import { CheckLoggedIn } from "../hooks/useLoggedIn";
 import userStore from "../store/user.store";
 import FloatLayout from "../layouts/FloatLayout";
 
@@ -39,7 +38,6 @@ export default function MainPage() {
       </div>
 
       <Suspense fallback={<Loading />}>
-        <CheckLoggedIn />
         <FloatLayout>
           <Header>
             <UserInfo />

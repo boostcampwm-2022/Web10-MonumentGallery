@@ -59,26 +59,26 @@ router.get(
 router.get(
   "/setdummy",
   asyncHandler(async (req, res) => {
-    // const tmp = [];
-    // for (let i = 800000; i < 1000000; i++) tmp.push(i);
-    // await Promise.all(
-    //   tmp.map(async (val) => {
-    //     const nowUser = userDummyData;
-    //     userDummyData.userID = val.toString();
-    //     userDummyData.randIdx = getRandomInt(0, 10);
-    //     userDummyData.seq = val;
-    //     await User.create(nowUser);
-    //     // const galleryID = await Gallery.create(galleryDummyData);
-    //     // const history = { galleryID: Date.now() };
-    //     // await User.findOneAndUpdate({ userID: val }, { history });
-    //     // await saveGallery(userDummyData.userID, galleryDummyData);
-    //     return val;
-    //   }),
-    // );
-    const nowUser = userDummyData;
-    userDummyData.userID = "-2";
-    userDummyData.lastModified = 0;
-    await User.create(nowUser);
+    const tmp = [];
+    for (let i = 0; i < 500; i++) tmp.push(i);
+    await Promise.all(
+      tmp.map(async (val) => {
+        const nowUser = userDummyData;
+        userDummyData.userID = val.toString();
+        userDummyData.randIdx = getRandomInt(0, 10);
+        userDummyData.lastModified = Date.now() - 10000 + getRandomInt(0, 10000);
+        await User.create(nowUser);
+        const galleryID = (await Gallery.create(galleryDummyData))._id.valueOf();
+        const history = { [galleryID]: Date.now() };
+        await User.findOneAndUpdate({ userID: val }, { history });
+        await saveGallery(userDummyData.userID, galleryDummyData);
+        return val;
+      }),
+    );
+    // const nowUser = userDummyData;
+    // userDummyData.userID = "-2";
+    // userDummyData.lastModified = 0;
+    // await User.create(nowUser);
 
     //   for (let j = 0; j < 100; j++) {
     //     await saveGallery(i.toString(), galleryDummyData);

@@ -24,7 +24,7 @@ export async function updateUserHistoryByUserID(userID, galleryID, session) {
   if (isExists) {
     const history = await findHistoryByUserID(userID);
     history.set(galleryID, now);
-    return User.findOneAndUpdate({ userID }, { history }).session(session);
+    return await User.findOneAndUpdate({ userID }, { history }).session(session);
   }
   const history = { [galleryID]: now };
   return User.create(
@@ -59,7 +59,10 @@ export async function findShareStatusByUserID(userID) {
 export async function updateShareStateByUserID(userID, isShared, session) {
   const isExists = await User.exists({ userID });
   if (!isExists) return null;
-  const res = await User.updateOne({ userID }, { isShared, lastShareModified: Date.now() }).session(session);
+  const res = await User.updateOne(
+    { userID },
+    { isShared, lastShareModified: Date.now(), lastModified: Date.now() },
+  ).session(session);
   return res;
 }
 
@@ -79,4 +82,14 @@ export async function findLastGalleryIDByUserID(userID) {
 export async function findAllUserNotShared(page, limit) {
   const yesterday = Date.now() - 1000 * 60 * 60 * 24;
   const users = await User.find({ isShared: false, lastShareModified: { $lte: yesterday } });
+}
+
+export async function findAllUserRandom(randIdx, lastModified = 0, limit) {
+  return await User.find({
+    randIdx,
+    lastModified: { $gt: lastModified },
+    isShared: false,
+  })
+    .sort({ lastModified: 1 })
+    .limit(limit);
 }

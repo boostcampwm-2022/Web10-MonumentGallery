@@ -1,19 +1,24 @@
-import { BallCollider, RigidBody } from "@react-three/rapier";
-import { useState } from "react";
-import SubWordCloud from "../../GalleryPage/mapObjects/SubWordCloud";
-import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+import { Text } from "@react-three/drei";
 import Monolith from "./Monolith";
 import TextRing from "./TextRing";
+import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 
-export default function Monument() {
-  const [collision, setCollision] = useState(false);
-  const springs = useTriggeredSpring(true, { tension: 500, friction: 150, precision: 0.04 });
+interface MonumentProps {
+  userName: string;
+  titles: string[];
+  galleryUrl: string;
+}
+
+export default function Monument({ userName, titles, galleryUrl }: MonumentProps) {
   return (
     <>
+      <Text position={[0, 7, 0]} font={MapoFlowerIsland} fontSize={0.5} color="black">
+        {userName}
+      </Text>
       <Monolith />
-      <TextRing text="가나다라마바사" position={[0, 1, 0]} scale={[0.7, 0.7, 0.7]} />
-      <TextRing text="ABCDEFG" position={[0, 2, 0]} scale={[0.6, 0.6, 0.6]} />
-      <TextRing text="라스트제목" position={[0, 3, 0]} scale={[0.5, 0.5, 0.5]} />
+      {titles[0] && <TextRing text={titles[0]} position={[0, 1, 0]} scale={[0.7, 0.7, 0.7]} />}
+      {titles[1] && <TextRing text={titles[1]} position={[0, 2, 0]} scale={[0.6, 0.6, 0.6]} />}
+      {titles[2] && <TextRing text={titles[2]} position={[0, 3, 0]} scale={[0.5, 0.5, 0.5]} />}
     </>
   );
 }

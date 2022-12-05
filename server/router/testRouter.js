@@ -5,9 +5,93 @@ import { getRawContentsFromNotion } from "../service/getNotionContentService.js"
 import galleryMockData from "../model/galleryDummyData.js";
 import { processDataFromRawContent } from "../service/dataProcessService.js";
 import Gallery from "../schema/gallerySchema.js";
+import User from "../schema/userSchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
+import { deleteUserHistory, saveGallery, searchGalleryRandom } from "../service/galleryService.js";
+import { asyncHandler } from "../utils/utils.js";
+import userDummyData from "../model/userDummyData.js";
+import galleryDummyData from "../model/galleryDummyData.js";
+import { findAllUserRandom } from "../model/userModel.js";
 const router = express.Router();
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+}
+function getRandomDate() {
+  //2022년 12월 5일부터 현 시간까지
+  return getRandomInt(1670224522812, Date.now());
+}
+function makeJsonToBase64(json) {
+  return Buffer.from(JSON.stringify(json)).toString("base64").replace(/[=]/g, "");
+}
+
+function decodeBase64(base64) {
+  return Buffer.from(base64, "base64").toString("utf8");
+}
+
+function makeBase64ToBase64URL(base64) {
+  return base64.replace(/[+]/g, "-").replace(/[/]/g, "_");
+}
+function makeBase64URLToBase64(base64URL) {
+  return base64URL.replace(/[-]/g, "+").replace(/[_]/g, "/");
+}
+router.get(
+  "/getDataIdx",
+  asyncHandler(async (req, res) => {
+    const cookieState = req.cookies.searchState ? decodeBase64(makeBase64URLToBase64(req.cookies.searchState)) : null;
+    const { searchState, gallerys } = await searchGalleryRandom(JSON.parse(cookieState ?? "{}"));
+    console.log(gallerys);
+    res.cookie("searchState", makeBase64ToBase64URL(makeJsonToBase64(searchState)));
+    res.send("good");
+  }),
+);
+router.get(
+  "/crontab",
+  asyncHandler(async (req, res) => {
+    const yesterday = Date.now() - 1000 * 60 * 60 * 24;
+    // const users = await User.find({ isShared: false, lastShareModified: { $lte: yesterday } });
+    // 대충 일정 수 받았다고 가정
+    const users = await User.find();
+    // console.log(users);
+    await deleteUserHistory(users);
+    res.send(await User.find());
+  }),
+);
+router.get(
+  "/setdummy",
+  asyncHandler(async (req, res) => {
+    const tmp = [];
+    for (let i = 0; i < 500; i++) tmp.push(i);
+    await Promise.all(
+      tmp.map(async (val) => {
+        const nowUser = userDummyData;
+        userDummyData.userID = val.toString();
+        userDummyData.userName = val.toString();
+        userDummyData.randIdx = getRandomInt(0, 10);
+        userDummyData.lastModified = Date.now() - 10000 + getRandomInt(0, 10000);
+        await User.create(nowUser);
+        const galleryID = (await Gallery.create(galleryDummyData))._id.valueOf();
+        const history = { [galleryID]: Date.now() };
+        await User.findOneAndUpdate({ userID: val }, { history });
+        await saveGallery(userDummyData.userID, galleryDummyData);
+        return val;
+      }),
+    );
+    // const nowUser = userDummyData;
+    // userDummyData.userID = "-2";
+    // userDummyData.lastModified = 0;
+    // await User.create(nowUser);
+
+    //   for (let j = 0; j < 100; j++) {
+    //     await saveGallery(i.toString(), galleryDummyData);
+    //   }
+    // }
+    res.send("good");
+  }),
+);
 
 router.get("/testShared", (req, res) => {
   res.send({ isShared: true });

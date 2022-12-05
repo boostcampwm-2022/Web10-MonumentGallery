@@ -30,8 +30,8 @@ export default function CreatePage() {
   const [show, setShow] = useState<boolean>(true);
   const [eventSourceUrl, setEventSourceUrl] = useState<string>("");
   const [requested, setRequested] = useState<boolean>(false);
-  const { setData } = galleryStore();
-  const { addToast } = toastStore();
+  const setData = galleryStore((store) => store.setData);
+  const addToast = toastStore((store) => store.addToast);
 
   useLayoutEffect(() => {
     setData(dummyData, "");

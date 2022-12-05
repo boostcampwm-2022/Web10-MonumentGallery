@@ -1,22 +1,30 @@
-import React, { Suspense, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import "./style.scss";
+import { Suspense, useState } from "react";
 
 import Loading from "./Loading";
+import MainCanvas from "./MainCanvas";
 import CreateModal from "./components/CreateModal";
+import CanvasLoading from "../components/CanvasLoading";
 import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
-
-import { CheckLoggedIn } from "../hooks/useLoggedIn";
-import userStore from "../store/user.store";
-
-import FloatLayout from "../layouts/FloatLayout";
-import "./style.scss";
 import Footer from "../components/Footer";
+
+import userStore from "../store/user.store";
+import FloatLayout from "../layouts/FloatLayout";
+
+function CreateMonumentButton({ showModal }: { showModal: () => void }) {
+  const isLoggedIn = userStore((store) => store.isLoggedIn);
+
+  return (
+    <button className={isLoggedIn ? "my-monument-btn" : "upload-btn"} type="button" onClick={showModal}>
+      {isLoggedIn ? "My Monument" : "Upload"}
+    </button>
+  );
+}
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
-  const { isLoggedIn } = userStore();
 
   function showModal() {
     setShow(true);
@@ -25,26 +33,16 @@ export default function MainPage() {
   return (
     <>
       <div className="canvas-outer">
-        <Canvas className="canvas-inner">
-          <mesh></mesh>
-        </Canvas>
+        <Suspense fallback={<CanvasLoading />}>
+          <MainCanvas />
+        </Suspense>
       </div>
-
       <Suspense fallback={<Loading />}>
-        <CheckLoggedIn />
         <FloatLayout>
           <Header>
             <UserInfo />
           </Header>
-          {isLoggedIn ? (
-            <button className="my-monument-btn" type="button" onClick={showModal}>
-              My Monument
-            </button>
-          ) : (
-            <button className="upload-btn" type="button" onClick={showModal}>
-              Upload
-            </button>
-          )}
+          <CreateMonumentButton showModal={showModal} />
           <Footer />
         </FloatLayout>
       </Suspense>

@@ -1,6 +1,6 @@
 import "./style.scss";
 import { useState, useEffect } from "react";
-import LoadingImg from "../../../assets/loading.svg";
+import LoadingImg from "../../assets/loading.svg";
 
 function Ellipsis() {
   const [ellipseCount, setCount] = useState<number>(1);

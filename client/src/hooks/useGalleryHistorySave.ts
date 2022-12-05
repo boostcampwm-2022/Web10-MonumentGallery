@@ -3,9 +3,9 @@ import { IGalleryMapData } from "../@types/gallery";
 import audioStore from "../store/audio.store";
 
 export function useGalleryHistorySave() {
-  const { setData } = galleryStore();
-  const { setSourceUrl } = audioStore();
-
+  const setData = galleryStore((store) => store.setData);
+  const setSourceUrl = audioStore((store) => store.setSourceUrl);
+  
   function applyGallery(data: IGalleryMapData, userId: string, url: string | null = null) {
     setData(data, userId);
     setSourceUrl(data.theme);
@@ -18,8 +18,5 @@ export function useGalleryHistorySave() {
     console.log("initialized", { data, userId });
     window.history.replaceState({ data, userId }, "");
   }
-  return {
-    applyGallery,
-    initializeGallery,
-  };
+  return { applyGallery, initializeGallery };
 }

@@ -10,8 +10,6 @@ import ProtectedIcon from "../../assets/images/protected.svg";
 import ThemeSeletor from "../../components/ThemeSelector";
 import UserInfo from "../../components/Header/UserInfo";
 import FullScreenModal from "../../components/modal/FullScreenModal";
-import { CheckLoggedIn } from "../../hooks/useLoggedIn";
-import UserInfoSkeleton from "../../components/Header/UserInfoSkeleton";
 import toastStore from "../../store/toast.store";
 import TOAST from "../../components/Toast/ToastList";
 import userStore from "../../store/user.store";
@@ -35,10 +33,7 @@ export default function DomElements({
       <div hidden={locked}>
         <FloatLayout>
           <Header>
-            <Suspense fallback={<UserInfoSkeleton />}>
-              <CheckLoggedIn />
-              <UserInfo />
-            </Suspense>
+            <UserInfo />
             <ThemeSeletor />
             <button>
               <img width={24} src={HistoryIcon} onClick={() => setShowSidebar(!showSidebar)} />
@@ -59,8 +54,9 @@ export default function DomElements({
 }
 
 function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) {
-  const { isShared, setShared } = userStore();
-  const { addToast } = toastStore();
+  const isShared = userStore((store) => store.isShared);
+  const setShared = userStore((store) => store.setShared);
+  const addToast = toastStore((store) => store.addToast);
 
   return (
     <div className="modal share-modal">
@@ -109,12 +105,12 @@ function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) 
 }
 
 function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const { data, userId: galleryUserId } = galleryStore();
-  const {
-    isLoggedIn,
-    isShared,
-    user: { id },
-  } = userStore();
+  const data = galleryStore((gallery) => gallery.data);
+  const galleryUserId = galleryStore((gallery) => gallery.userId);
+  const isLoggedIn = userStore((user) => user.isLoggedIn);
+  const isShared = userStore((user) => user.isShared);
+  const id = userStore((user) => user.user?.id);
+
   const [hover, setHover] = useState(false);
 
   function onClick() {
@@ -159,12 +155,15 @@ function HistorySidebar({
 }) {
   const historyRef = useRef<HTMLDivElement>(null);
   const historyListRef = useRef<HTMLDivElement>(null);
+
   const [scrollOffset, setScrollOffset] = useState(0);
   const [selected, setSelected] = useState(0);
   const [canScroll, setCanScroll] = useState(true);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const { data, userId } = galleryStore();
   const [histories, setHistories] = useState<IHistory[]>([]);
+
+  const data = galleryStore((store) => store.data);
+  const userId = galleryStore((store) => store.userId);
 
   useLayoutEffect(() => {
     if (!userId) return;
@@ -175,7 +174,7 @@ function HistorySidebar({
       setScrollOffset(idx);
       setSelected(idx);
     });
-  }, [userId]);
+  }, [userId, data]);
 
   useEffect(() => {
     if (canScroll) return;
@@ -284,7 +283,7 @@ function HistoryItem({
   onClick: (distanceToSelected: number) => void;
 }) {
   const [hover, setHover] = useState(false);
-  const { data } = galleryStore();
+  const data = galleryStore((store) => store.data);
   const offset = useMemo(() => Math.abs(distanceToSelected), [distanceToSelected]);
 
   return (

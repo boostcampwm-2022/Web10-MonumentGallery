@@ -1,90 +1,11 @@
-import { useReducer, useEffect } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { Vector3, Camera } from "three";
 
-interface KeyState {
-  [code: string]: boolean;
-}
-
-interface KeyStateReducerProps {
-  code: string;
-  type: "keydown" | "keyup" | "allKeyUp";
-}
+import { useKeyMovement } from "../../hooks/useKeyMovement";
 
 interface MovementControllerProps {
   camera?: Camera;
   speed?: number;
-}
-
-function mapMovementKey(code: string) {
-  switch (code) {
-    case "ArrowUp":
-    case "KeyW":
-      return "Front";
-    case "ArrowLeft":
-    case "KeyA":
-      return "Left";
-    case "ArrowDown":
-    case "KeyS":
-      return "Back";
-    case "ArrowRight":
-    case "KeyD":
-      return "Right";
-    case "Space":
-      return "Up";
-    case "ShiftLeft":
-      return "Down";
-    default:
-      return null;
-  }
-}
-
-function keyStateReducer(state: KeyState, { code, type }: KeyStateReducerProps) {
-  switch (type) {
-    case "keydown":
-      return { ...state, [code]: true };
-    case "keyup":
-      return { ...state, [code]: false };
-    case "allKeyUp":
-      return {};
-    default:
-      throw new Error("invalid command!");
-  }
-}
-
-function useKeyMovement() {
-  const [keyState, controlKeyState] = useReducer(keyStateReducer, {});
-  function getKeyState(code: string) {
-    return !!keyState[code];
-  }
-
-  useEffect(() => {
-    function keyDown(e: KeyboardEvent) {
-      const movementKey = mapMovementKey(e.code);
-      if (movementKey === null) return;
-      controlKeyState({ type: "keydown", code: movementKey });
-    }
-    function keyUp(e: KeyboardEvent) {
-      const movementKey = mapMovementKey(e.code);
-      if (movementKey === null) return;
-      controlKeyState({ type: "keyup", code: movementKey });
-    }
-    function allRelease() {
-      controlKeyState({ type: "allKeyUp", code: "" });
-    }
-
-    document.addEventListener("keydown", keyDown);
-    document.addEventListener("keyup", keyUp);
-    window.addEventListener("blur", allRelease);
-
-    return () => {
-      document.removeEventListener("keydown", keyDown);
-      document.removeEventListener("keyup", keyUp);
-      window.removeEventListener("blur", allRelease);
-    };
-  }, []);
-
-  return getKeyState;
 }
 
 function getCameraXZAxis(camera: Camera) {
@@ -101,7 +22,6 @@ function getCameraXZAxis(camera: Camera) {
 function MovementController({ camera, speed = 1 }: MovementControllerProps) {
   const isPressed = useKeyMovement();
   const { camera: defaultCamera } = useThree();
-
   const targetCamera = camera || defaultCamera;
 
   function runMovement(delta: number) {

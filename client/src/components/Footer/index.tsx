@@ -5,14 +5,16 @@ import ScreenShotIcon from "../../assets/images/viewfinder.png";
 import PlayIcon from "../../assets/images/play.png";
 import PauseIcon from "../../assets/images/pause.png";
 import galleryStore from "../../store/gallery.store";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAudio from "../../hooks/useAudio";
 import audioStore from "../../store/audio.store";
 
 export default function Footer() {
   const { theme } = galleryStore();
+  const audioRef = useRef<HTMLAudioElement>(null);
   const { isPlaying, setIsPlaying, volume, setVolume } = audioStore();
-  useAudio();
+  const [autoplay, setAutoplay] = useState(false);
+  useAudio(audioRef);
 
   useEffect(() => {
     console.log({ theme, isPlaying });
@@ -20,12 +22,18 @@ export default function Footer() {
 
   useEffect(() => {
     function onFkeyDown(e: KeyboardEvent) {
-      if (e.code !== "KeyF") return;
+      if (!autoplay) {
+        setIsPlaying(true);
+        setAutoplay(true);
+      }
+      if (e.code !== "KeyF") {
+        return;
+      }
       onFullScreen();
     }
     document.addEventListener("keydown", onFkeyDown);
     return () => document.removeEventListener("keydown", onFkeyDown);
-  }, []);
+  }, [autoplay]);
 
   function onFullScreen() {
     if (!document.fullscreenElement) {
@@ -37,13 +45,20 @@ export default function Footer() {
 
   return (
     <div className="footer">
+      <audio ref={audioRef} />
       <span className="footer-text">© Monument Gallery</span>
       <a href="https://github.com/boostcampwm-2022/Web10-MonumentGallery" target="_blank" rel="noreferrer">
         <button className="footer-element">
           <img height={24} src={GithubMark} />
         </button>
       </a>
-      <button className="footer-element" onClick={() => setIsPlaying(!isPlaying)}>
+      <button
+        className="footer-element"
+        onClick={(e) => {
+          setIsPlaying(!isPlaying);
+          e.currentTarget.blur();
+        }}
+      >
         {isPlaying ? <img height={24} src={PauseIcon} /> : <img height={24} src={PlayIcon} />}
       </button>
       <input

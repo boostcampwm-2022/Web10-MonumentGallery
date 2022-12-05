@@ -1,16 +1,29 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import audioStore from "../store/audio.store";
 
-export default function useAudio() {
+export default function useAudio(audioRef: React.RefObject<HTMLAudioElement>) {
   const { sourceUrl, isPlaying, volume } = audioStore();
-  const audio = useMemo(() => new Audio(sourceUrl), [sourceUrl]);
 
   useEffect(() => {
+    console.log("play effect");
+    if (!audioRef.current) return;
     if (isPlaying) {
-      audio.play();
-      audio.volume = volume / 500;
+      audioRef.current.play();
       return;
     }
-    audio.pause();
-  }, [isPlaying, volume]);
+    audioRef.current.pause();
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+    audioRef.current.volume = volume / 500;
+  }, [volume]);
+
+  useLayoutEffect(() => {
+    if (!audioRef.current) return;
+    if (sourceUrl === audioRef.current.src) return;
+    audioRef.current.remove();
+    audioRef.current.src = sourceUrl;
+    if (isPlaying) audioRef.current.play();
+  }, [sourceUrl]);
 }

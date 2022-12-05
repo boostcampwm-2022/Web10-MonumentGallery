@@ -1,19 +1,28 @@
 import create from "zustand";
+import { THEME } from "../@types/gallery";
+
+const AudioTrackUrl = {
+  DREAM: "https://kr.object.ncloudstorage.com/monument-gallery/audio/dream.mp3",
+  SPRING: "https://kr.object.ncloudstorage.com/monument-gallery/audio/spring.wav",
+  SUMMER: "https://kr.object.ncloudstorage.com/monument-gallery/audio/summer.wav",
+  AUTUMN: "https://kr.object.ncloudstorage.com/monument-gallery/audio/autumn.wav",
+  WINTER: "https://kr.object.ncloudstorage.com/monument-gallery/audio/winter.wav",
+};
 
 interface AudioStore {
   sourceUrl: string;
   isPlaying: boolean;
   volume: number;
-  setSourceUrl: (sourceUrl: string) => void;
+  setSourceUrl: (theme: THEME) => void;
   setIsPlaying: (isPlaying: boolean) => void;
   setVolume: (volume: number) => void;
 }
 
 const audioStore = create<AudioStore>((set) => ({
-  sourceUrl: "https://kr.object.ncloudstorage.com/monument-gallery/Vlad%20Gluschenko%20-%20Meaning.wav",
+  sourceUrl: AudioTrackUrl.DREAM,
   isPlaying: false,
   volume: 50,
-  setSourceUrl: (sourceUrl) => set({ sourceUrl }),
+  setSourceUrl: (theme) => set({ sourceUrl: AudioTrackUrl[theme] }),
   setIsPlaying: (isPlaying) => set({ isPlaying }),
   setVolume: (volume) => set({ volume }),
 }));

@@ -19,6 +19,7 @@ import galleryStore from "../../store/gallery.store";
 import axios from "axios";
 import { IHistory } from "../../@types/gallery";
 import URLCopy from "../../utils/URLCopy";
+import Footer from "../../components/Footer";
 
 export default function DomElements({
   setRequestUrl,
@@ -45,6 +46,7 @@ export default function DomElements({
           </Header>
           <SyncButton />
           <ShareButton show={showShareModal} setShow={setShowShareModal} />
+          <Footer />
         </FloatLayout>
         <FullScreenModal css={{ width: "400px", height: "230px" }} show={showShareModal} setShow={setShowShareModal}>
           <ShareModal onShareButtonClick={() => setShowShareModal(false)} />

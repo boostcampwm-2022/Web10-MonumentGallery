@@ -16,6 +16,7 @@ import galleryStore from "../store/gallery.store";
 import "./style.scss";
 import { THEME } from "../@types/gallery";
 import URLCreator from "../utils/URLCreator";
+import Footer from "../components/Footer";
 
 interface IPostGalleryResponse {
   page: string;
@@ -60,6 +61,7 @@ export default function CreatePage() {
         <button className="upload-btn" type="button" onClick={showModal}>
           Upload
         </button>
+        <Footer />
       </FloatLayout>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%", minHeight: "480px" }} setShow={setShow}>
         <SpaceCreater

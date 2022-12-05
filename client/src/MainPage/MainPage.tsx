@@ -12,6 +12,7 @@ import userStore from "../store/user.store";
 
 import FloatLayout from "../layouts/FloatLayout";
 import "./style.scss";
+import Footer from "../components/Footer";
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
@@ -44,6 +45,7 @@ export default function MainPage() {
               Upload
             </button>
           )}
+          <Footer />
         </FloatLayout>
       </Suspense>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>

@@ -10,7 +10,7 @@ interface FullScreenModalProps {
 
 export default function FullScreenModal({ children, show, setShow, css }: FullScreenModalProps) {
   return (
-    <div hidden={!show}>
+    <div className={`fullscreen-modal-wrapper${show ? "" : " hidden"}`}>
       <div
         className="dimmed"
         onClick={(e) => {

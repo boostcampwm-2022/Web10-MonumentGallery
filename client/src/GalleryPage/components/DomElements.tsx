@@ -1,23 +1,24 @@
-import React, { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Header from "../../components/Header";
-import { Toast } from "../../components/Toast/Toast";
+
+import ShareWrapper from "./ShareWrapper";
+
 import FloatLayout from "../../layouts/FloatLayout";
-import SyncButton from "./SyncButton";
-import lockStore from "../../store/lock.store";
-import HistoryIcon from "../../assets/images/hamburger.svg";
-import SharedIcon from "../../assets/images/shared.svg";
-import ProtectedIcon from "../../assets/images/protected.svg";
-import ThemeSeletor from "../../components/ThemeSelector";
 import UserInfo from "../../components/Header/UserInfo";
-import FullScreenModal from "../../components/modal/FullScreenModal";
-import toastStore from "../../store/toast.store";
-import TOAST from "../../components/Toast/ToastList";
-import userStore from "../../store/user.store";
-import galleryStore from "../../store/gallery.store";
-import axios from "axios";
-import { IHistory } from "../../@types/gallery";
-import URLCopy from "../../utils/URLCopy";
+import ThemeSeletor from "../../components/ThemeSelector";
 import Footer from "../../components/Footer";
+import { Toast } from "../../components/Toast/Toast";
+
+import lockStore from "../../store/lock.store";
+
+import HistoryIcon from "../../assets/images/hamburger.svg";
+
+// history side bar
+import axios from "axios";
+import FullScreenModal from "../../components/modal/FullScreenModal";
+import galleryStore from "../../store/gallery.store";
+
+import { IHistory } from "../../@types/gallery";
 
 export default function DomElements({
   setRequestUrl,
@@ -25,7 +26,6 @@ export default function DomElements({
   setRequestUrl: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { locked } = lockStore();
-  const [showShareModal, setShowShareModal] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
 
   return (
@@ -39,108 +39,13 @@ export default function DomElements({
               <img width={24} src={HistoryIcon} onClick={() => setShowSidebar(!showSidebar)} />
             </button>
           </Header>
-          <SyncButton />
-          <ShareButton show={showShareModal} setShow={setShowShareModal} />
+          <ShareWrapper />
           <Footer />
         </FloatLayout>
-        <FullScreenModal css={{ width: "400px", height: "230px" }} show={showShareModal} setShow={setShowShareModal}>
-          <ShareModal onShareButtonClick={() => setShowShareModal(false)} />
-        </FullScreenModal>
         <HistorySidebar show={showSidebar} setShow={setShowSidebar} setRequestUrl={setRequestUrl} />
       </div>
       <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
     </>
-  );
-}
-
-function ShareModal({ onShareButtonClick }: { onShareButtonClick: () => void }) {
-  const isShared = userStore((store) => store.isShared);
-  const setShared = userStore((store) => store.setShared);
-  const addToast = toastStore((store) => store.addToast);
-
-  return (
-    <div className="modal share-modal">
-      <span>{isShared ? "공유를 중단하시겠습니까?" : "공유를 시작하시겠습니까?"}</span>
-      <div className="button__container">
-        <button
-          onClick={() => {
-            const toastMsg = isShared ? "공유를 중단합니다." : "공유를 시작합니다.";
-            axios
-              .post("/api/user/share", { isShared: !isShared })
-              .then(() => {
-                addToast(TOAST.INFO(toastMsg));
-                setShared(!isShared);
-                if (isShared) {
-                  onShareButtonClick();
-                }
-              })
-              .catch(() => {
-                const toastErrMsg = "에러가 발생했습니다.";
-                addToast(TOAST.ERROR(toastErrMsg));
-              });
-          }}
-        >
-          {isShared ? "공유 중단" : "공유 시작"}
-        </button>
-        {isShared && (
-          <button
-            onClick={async () => {
-              const result = await URLCopy();
-              if (result) {
-                const toastMsg = "이 공간의 링크가 클립보드에 복사되었습니다.";
-                addToast(TOAST.INFO(toastMsg));
-              } else {
-                const toastErrMsg = "에러가 발생했습니다.";
-                addToast(TOAST.ERROR(toastErrMsg));
-              }
-              onShareButtonClick();
-            }}
-          >
-            링크 복사하기
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ShareButton({ show, setShow }: { show: boolean; setShow: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const data = galleryStore((gallery) => gallery.data);
-  const galleryUserId = galleryStore((gallery) => gallery.userId);
-  const isLoggedIn = userStore((user) => user.isLoggedIn);
-  const isShared = userStore((user) => user.isShared);
-  const id = userStore((user) => user.user?.id);
-
-  const [hover, setHover] = useState(false);
-
-  function onClick() {
-    setShow(!show);
-  }
-
-  if (!isLoggedIn || id !== galleryUserId) return null;
-
-  return (
-    <div className="share">
-      <div className="share-hover" hidden={!hover}>
-        {isShared ? "전체에게 공개됨" : "전체에게 비공개됨"}
-      </div>
-      <button
-        className="share-button"
-        onClick={onClick}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-      >
-        {isShared ? <img src={SharedIcon} /> : <img src={ProtectedIcon} />}
-      </button>
-      {isShared && (
-        <>
-          <span data-views={data.views} className="share-span">
-            조회:
-          </span>
-          <span className="share-span share-view-count">{data.views}</span>
-        </>
-      )}
-    </div>
   );
 }
 

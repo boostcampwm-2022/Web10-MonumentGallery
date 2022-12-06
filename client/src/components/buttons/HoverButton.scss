@@ -16,10 +16,12 @@
     height: 30px;
   }
   .hover-caption {
-    visibility: hidden;
-    color: #ffffff;
     position: absolute;
+    visibility: hidden;
     bottom: 65px;
+    width: max-content;
+    max-width: 150%;
+    color: #ffffff;
   }
   &:hover .hover-caption {
     visibility: visible;

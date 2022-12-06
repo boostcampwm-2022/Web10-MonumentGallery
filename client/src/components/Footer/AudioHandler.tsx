@@ -12,7 +12,7 @@ export default function AudioHandler() {
   useAudio(audioRef);
 
   useEffect(() => {
-    function onAutoplayInteraction(e: KeyboardEvent) {
+    function onAutoplayInteraction() {
       if (!autoplay) {
         setIsPlaying(true);
         setAutoplay(true);

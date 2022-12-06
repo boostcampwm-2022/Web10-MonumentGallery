@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import ShareWrapper from "./ShareWrapper";
 import HistorySidebar from "./HistorySidebar";
-
+import CrossPointer from "./CrossPointer";
 import Header from "../../components/Header";
 import UserInfo from "../../components/Header/UserInfo";
 import ThemeSeletor from "../../components/ThemeSelector";
@@ -11,7 +11,6 @@ import { Toast } from "../../components/Toast/Toast";
 import FloatLayout from "../../layouts/FloatLayout";
 
 import lockStore from "../../store/lock.store";
-
 import HistoryIcon from "../../assets/images/hamburger.svg";
 
 export default function DomElements({
@@ -38,6 +37,7 @@ export default function DomElements({
         </FloatLayout>
         <HistorySidebar show={showSidebar} setShow={setShowSidebar} setRequestUrl={setRequestUrl} />
       </div>
+      <CrossPointer />
       <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
     </>
   );

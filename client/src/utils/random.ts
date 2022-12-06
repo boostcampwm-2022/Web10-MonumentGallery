@@ -1,7 +1,7 @@
 import { COLORS } from "../@types/colors";
 import POSITION from "./randomPosition.json";
 
-const position = POSITION.position as [number, number][];
+type POSITION = keyof typeof POSITION;
 
 function generateRandomPick<Item>(array: Item[], count = 1): Item[] {
   const picked: Item[] = [];
@@ -20,6 +20,6 @@ export function generateRandomPastelColors(count = 1) {
   return generateRandomPick<keyof typeof COLORS>(colors as (keyof typeof COLORS)[], count);
 }
 
-export function generateRandomPosition(count = 1) {
-  return generateRandomPick<[number, number]>(position, count);
+export function generateRandomPosition(val: POSITION, count = 1) {
+  return generateRandomPick<[number, number]>(POSITION[val] as [number, number][], count);
 }

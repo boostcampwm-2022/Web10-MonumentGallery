@@ -1,7 +1,6 @@
 import "./style.scss";
 import { Suspense, useState } from "react";
 
-import Loading from "./Loading";
 import MainCanvas from "./MainCanvas";
 import CreateModal from "./components/CreateModal";
 import CanvasLoading from "../components/CanvasLoading";
@@ -37,15 +36,13 @@ export default function MainPage() {
           <MainCanvas />
         </Suspense>
       </div>
-      <Suspense fallback={<Loading />}>
-        <FloatLayout>
-          <Header>
-            <UserInfo />
-          </Header>
-          <CreateMonumentButton showModal={showModal} />
-          <Footer />
-        </FloatLayout>
-      </Suspense>
+      <FloatLayout>
+        <Header>
+          <UserInfo />
+        </Header>
+        <CreateMonumentButton showModal={showModal} />
+        {/* <Footer /> */}
+      </FloatLayout>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
         <CreateModal />
       </FullScreenModal>

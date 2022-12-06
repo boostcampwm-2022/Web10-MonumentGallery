@@ -1,5 +1,5 @@
 export function decodeBase64TOJSON(base64URL) {
-  if (!base64URL) return {};
+  if (!base64URL) return null;
   return JSON.parse(Buffer.from(makeBase64URLToBase64(base64URL), "base64").toString("utf8") ?? "{}");
 }
 

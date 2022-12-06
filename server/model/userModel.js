@@ -69,9 +69,9 @@ export async function updateShareStateByUserID(userID, isShared, session) {
 export async function findLastGalleryIDByUserID(userID) {
   const history = await findHistoryByUserID(userID);
   const [result] = [...history].reduce(
-    ([rescentID, rescentDate], [galleryID, date]) => {
-      if (rescentDate < date) return [galleryID, date];
-      return [rescentID, rescentDate];
+    ([recentID, recentDate], [galleryID, date]) => {
+      if (recentDate < date) return [galleryID, date];
+      return [recentID, recentDate];
     },
     [null, 0],
   );
@@ -83,7 +83,13 @@ export async function findAllUserNotShared(page, limit) {
   const yesterday = Date.now() - 1000 * 60 * 60 * 24;
   const users = await User.find({ isShared: false, lastShareModified: { $lte: yesterday } });
 }
-
+export async function findAllUserShared(limit) {
+  return await User.find({
+    isShared: true,
+  })
+    .sort({ lastModified: 1 })
+    .limit(limit);
+}
 export async function findAllUserRandom(randIdx, lastModified = 0, limit) {
   return await User.find({
     randIdx,

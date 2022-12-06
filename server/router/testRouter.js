@@ -8,7 +8,7 @@ import Gallery from "../schema/gallerySchema.js";
 import User from "../schema/userSchema.js";
 import { getImagePixelsFromPages } from "../service/imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "../service/sseService.js";
-import { deleteUserHistory, saveGallery, searchGalleryRandom } from "../service/galleryService.js";
+import { deleteUserHistory, saveGallery, searchGalleryAll } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
 import userDummyData from "../model/userDummyData.js";
 import galleryDummyData from "../model/galleryDummyData.js";
@@ -42,7 +42,7 @@ router.get(
   "/getDataIdx",
   asyncHandler(async (req, res) => {
     const cookieState = req.cookies.searchState ? decodeBase64(makeBase64URLToBase64(req.cookies.searchState)) : null;
-    const { searchState, gallerys } = await searchGalleryRandom(JSON.parse(cookieState ?? "{}"));
+    const { searchState, gallerys } = await searchGalleryAll(JSON.parse(cookieState ?? "{}"));
     console.log(gallerys);
     res.cookie("searchState", makeBase64ToBase64URL(makeJsonToBase64(searchState)));
     res.send("good");

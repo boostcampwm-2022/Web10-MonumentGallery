@@ -14,6 +14,7 @@ import {
   updateShareStateByUserID,
   deleteUserHistoryByID,
   findAllUserRandom,
+  findAllUserShared,
 } from "../model/userModel.js";
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
@@ -204,37 +205,92 @@ function getRandomDate() {
   return getRandomInt(0, Date.now());
 }
 function checkValidIndex(searchState, idx) {
-  if (!(idx in searchState)) return false;
-  const { start, last, curved } = searchState[idx];
-  return start <= last && curved;
+  if (!(idx in searchState)) return true;
+  return searchState[idx].valid;
 }
 function getRandomIndex(searchState) {
   let res = getRandomInt(0, 5);
   const start = res;
-  if (checkValidIndex(searchState, res)) res = (res + 1) % 5;
+  if (!checkValidIndex(searchState, res)) res = (res + 1) % 5;
 
-  while (checkValidIndex(searchState, res) && start !== res) {
+  while (!checkValidIndex(searchState, res) && start !== res) {
     res = (res + 1) % 5;
   }
-  if (checkValidIndex(searchState, res) && start === res) console.log("오링"); //데이터 다 씀!
+  if (!checkValidIndex(searchState, res) && start === res) {
+    console.log("오링", res); //데이터 다 씀!
+    return -1;
+  }
   return res;
 }
-export async function searchGalleryRandom(searchState) {
-  // console.log(searchState);
-  const nowIdx = getRandomIndex(searchState);
+export async function searchGalleryAll(requestSearchState) {
+  if (!requestSearchState) requestSearchState = initSearchState();
+  const nowIdx = getRandomIndex(requestSearchState);
+  if (nowIdx === -1) return { searchState: requestSearchState, gallerys: [] };
   // console.log(nowIdx);
+  // let searchState = requestSearchState;
+  // let gallerys = [];
+  // let searchCnt = 0;
 
+  // while (gallerys.length < 15 && searchCnt++ < 10 && nowIdx !== -1) {
+  //   const searchData = await searchGalleryRandom(searchState, nowIdx);
+  //   searchState = searchData.searchState;
+  //   gallerys = [...gallerys, ...searchData.gallerys];
+  //   nowIdx = getRandomIndex(requestSearchState);
+  // }
+  const { searchState, gallerys } = await searchGalleryRandom(requestSearchState, nowIdx);
+
+  // console.log(gallerys);
+  if (gallerys.length === 0) {
+    const recentGallerys = await searchGalleryRecent(15);
+    if (recentGallerys.length < 15) {
+      Object.keys(searchState).forEach((key) => (searchState[key].valid = false));
+    }
+    return { searchState, gallerys: recentGallerys };
+  }
+  return { searchState, gallerys };
+}
+
+function initSearchState() {
   const randomDate = getRandomDate();
-  if (!(nowIdx in searchState)) searchState[nowIdx] = { start: randomDate, last: randomDate, curved: false };
+  const randIdxs = [0, 1, 2, 3, 4];
+  return randIdxs.reduce((acc, cur) => {
+    acc[cur] = { start: randomDate, last: randomDate, curved: false, valid: true };
+    return acc;
+  }, {});
+}
 
+async function searchGalleryRecent(limit) {
+  const recentUsers = await findAllUserShared(15);
+  return await Promise.all(
+    recentUsers.map(async (user) => {
+      const [lastGalleryID] = [...user.history].reduce(
+        ([recentID, recentDate], [galleryID, date]) => {
+          if (recentDate < date) return [galleryID, date];
+          return [recentID, recentDate];
+        },
+        [null, 0],
+      );
+      //map에 null들어가면 어케 되려나
+      const gallery = await findGalleryByID(lastGalleryID);
+
+      return {
+        userName: user.userName,
+        keywords: gallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),
+        galleryURL: `/gallery/${user.userID}/${lastGalleryID}`,
+      };
+    }),
+  );
+}
+
+async function searchGalleryRandom(searchState, nowIdx) {
   const users = await findAllUserRandom(nowIdx, searchState[nowIdx].last, 15);
-  // console.log(users);
+  console.log(users);
   const gallerys = await Promise.all(
     users.map(async (user) => {
       const [lastGalleryID] = [...user.history].reduce(
-        ([rescentID, rescentDate], [galleryID, date]) => {
-          if (rescentDate < date) return [galleryID, date];
-          return [rescentID, rescentDate];
+        ([recentID, recentDate], [galleryID, date]) => {
+          if (recentDate < date) return [galleryID, date];
+          return [recentID, recentDate];
         },
         [null, 0],
       );
@@ -250,13 +306,21 @@ export async function searchGalleryRandom(searchState) {
   );
 
   if (users.length > 0) searchState[nowIdx].last = Date.parse(users.at(-1).lastModified);
-  if (users.length < 15) {
+
+  const { start, last, curved } = searchState[nowIdx];
+
+  if (users.length < 15 && !curved) {
+    //끝 도달
+    console.log("curved", nowIdx);
     searchState[nowIdx].curved = true;
     searchState[nowIdx].last = 0;
+  } else if (curved && (users.length < 15 || last >= start)) {
+    //전체 데이터 크기가 작은 경우 or 한바퀴 돈 경우
+    searchState[nowIdx].valid = false;
+    // console.log(searchState);
   }
-  // console.log(searchState, "\n");
+  // console.log(searchState);
   return { searchState, gallerys };
 }
-
 //search
 //{'0' : {start: Date, last : Date(가장 마지막으로 불러온 것), curved: 끝도달 여부}}

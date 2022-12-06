@@ -6,7 +6,7 @@ import {
   createGalleryFromNotion,
   loadUserHistory,
   updateShareState,
-  searchGalleryRandom,
+  searchGalleryAll,
 } from "../service/galleryService.js";
 import { asyncHandler } from "../utils/utils.js";
 import { endConnectionSSE } from "../service/sseService.js";
@@ -18,7 +18,7 @@ router.get(
   "/gallery/all",
   asyncHandler(async (req, res) => {
     const cookieState = decodeBase64TOJSON(req.cookies.searchState);
-    const { searchState, gallerys } = await searchGalleryRandom(cookieState);
+    const { searchState, gallerys } = await searchGalleryAll(cookieState);
 
     res.cookie("searchState", encodeBase64FromJSON(searchState));
     res.status(200).json(gallerys);

@@ -83,7 +83,13 @@ export async function findAllUserNotShared(page, limit) {
   const yesterday = Date.now() - 1000 * 60 * 60 * 24;
   const users = await User.find({ isShared: false, lastShareModified: { $lte: yesterday } });
 }
-
+export async function findAllUserShared(limit) {
+  return await User.find({
+    isShared: true,
+  })
+    .sort({ lastModified: 1 })
+    .limit(limit);
+}
 export async function findAllUserRandom(randIdx, lastModified = 0, limit) {
   return await User.find({
     randIdx,

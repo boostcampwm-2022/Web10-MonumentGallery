@@ -30,7 +30,7 @@ export function Monument({ data, position }: MonumentProps) {
       </Text>
       <Monolith rotation={[0, Math.PI / 4, 0]} />
       {titles.map((title, i) => (
-        <Delayed key={title + i} waitBeforeShow={i * 300 + 100}>
+        <Delayed key={title + i} waitBeforeShow={i * 100 + 100}>
           <TextRing text={title} position={[0, 1 + i, 0]} scale={[0.7 - 0.1 * i, 0.7 - 0.1 * i, 0.7 - 0.1 * i]} />
         </Delayed>
       ))}
@@ -51,7 +51,7 @@ export function Monuments({
   return (
     <>
       {positions.map(([positionX, positionZ], i) => (
-        <Delayed key={JSON.stringify([positionX, 0, positionZ])} waitBeforeShow={i * 300 + 100}>
+        <Delayed key={JSON.stringify([positionX, 0, positionZ])} waitBeforeShow={i * 100 + 100}>
           <Monument position={[gridPosition[0] + positionX, 0, gridPosition[1] + positionZ]} data={data[i]} />
         </Delayed>
       ))}

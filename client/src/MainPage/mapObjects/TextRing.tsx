@@ -1,6 +1,6 @@
 import { Cylinder } from "@react-three/drei";
-import { useFrame, Vector2, Vector3 } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useFrame, Vector3 } from "@react-three/fiber";
+import { useMemo, useRef, Suspense } from "react";
 import * as THREE from "three";
 
 function genarateTextCanvas(text: string) {
@@ -43,22 +43,24 @@ export default function TextRing({ text, position, scale }: TextRingProps) {
   const cylArgs = [3, 3, 3, 64, 1, true];
   return (
     <group position={position} rotation-y={Math.PI / 4} scale={scale}>
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
-      <Cylinder args={cylArgs}>
-        <meshStandardMaterial transparent attach="material" side={THREE.FrontSide}>
-          <canvasTexture
-            attach="map"
-            repeat={new THREE.Vector2(4, 1)}
-            image={canvas}
-            premultiplyAlpha
-            ref={texture}
-            wrapS={THREE.RepeatWrapping}
-            wrapT={THREE.RepeatWrapping}
-            onUpdate={(s) => (s.needsUpdate = true)}
-          />
-        </meshStandardMaterial>
-      </Cylinder>
+      <Suspense fallback={null}>
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+        {/* @ts-ignore */}
+        <Cylinder args={cylArgs}>
+          <meshStandardMaterial transparent attach="material" side={THREE.FrontSide}>
+            <canvasTexture
+              attach="map"
+              repeat={new THREE.Vector2(4, 1)}
+              image={canvas}
+              premultiplyAlpha
+              ref={texture}
+              wrapS={THREE.RepeatWrapping}
+              wrapT={THREE.RepeatWrapping}
+              onUpdate={(s) => (s.needsUpdate = true)}
+            />
+          </meshStandardMaterial>
+        </Cylinder>
+      </Suspense>
     </group>
   );
 }

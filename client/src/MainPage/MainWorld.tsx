@@ -3,7 +3,6 @@ import Light from "../GalleryPage/mapObjects/Light";
 
 import Player from "./mapObjects/Player";
 import Plane from "./mapObjects/Plane";
-import Monument from "./mapObjects/Monument";
 import { Monuments } from "./mapObjects/Monument";
 import MapDataFetcher from "./components/MapDataFetcher";
 

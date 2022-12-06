@@ -23,8 +23,8 @@ export default function MainCanvas() {
     >
       <color attach="background" args={[backgroundColor]} />
       <MainWorld />
-      {/* <axesHelper />
-      <gridHelper args={[100, 100, 0]} /> */}
+      <axesHelper />
+      <gridHelper args={[10000, 200]} position={[25, 0, 25]} />
       <Stats />
       <ScreenshotCapturer />
     </Canvas>

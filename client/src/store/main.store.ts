@@ -13,12 +13,7 @@ interface MainStore {
 }
 
 const mainStore = create<MainStore>((set) => ({
-  grid: {
-    "[-1,-1]": {
-      data: [],
-      positions: [],
-    },
-  },
+  grid: {},
   getData: (positionKey) => mainSelector(positionKey).data,
   setGrid: (data, positionKey, positions) =>
     set((state) => {

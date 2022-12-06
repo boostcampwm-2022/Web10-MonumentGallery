@@ -18,7 +18,7 @@ export default function MainWorld() {
 
   useEffect(() => {
     function wheelHandler(e: WheelEvent) {
-      if (cameraScale < 3 && e.deltaY > 0) {
+      if (cameraScale < 1.5 && e.deltaY > 0) {
         setCameraScale((prev) => prev + e.deltaY / 1000);
       }
       if (cameraScale > 0.2 && e.deltaY < 0) {

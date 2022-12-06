@@ -48,8 +48,8 @@ function Player() {
   const rigidRef = useRef<RigidBodyApi>(null);
   // const speed = 10
 
-  // 개발용으로 속도 2배 늘려둠
-  const speed = 20;
+  // 개발용으로 속도 4배 늘려둠
+  const speed = 40;
 
   useEffect(() => {
     if (!ghostRef.current) return;

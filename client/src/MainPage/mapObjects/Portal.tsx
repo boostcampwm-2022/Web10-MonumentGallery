@@ -28,9 +28,10 @@ type GLTFResult = GLTF & {
 interface PortalProps {
   link: string;
   position: Vector3;
+  setTextRingVisible: (visible: boolean) => void;
 }
 
-export function Portal({ link, position }: PortalProps) {
+export function Portal({ link, position, setTextRingVisible }: PortalProps) {
   const { nodes, materials } = useGLTF(PortalGlb) as unknown as GLTFResult;
   const [collision, setCollision] = useState(false);
   const { spring } = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
@@ -53,9 +54,11 @@ export function Portal({ link, position }: PortalProps) {
       colliders={false}
       onCollisionEnter={() => {
         setCollision(true);
+        setTextRingVisible(true);
       }}
       onCollisionExit={() => {
         setCollision(false);
+        setTextRingVisible(false);
       }}
     >
       <animated.mesh scale={animatedScale}>

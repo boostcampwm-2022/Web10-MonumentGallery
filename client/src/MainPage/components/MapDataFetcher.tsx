@@ -16,6 +16,23 @@ export default function MapDataFetcher() {
     return JSON.stringify([Math.floor((position[0] - 25) / 50), Math.floor((position[1] - 25) / 50)]);
   }
 
+  function getNearByPositionKeys() {
+    const position = JSON.parse(positionKey);
+    const [x, z] = position;
+    const nearByPositions = [
+      [x, z],
+      [x - 1, z - 1],
+      [x - 1, z + 1],
+      [x + 1, z + 1],
+      [x + 1, z - 1],
+      [x - 1, z],
+      [x + 1, z],
+      [x, z - 1],
+      [x, z + 1],
+    ];
+    return nearByPositions.map((position) => JSON.stringify(position));
+  }
+
   useFrame(({ clock }) => {
     const timer = clock.getElapsedTime();
     if (Math.floor(timer * 1000) % 10 === 0) {
@@ -33,18 +50,21 @@ export default function MapDataFetcher() {
 
   useEffect(() => {
     if (positionKey === "[-1,-1]") {
-      if (grid[positionKey].data.length !== 0) return;
+      if (grid[positionKey]) return;
       setGrid(data, positionKey, generateRandomPosition("monument", data.length));
     }
   }, [data]);
 
   return (
     <>
-      <Monuments
-        data={grid[positionKey].data}
-        gridPosition={JSON.parse(positionKey).map((e: number) => Math.floor((e + 1) * 50))}
-        positions={grid[positionKey].positions}
-      />
+      {getNearByPositionKeys().map((pkey) => (
+        <Monuments
+          key={pkey}
+          data={grid[pkey]?.data}
+          gridPosition={JSON.parse(pkey).map((e: number) => Math.floor((e + 1) * 50))}
+          positions={grid[pkey]?.positions}
+        />
+      ))}
     </>
   );
 }

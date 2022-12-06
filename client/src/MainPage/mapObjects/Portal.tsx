@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Box, Text, useGLTF } from "@react-three/drei";
+import { Text, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import PortalGlb from "../../assets/models/portal.glb?url";
 import { Vector3 } from "@react-three/fiber";
@@ -68,21 +68,19 @@ export function Portal({ link, position }: PortalProps) {
           </group>
         </group>
       </animated.mesh>
-      <Box args={[3, 3, 3]} />
       <CuboidCollider args={[1, 1, 1]} />
-      {collision && (
-        <Text
-          font={MapoFlowerIsland}
-          color="black"
-          position={[2, 0, 2]}
-          fontSize={0.5}
-          anchorX="center"
-          anchorY="middle"
-          rotation={[-Math.PI / 2, Math.PI / 4, 0, "YXZ"]}
-        >
-          Space를 눌러 입장하세요
-        </Text>
-      )}
+
+      <Text
+        font={MapoFlowerIsland}
+        color="black"
+        position={[2, 0, 2]}
+        fontSize={0.5}
+        anchorX="center"
+        anchorY="middle"
+        rotation={[-Math.PI / 2, Math.PI / 4, 0, "YXZ"]}
+      >
+        Space를 눌러 입장하세요
+      </Text>
     </RigidBody>
   );
 }

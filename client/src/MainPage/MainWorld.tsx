@@ -5,6 +5,7 @@ import Player from "./mapObjects/Player";
 import Plane from "./mapObjects/Plane";
 import { Monuments } from "./mapObjects/Monument";
 import MapDataFetcher from "./components/MapDataFetcher";
+import { Suspense } from "react";
 
 const MockMonumentData = {
   userName: "고세연",
@@ -15,7 +16,9 @@ const MockMonumentData = {
 export default function MainWorld() {
   return (
     <>
-      <MapDataFetcher />
+      <Suspense fallback={null}>
+        <MapDataFetcher />
+      </Suspense>
       <Physics gravity={[0, 0, 0]}>
         <Light />
         <Player />

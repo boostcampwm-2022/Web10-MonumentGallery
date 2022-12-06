@@ -51,10 +51,6 @@ export function Monument({ data, position }: MonumentProps) {
 export function Monuments() {
   const positions = useMemo(() => generateRandomPosition("monument", 15), []);
 
-  useEffect(() => {
-    axios.get("/api/gallery/all").then((res) => console.log(res.data));
-  }, []);
-
   return (
     <>
       {positions.map(([positionX, positionZ]) => (

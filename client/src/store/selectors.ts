@@ -16,8 +16,8 @@ export const gallerySelector = (url?: string) =>
     get: () => axios({ method: "get", url }),
   });
 
-export const mainSelector = (position?: string) =>
+export const mainSelector = (positionKey?: string) =>
   select<AxiosResponse<IMainDataResponse>>({
-    key: `main selector ${position}`,
+    key: `main selector ${positionKey}`,
     get: () => axios({ method: "get", url: "/api/gallery/all" }),
   });

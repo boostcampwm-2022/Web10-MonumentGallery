@@ -3,6 +3,8 @@ import Monolith from "./Monolith";
 import TextRing from "./TextRing";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 import { Portal } from "./Portal";
+import { useMemo } from "react";
+import { Euler } from "@react-three/fiber";
 
 interface MonumentData {
   userName: string;
@@ -15,9 +17,10 @@ interface MonumentProps {
 
 export default function Monument({ data }: MonumentProps) {
   const { userName, titles, galleryURL } = data;
+  const rotation = useMemo<Euler>(() => [0, -Math.PI / 2 + Math.random() * (Math.PI / 2), 0], []);
 
   return (
-    <>
+    <group rotation={rotation}>
       <Text position={[0, 7, 0]} rotation={[0, Math.PI / 4, 0]} font={MapoFlowerIsland} fontSize={0.5} color="black">
         {userName}
       </Text>
@@ -31,6 +34,6 @@ export default function Monument({ data }: MonumentProps) {
         />
       ))}
       <Portal link={galleryURL} position={[1, 0.2, 1]} />
-    </>
+    </group>
   );
 }

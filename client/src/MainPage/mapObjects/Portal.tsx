@@ -70,17 +70,19 @@ export function Portal({ link, position }: PortalProps) {
       </animated.mesh>
       <CuboidCollider args={[1, 1, 1]} />
 
-      <Text
-        font={MapoFlowerIsland}
-        color="black"
-        position={[2, 0, 2]}
-        fontSize={0.5}
-        anchorX="center"
-        anchorY="middle"
-        rotation={[-Math.PI / 2, Math.PI / 4, 0, "YXZ"]}
-      >
-        Space를 눌러 입장하세요
-      </Text>
+      {collision && (
+        <Text
+          font={MapoFlowerIsland}
+          color="black"
+          position={[2, 0, 2]}
+          fontSize={0.5}
+          anchorX="center"
+          anchorY="middle"
+          rotation={[-Math.PI / 2, Math.PI / 4, 0, "YXZ"]}
+        >
+          Space를 눌러 입장하세요
+        </Text>
+      )}
     </RigidBody>
   );
 }

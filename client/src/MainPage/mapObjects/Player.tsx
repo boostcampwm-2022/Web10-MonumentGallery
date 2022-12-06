@@ -69,8 +69,8 @@ function Player() {
     ghostPosition.addScaledVector(moveDirection, speed * frame);
 
     camera.position.copy(ghostPosition);
-    camera.position.y += 10;
-    camera.position.z += 10;
+    camera.position.y += 20;
+    camera.position.z += 20;
 
     _quaternion.copy(prevRotation).slerp(currentRotation, spring.get());
     ghostRotation.copy(_quaternion);

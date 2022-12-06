@@ -18,7 +18,7 @@ export default function MainWorld() {
 
   useEffect(() => {
     function wheelHandler(e: WheelEvent) {
-      if (cameraScale < 1.6 && e.deltaY > 0) {
+      if (cameraScale < 3 && e.deltaY > 0) {
         setCameraScale((prev) => prev + e.deltaY / 1000);
       }
       if (cameraScale > 0.2 && e.deltaY < 0) {
@@ -35,7 +35,6 @@ export default function MainWorld() {
         <MapDataFetcher />
       </Suspense>
       <Light />
-      <Box position={[-25, 0, 0]} />
       <Player />
       <Plane />
     </Physics>

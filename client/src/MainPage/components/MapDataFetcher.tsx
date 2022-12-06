@@ -39,10 +39,12 @@ export default function MapDataFetcher() {
   }, [data]);
 
   return (
-    <Monuments
-      data={grid[positionKey].data}
-      gridPosition={JSON.parse(positionKey).map((e: number) => Math.floor((e + 1) * 50))}
-      positions={grid[positionKey].positions}
-    />
+    <>
+      <Monuments
+        data={grid[positionKey].data}
+        gridPosition={JSON.parse(positionKey).map((e: number) => Math.floor((e + 1) * 50))}
+        positions={grid[positionKey].positions}
+      />
+    </>
   );
 }

@@ -227,13 +227,13 @@ export async function searchGalleryAll(requestSearchState) {
 
   // console.log(gallerys);
   if (gallerys.length === 0) {
-    const latestUsers = await findAllUserShared(15);
-    const latestGallerys = await Promise.all(
-      latestUsers.map(async (user) => {
+    const recentUsers = await findAllUserShared(15);
+    const recentGallerys = await Promise.all(
+      recentUsers.map(async (user) => {
         const [lastGalleryID] = [...user.history].reduce(
-          ([rescentID, rescentDate], [galleryID, date]) => {
-            if (rescentDate < date) return [galleryID, date];
-            return [rescentID, rescentDate];
+          ([recentID, recentDate], [galleryID, date]) => {
+            if (recentDate < date) return [galleryID, date];
+            return [recentID, recentDate];
           },
           [null, 0],
         );
@@ -248,7 +248,7 @@ export async function searchGalleryAll(requestSearchState) {
       }),
     );
 
-    return { searchState, gallerys: latestGallerys };
+    return { searchState, gallerys: recentGallerys };
   }
   return { searchState, gallerys };
 }
@@ -262,9 +262,9 @@ async function searchGalleryRandom(searchState, nowIdx) {
   const gallerys = await Promise.all(
     users.map(async (user) => {
       const [lastGalleryID] = [...user.history].reduce(
-        ([rescentID, rescentDate], [galleryID, date]) => {
-          if (rescentDate < date) return [galleryID, date];
-          return [rescentID, rescentDate];
+        ([recentID, recentDate], [galleryID, date]) => {
+          if (recentDate < date) return [galleryID, date];
+          return [recentID, recentDate];
         },
         [null, 0],
       );

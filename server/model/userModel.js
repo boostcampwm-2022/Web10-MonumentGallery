@@ -69,9 +69,9 @@ export async function updateShareStateByUserID(userID, isShared, session) {
 export async function findLastGalleryIDByUserID(userID) {
   const history = await findHistoryByUserID(userID);
   const [result] = [...history].reduce(
-    ([rescentID, rescentDate], [galleryID, date]) => {
-      if (rescentDate < date) return [galleryID, date];
-      return [rescentID, rescentDate];
+    ([recentID, recentDate], [galleryID, date]) => {
+      if (recentDate < date) return [galleryID, date];
+      return [recentID, recentDate];
     },
     [null, 0],
   );

@@ -77,7 +77,7 @@ function Player() {
   return (
     <>
       <group ref={ghostRef} position-y={2}>
-        <Ghost />
+        <Ghost scale={[0.6, 0.6, 0.6]} />
       </group>
       <RigidBody
         ref={rigidRef}

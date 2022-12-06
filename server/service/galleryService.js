@@ -243,7 +243,7 @@ export async function searchGalleryRandom(searchState) {
 
       return {
         userName: user.userName,
-        titles: gallery.pages.slice(0, 3).map((page) => page.title),
+        keywords: gallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),
         galleryURL: `/gallery/${user.userID}/${lastGalleryID}`,
       };
     }),

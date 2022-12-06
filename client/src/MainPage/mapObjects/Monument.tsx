@@ -1,13 +1,11 @@
-import { Html, Text } from "@react-three/drei";
+import { Text } from "@react-three/drei";
 import Monolith from "./Monolith";
 import TextRing from "./TextRing";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 import { Portal } from "./Portal";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Euler } from "@react-three/fiber";
-import { generateRandomPosition } from "../../utils/random";
 import { Vector3Arr } from "../../@types/common";
-import axios from "axios";
 import { IMainDataResponse } from "../../@types/main";
 
 interface MonumentData {
@@ -19,12 +17,6 @@ interface MonumentProps {
   data: MonumentData;
   position: Vector3Arr;
 }
-
-const MockMonumentData = {
-  userName: "고세연",
-  titles: ["WebProgramming", "HTML", "CSS"],
-  galleryURL: "https://monumentgallery.ddns.net/gallery/2d3eef7f-c882-4097-ad72-05eed3a0c037/638da02ca04e896209e0e8b2",
-};
 
 export function Monument({ data, position }: MonumentProps) {
   const { userName, titles, galleryURL } = data;

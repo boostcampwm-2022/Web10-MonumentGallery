@@ -45,7 +45,7 @@ export default function ShareModal({ onShareButtonClick }: { onShareButtonClick:
       <span>{isShared ? "공유를 중단하시겠습니까?" : "공유를 시작하시겠습니까?"}</span>
       <div className="button__container">
         <button onClick={requestShare}>{isShared ? "공유 중단" : "공유 시작"}</button>
-        <button className={!isShared ? "hidden" : null} onClick={copyLink}>
+        <button className={!isShared ? "hidden" : undefined} onClick={copyLink}>
           링크 복사하기
         </button>
       </div>

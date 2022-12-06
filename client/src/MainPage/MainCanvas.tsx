@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Box, Stats } from "@react-three/drei";
 
 import MainWorld from "./MainWorld";
+import ScreenshotCapturer from "../components/ScreenshotCapturer";
 
 import themeStore from "../store/theme.store";
 
@@ -24,6 +25,7 @@ export default function MainCanvas() {
       <MainWorld />
       <axesHelper />
       <Stats />
+      <ScreenshotCapturer />
     </Canvas>
   );
 }

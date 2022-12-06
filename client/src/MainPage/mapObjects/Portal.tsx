@@ -52,11 +52,9 @@ export function Portal({ link, position }: PortalProps) {
       position={position}
       colliders={false}
       onCollisionEnter={() => {
-        console.log("enter");
         setCollision(true);
       }}
       onCollisionExit={() => {
-        console.log("exit");
         setCollision(false);
       }}
     >

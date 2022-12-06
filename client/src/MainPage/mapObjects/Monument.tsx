@@ -49,17 +49,22 @@ export function Monument({ data, position }: MonumentProps) {
   );
 }
 
-export function Monuments({ data, position }: { data: IMainDataResponse; position: number[] }) {
-  const positions = useMemo(() => generateRandomPosition("monument", data.length), [position]);
-  console.log({ data, position });
-
+export function Monuments({
+  data,
+  gridPosition,
+  positions,
+}: {
+  data: IMainDataResponse;
+  gridPosition: number[];
+  positions: [number, number][];
+}) {
   return (
     <>
-      {positions.map(([positionX, positionZ]) => (
+      {positions.map(([positionX, positionZ], i) => (
         <Monument
           key={JSON.stringify([positionX, 0, positionZ])}
-          position={[position[0] + positionX, 0, position[1] + positionZ]}
-          data={MockMonumentData}
+          position={[gridPosition[0] + positionX, 0, gridPosition[1] + positionZ]}
+          data={data[i]}
         />
       ))}
     </>

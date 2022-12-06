@@ -3,6 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useState } from "react";
 import { Vector2 } from "three";
 import mainStore from "../../store/main.store";
+import { Monuments } from "../mapObjects/Monument";
 
 export default function MapDataFetcher() {
   const { camera } = useThree();
@@ -26,5 +27,5 @@ export default function MapDataFetcher() {
     }
   });
 
-  return null;
+  return <Monuments data={data} position={JSON.parse(positionKey).map((e: number) => Math.floor((e + 1) * 50))} />;
 }

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Text, useGLTF } from "@react-three/drei";
+import { Box, Text, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import PortalGlb from "../../assets/models/portal.glb?url";
 import { Vector3 } from "@react-three/fiber";
@@ -52,9 +52,11 @@ export function Portal({ link, position }: PortalProps) {
       position={position}
       colliders={false}
       onCollisionEnter={() => {
+        console.log("enter");
         setCollision(true);
       }}
       onCollisionExit={() => {
+        console.log("exit");
         setCollision(false);
       }}
     >
@@ -68,6 +70,7 @@ export function Portal({ link, position }: PortalProps) {
           </group>
         </group>
       </animated.mesh>
+      <Box args={[3, 3, 3]} />
       <CuboidCollider args={[1, 1, 1]} />
       {collision && (
         <Text

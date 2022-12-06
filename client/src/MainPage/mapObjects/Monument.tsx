@@ -8,6 +8,7 @@ import { Euler } from "@react-three/fiber";
 import { generateRandomPosition } from "../../utils/random";
 import { Vector3Arr } from "../../@types/common";
 import axios from "axios";
+import { IMainDataResponse } from "../../@types/main";
 
 interface MonumentData {
   userName: string;
@@ -48,15 +49,16 @@ export function Monument({ data, position }: MonumentProps) {
   );
 }
 
-export function Monuments() {
-  const positions = useMemo(() => generateRandomPosition("monument", 15), []);
+export function Monuments({ data, position }: { data: IMainDataResponse; position: number[] }) {
+  const positions = useMemo(() => generateRandomPosition("monument", data.length), [position]);
+  console.log({ data, position });
 
   return (
     <>
       {positions.map(([positionX, positionZ]) => (
         <Monument
           key={JSON.stringify([positionX, 0, positionZ])}
-          position={[positionX, 0, positionZ]}
+          position={[position[0] + positionX, 0, position[1] + positionZ]}
           data={MockMonumentData}
         />
       ))}

@@ -3,6 +3,5 @@ export interface IPreviewGalleryData {
   titles: string[];
   galleryURL: string;
 }
-export interface IMainDataResponse {
-  gallerys: IPreviewGalleryData;
-}
+
+export type IMainDataResponse = IPreviewGalleryData[];

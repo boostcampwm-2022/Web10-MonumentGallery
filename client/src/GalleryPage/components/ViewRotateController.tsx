@@ -36,7 +36,7 @@ function useMouseHold(dom: HTMLElement) {
 }
 
 function ViewRotateControler({ camera, dom, toggleKey = "KeyE", speed = 0.002 }: ViewRotateControlerProps) {
-  const { camera: defaultCamera, gl } = useThree();
+  const { camera: defaultCamera, gl, get, setEvents } = useThree();
   const targetDom = dom || gl.domElement;
   const targetCamera = camera || defaultCamera;
   const _document = targetDom.ownerDocument;
@@ -71,6 +71,21 @@ function ViewRotateControler({ camera, dom, toggleKey = "KeyE", speed = 0.002 }:
     return () => {
       _document.removeEventListener("keyup", handleKey);
       _document.removeEventListener("pointerlockchange", handlePointerLock);
+    };
+  }, [locked]);
+
+  useEffect(() => {
+    if (!locked) return;
+    const prevCompute = get().events.compute;
+    setEvents({
+      compute: (_, state) => {
+        state.pointer.set(0, 0);
+        state.raycaster.setFromCamera(state.pointer, state.camera);
+      },
+    });
+
+    return () => {
+      setEvents({ compute: prevCompute });
     };
   }, [locked]);
 

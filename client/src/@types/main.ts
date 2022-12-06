@@ -1,6 +1,6 @@
 export interface IPreviewGalleryData {
   userName: string;
-  titles: string[];
+  keywords: string[];
   galleryURL: string;
 }
 

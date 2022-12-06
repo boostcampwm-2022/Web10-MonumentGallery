@@ -1,12 +1,11 @@
+import { Suspense, useEffect, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import Light from "../GalleryPage/mapObjects/Light";
 
 import Player from "./mapObjects/Player";
 import Plane from "./mapObjects/Plane";
 import MapDataFetcher from "./components/MapDataFetcher";
-import { Suspense, useEffect, useState } from "react";
-import { Box } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
 
 export default function MainWorld() {
   const { camera } = useThree();

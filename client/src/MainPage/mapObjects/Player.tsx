@@ -46,7 +46,10 @@ function Player() {
 
   const ghostRef = useRef<Group>(null);
   const rigidRef = useRef<RigidBodyApi>(null);
-  const speed = 6;
+  // const speed = 10
+
+  // 개발용으로 속도 2배 늘려둠
+  const speed = 20;
 
   useEffect(() => {
     if (!ghostRef.current) return;
@@ -77,7 +80,7 @@ function Player() {
   return (
     <>
       <group ref={ghostRef} position-y={2}>
-        <Ghost />
+        <Ghost scale={[0.5, 0.5, 0.5]} />
       </group>
       <RigidBody
         ref={rigidRef}

@@ -18,7 +18,7 @@ interface LinkPedalsProps extends GroupProps {
 }
 
 export default function LinkPedals({ links, ...props }: LinkPedalsProps) {
-  const positions = useMemo(() => generateRandomPosition(links.length), []);
+  const positions = useMemo(() => generateRandomPosition("ston", links.length), []);
   return (
     <group {...props}>
       {links.map((link, i) => (

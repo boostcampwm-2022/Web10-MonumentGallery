@@ -18,9 +18,10 @@ import {
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseService.js";
-import { getRawContentsFromNotion } from "./getNotionContentService.js";
+import { getChildPages, getRawContentsFromNotion, getRoot, getLimitTime } from "./getNotionContentService.js";
 import hash from "../utils/hash.js";
 import { BadRequestError, NotFoundError, ForbiddenError, InternalServerError } from "../utils/httpError.js";
+import { Client } from "@notionhq/client";
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
@@ -155,22 +156,39 @@ export async function deleteUserHistory(users) {
 
 export async function createGalleryFromNotion(notionAccessToken, period, theme, userID, userName, res) {
   createConnectionSSE(res);
+  const limitTime = getLimitTime(period);
+  const notion = new Client({ auth: notionAccessToken });
 
-  writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 25, data: {} }), res);
-  const notionRawContent = await getRawContentsFromNotion(notionAccessToken, period);
-  writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 50, data: {} }), res);
+  writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 5, data: {} }), res);
 
-  writeMessageSSE(JSON.stringify({ kind: "이미지 가공 중...", progress: 55, data: {} }), res);
-  const notionImageContent = await getImagePixelsFromPages(notionRawContent);
-  writeMessageSSE(JSON.stringify({ kind: "이미지 가공 완료", progress: 60, data: {} }), res);
+  writeMessageSSE(JSON.stringify({ kind: "루트 페이지 불러오는 중...", progress: 10, data: {} }), res);
+  const { pageContents, pageID } = await getRoot(notion, limitTime);
 
-  writeMessageSSE(JSON.stringify({ kind: "키워드 추출 중...", progress: 65, data: {} }), res);
+  for (let i = 0; i <= 85 && i < pageID.length; i++) {
+    // console.log(pageContents[pageID[i]]);
+    writeMessageSSE(
+      JSON.stringify({
+        kind: `${pageContents[pageID[i]]?.title} 페이지 불러오는 중...`,
+        progress: 15 + 5 * i <= 55 ? 15 + 5 * i : 55,
+        data: {},
+      }),
+      res,
+    );
+    await getChildPages(notion, pageContents, pageID, i, limitTime);
+  }
+  writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 60, data: {} }), res);
+
+  writeMessageSSE(JSON.stringify({ kind: "이미지 가공 중...", progress: 65, data: {} }), res);
+  const notionImageContent = await getImagePixelsFromPages(pageContents);
+  writeMessageSSE(JSON.stringify({ kind: "이미지 가공 완료", progress: 70, data: {} }), res);
+
+  writeMessageSSE(JSON.stringify({ kind: "키워드 추출 중...", progress: 75, data: {} }), res);
   const processedNotionContent = await processDataFromRawContent(notionImageContent, theme);
-  writeMessageSSE(JSON.stringify({ kind: "키워드 추출 완료", progress: 70, data: {} }), res);
+  writeMessageSSE(JSON.stringify({ kind: "키워드 추출 완료", progress: 80, data: {} }), res);
 
-  writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 저장 중...", progress: 80, data: {} }), res);
+  writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 저장 중...", progress: 85, data: {} }), res);
   const galleryID = await saveGallery(userID, userName, processedNotionContent);
-  writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 저장 완료", progress: 85, data: {} }), res);
+  writeMessageSSE(JSON.stringify({ kind: "DB에서 데이터 저장 완료", progress: 90, data: {} }), res);
 
   return galleryID;
 }

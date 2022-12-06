@@ -15,6 +15,14 @@ export default {
       keyword: "부스트캠프",
       freq: 1,
     },
+    {
+      keyword: "CSS",
+      freq: 1,
+    },
+    {
+      keyword: "Monument",
+      freq: 1,
+    },
   ],
   groupKeywords: [
     { position: [20, 0], keyword: "1번방향" },

@@ -29,7 +29,7 @@ function getPageBasic(result, type) {
   };
 }
 
-function sumObject(obj1, obj2) {
+export function sumObject(obj1, obj2) {
   //obj1이 기준임
   return {
     title: obj1?.title,
@@ -50,7 +50,7 @@ function sumObject(obj1, obj2) {
 
 async function getRootPages(notion, limitTime, type) {
   const pageContents = {};
-  const pageIds = [];
+  const pageID = [];
 
   const pageResponse = await notion.search({
     filter: { property: "object", value: type },
@@ -62,38 +62,62 @@ async function getRootPages(notion, limitTime, type) {
       result.parent.type === "workspace" &&
       Date.parse(result.last_edited_time) > limitTime
     ) {
-      pageIds.push(result.id);
+      pageID.push(result.id);
       pageContents[result.id] = getPageBasic(result, type);
     }
   });
 
-  for (let i = 0; i < pageIds.length; i++) {
+  for (let i = 0; i < pageID.length; i++) {
     const pageData =
-      type === "page" ? await getDataFromPage(notion, pageIds[i]) : await getDataFromDatabase(notion, pageIds[i]);
-    pageContents[pageIds[i]] = sumObject(pageContents[pageIds[i]], pageData);
+      type === "page" ? await getDataFromPage(notion, pageID[i]) : await getDataFromDatabase(notion, pageID[i]);
+    pageContents[pageID[i]] = sumObject(pageContents[pageID[i]], pageData);
   }
   return pageContents;
 }
 
+export async function getRoot(notion, limitTime) {
+  const pageContents = {
+    ...(await getRootPages(notion, limitTime, "page")),
+    ...(await getRootPages(notion, limitTime, "database")),
+  };
+  const pageID = Object.keys(pageContents);
+
+  return { pageContents, pageID };
+}
+
+export async function getChildPages(notion, pageContents, pageID, cursor, limitTime) {
+  if (cursor >= pageID.length || pageID.length > 85) return;
+  const cursorID = pageID[cursor];
+  for (let i = 0; i < pageContents[cursorID].childPage.length && pageID.length <= 85; i++) {
+    const nowPage = pageContents[cursorID].childPage[i];
+    if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
+    pageID.push(nowPage.id);
+    if (nowPage.type === "page") {
+      pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
+    } else {
+      pageContents[nowPage.id] = sumObject(nowPage, await getDataFromDatabase(notion, nowPage.id));
+    }
+  }
+}
 async function getPages(notion, limitTime) {
   //root page 처리
   const pageContents = {
     ...(await getRootPages(notion, limitTime, "page")),
     ...(await getRootPages(notion, limitTime, "database")),
   };
-  const pageIds = Object.keys(pageContents);
-  // console.log(pageIds);
+  const pageID = Object.keys(pageContents);
+  // console.log(pageID);
   //자식 페이지들 재귀탐색 (85개까지만 => 대략 1분 걸림)
 
   let cursor = -1;
 
-  while (++cursor < pageIds.length && pageIds.length <= 85) {
+  while (++cursor < pageID.length && pageID.length <= 85) {
     // console.log(cursor);
-    const cursorId = pageIds[cursor];
-    for (let i = 0; i < pageContents[cursorId].childPage.length && pageIds.length <= 85; i++) {
+    const cursorId = pageID[cursor];
+    for (let i = 0; i < pageContents[cursorId].childPage.length && pageID.length <= 85; i++) {
       const nowPage = pageContents[cursorId].childPage[i];
       if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
-      pageIds.push(nowPage.id);
+      pageID.push(nowPage.id);
       if (nowPage.type === "page") {
         pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
       } else {
@@ -101,12 +125,12 @@ async function getPages(notion, limitTime) {
       }
     }
   }
-  // console.log(pageIds);
+  // console.log(pageID);
   // console.log(pageContents);
   return pageContents;
 }
 
-async function getDataFromPage(notion, pageId) {
+export async function getDataFromPage(notion, pageId) {
   const content = await notion.blocks.children.list({
     block_id: pageId,
     page_size: 50,
@@ -304,7 +328,7 @@ function processPageData(notion, data) {
 
   return res;
 }
-async function getDataFromDatabase(notion, databaseId) {
+export async function getDataFromDatabase(notion, databaseId) {
   const res = {
     position: [],
     childPage: [], // 자식 페이지들
@@ -391,7 +415,7 @@ function getTextFromTextObject(textObject) {
   return res;
 }
 
-function getLimitTime(period) {
+export function getLimitTime(period) {
   //제한시간
   const twoWeeks = 1209600033;
   if (!period) return 0;

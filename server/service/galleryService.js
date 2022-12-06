@@ -14,6 +14,7 @@ import {
   updateShareStateByUserID,
   deleteUserHistoryByID,
   findAllUserRandom,
+  findAllUserShared,
 } from "../model/userModel.js";
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
@@ -219,11 +220,40 @@ function getRandomIndex(searchState) {
   if (checkValidIndex(searchState, res) && start === res) console.log("오링"); //데이터 다 씀!
   return res;
 }
-export async function searchGalleryRandom(searchState) {
+export async function searchGalleryAll(requestSearchState) {
   // console.log(searchState);
-  const nowIdx = getRandomIndex(searchState);
-  // console.log(nowIdx);
+  const nowIdx = getRandomIndex(requestSearchState);
+  const { searchState, gallerys } = await searchGalleryRandom(requestSearchState, nowIdx);
 
+  // console.log(gallerys);
+  if (gallerys.length === 0) {
+    const latestUsers = await findAllUserShared(15);
+    const latestGallerys = await Promise.all(
+      latestUsers.map(async (user) => {
+        const [lastGalleryID] = [...user.history].reduce(
+          ([rescentID, rescentDate], [galleryID, date]) => {
+            if (rescentDate < date) return [galleryID, date];
+            return [rescentID, rescentDate];
+          },
+          [null, 0],
+        );
+        //map에 null들어가면 어케 되려나
+        const gallery = await findGalleryByID(lastGalleryID);
+
+        return {
+          userName: user.userName,
+          keywords: gallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),
+          galleryURL: `/gallery/${user.userID}/${lastGalleryID}`,
+        };
+      }),
+    );
+
+    return { searchState, gallerys: latestGallerys };
+  }
+  return { searchState, gallerys };
+}
+
+async function searchGalleryRandom(searchState, nowIdx) {
   const randomDate = getRandomDate();
   if (!(nowIdx in searchState)) searchState[nowIdx] = { start: randomDate, last: randomDate, curved: false };
 
@@ -254,9 +284,8 @@ export async function searchGalleryRandom(searchState) {
     searchState[nowIdx].curved = true;
     searchState[nowIdx].last = 0;
   }
-  // console.log(searchState, "\n");
+
   return { searchState, gallerys };
 }
-
 //search
 //{'0' : {start: Date, last : Date(가장 마지막으로 불러온 것), curved: 끝도달 여부}}

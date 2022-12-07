@@ -11,14 +11,10 @@ async function deleteUserHistory(user) {
   try {
     session.startTransaction();
 
-    await Promise.all(
-      user.history.forEach(async (val, key) => {
-        if (!(await deleteByID(key)))
-          throw new Error(`${user._id} : ${key} 갤러리를 찾을 수 없습니다.`);
-        return key;
-      })
-    );
-
+    for (const [galleryID, value] of user.history) {
+      if (!(await deleteByID(galleryID)))
+        throw new Error(`${user._id} : ${key} 갤러리를 찾을 수 없습니다.`);
+    }
     if (!(await deleteUserHistoryByID(user._id)))
       throw new Error(`${user._id} 존재하지 않는 유저입니다.`);
 
@@ -38,14 +34,18 @@ async function deleteAllUserNotShared() {
 
   while (isStart || users.length == 20) {
     isStart = false;
-    users = await findAllUserNotShared(skip, 20);
+    users = await findAllUserNotShared(page._id, 20);
 
-    await Promise.all(
-      users.map(async (user) => {
-        await deleteUserHistory(user);
-        return user._id;
-      })
-    );
+    for (let i = 0; i < users.length; i++) {
+      await deleteUserHistory(users[i]);
+    }
+    // await Promise.all(
+    //   users.map(async (user) => {
+    //     await deleteUserHistory(user);
+    //     return user._id;
+    //   })
+    // );
+
   }
 
   console.log("complete");

@@ -212,7 +212,7 @@ export async function getDataFromPage(notion, pageId) {
   return res;
 }
 
-function processPageData(notion, data) {
+function processPageData(data) {
   // 다른 함수들과 res의 형식이 강결합돼있으므로 여기 수정 시 모두 수정해야함
   const res = {
     position: [],

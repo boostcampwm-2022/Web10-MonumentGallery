@@ -8,7 +8,6 @@ const urlRegEx =
 
 export async function getRawContentsFromNotion(notionAccessToken, period) {
   const limitTime = getLimitTime(period);
-  // const limitTime = Date.now();
   const notion = new Client({ auth: notionAccessToken });
 
   return await getPages(notion, limitTime);
@@ -49,30 +48,29 @@ export function sumObject(obj1, obj2) {
 }
 
 async function getRootPages(notion, limitTime, type) {
-  const pageContents = {};
-  const pageID = [];
-
   const pageResponse = await notion.search({
     filter: { property: "object", value: type },
   });
 
-  pageResponse.results.forEach(async (result) => {
+  const pageContents = pageResponse.results.reduce((acc, result) => {
     if (
       result.object === type &&
       result.parent.type === "workspace" &&
       Date.parse(result.last_edited_time) > limitTime
     ) {
-      pageID.push(result.id);
-      pageContents[result.id] = getPageBasic(result, type);
+      acc[result.id] = getPageBasic(result, type);
     }
-  });
+    return acc;
+  }, {});
 
-  for (let i = 0; i < pageID.length; i++) {
-    const pageData =
-      type === "page" ? await getDataFromPage(notion, pageID[i]) : await getDataFromDatabase(notion, pageID[i]);
-    pageContents[pageID[i]] = sumObject(pageContents[pageID[i]], pageData);
-  }
-  return pageContents;
+  return await Promise.all(
+    Object.keys(pageContents).map(async (pageID) => {
+      return sumObject(
+        pageContents[pageID],
+        type === "page" ? await getDataFromPage(notion, pageID) : await getDataFromDatabase(notion, pageID),
+      );
+    }),
+  );
 }
 
 export async function getRoot(notion, limitTime) {

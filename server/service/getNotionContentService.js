@@ -153,57 +153,61 @@ export async function getDataFromPage(notion, pageId) {
     page_size: 50,
   });
 
-  const res = processPageData(notion, content.results);
+  const res = processPageData(content.results);
 
   //columnList 처리
-  if (res.columnList.length > 0) {
-    for (let i = 0; i < res.columnList.length; i++) {
-      const columnList = await getDataFromColumnList(notion, res.columnList[i]);
-      Object.keys(columnList).forEach((key) => {
-        res[key] = [...res[key], ...columnList[key]];
-      });
-    }
-    delete res.columnList;
-  }
+  const columnLists = await Promise.all(
+    res.columnList.map(async (column) => {
+      return await getDataFromColumnList(notion, column);
+    }),
+  );
+
+  columnLists.forEach((columnList) => {
+    Object.keys(columnList).forEach((key) => {
+      res[key] = [...res[key], ...columnList[key]];
+    });
+  });
 
   //자식 페이지 url 처리
+  res.childPage = await Promise.all(
+    res.childPage.map(async (page) => {
+      const nowPage = await notion.pages.retrieve({ page_id: page.id });
+      page.myUrl = nowPage.url;
+      return page;
+    }),
+  );
 
-  if (res.childPage.length > 0) {
-    for (let i = 0; i < res.childPage.length; i++) {
-      const childPage = await notion.pages.retrieve({ page_id: res.childPage[i].id });
-      res.childPage[i].myUrl = childPage.url;
+  //자식 DB처리
+  const childDatabases = await Promise.all(
+    res.childDatabase.map(async (databaseID) => {
+      return await notion.databases.retrieve({ database_id: databaseID });
+    }),
+  );
+
+  childDatabases.forEach(async (childDatabase) => {
+    //is_inline에 따라 다르게 처리
+    if (!childDatabase.is_inline) {
+      //인라인이 아닐 경우 -> 페이지로 간주
+      const innerText = getTextFromTextObject(childDatabase?.title);
+      res.childPage.push({
+        type: "database",
+        id: res.childDatabase[i],
+        title: innerText?.length > 0 ? innerText[0] : "-",
+        createdTime: childDatabase.created_time,
+        lastEditedTime: childDatabase.last_edited_time,
+        myUrl: childDatabase.url,
+      });
+    } else {
+      //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> paragraph
+      res.h3 = [...res.h3, ...getTextFromTextObject(childDatabase?.title)];
+      const databaseData = await notion.databases.query({
+        database_id: childDatabase.id,
+      });
+      databaseData.results.forEach((data) => {
+        if (getTitleFromProperties(data.properties)) res.paragraph.push(getTitleFromProperties(data.properties));
+      });
     }
-  }
-
-  //자식 데이터베이스 처리
-  if (res.childDatabase.length > 0) {
-    for (let i = 0; i < res.childDatabase.length; i++) {
-      const childDatabase = await notion.databases.retrieve({ database_id: res.childDatabase[i] });
-
-      //is_inline에 따라 다르게 처리
-      if (!childDatabase.is_inline) {
-        //인라인이 아닐 경우 -> 페이지로 간주
-        const innerText = getTextFromTextObject(childDatabase?.title);
-        res.childPage.push({
-          type: "database",
-          id: res.childDatabase[i],
-          title: innerText?.length > 0 ? innerText[0] : "-",
-          createdTime: childDatabase.created_time,
-          lastEditedTime: childDatabase.last_edited_time,
-          myUrl: childDatabase.url,
-        });
-      } else {
-        //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> paragraph
-        res.h3 = [...res.h3, ...getTextFromTextObject(childDatabase?.title)];
-        const databaseData = await notion.databases.query({
-          database_id: childDatabase.id,
-        });
-        databaseData.results.forEach((data) => {
-          if (getTitleFromProperties(data.properties)) res.paragraph.push(getTitleFromProperties(data.properties));
-        });
-      }
-    }
-  }
+  });
 
   return res;
 }

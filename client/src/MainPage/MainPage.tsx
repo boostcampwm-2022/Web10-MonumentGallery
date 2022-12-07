@@ -41,7 +41,7 @@ export default function MainPage() {
           <UserInfo />
         </Header>
         <CreateMonumentButton showModal={showModal} />
-        <Footer />
+        {/* <Footer /> */}
       </FloatLayout>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
         <CreateModal />

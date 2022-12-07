@@ -1,0 +1,73 @@
+.splash-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  z-index: 3;
+  & > img {
+    position: absolute;
+    top: calc(40% - 240px);
+    left: calc(50% - 240px);
+    width: 480px;
+    height: 480px;
+    animation-duration: 2s;
+    animation-name: fadeIn_Logo;
+  }
+  & > button {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: calc(40% + 120px);
+    left: calc(50% - 240px);
+    width: 480px;
+    height: 50px;
+    font-size: 19px;
+    color: #ffffff;
+    background: #333333;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    animation-duration: 2s;
+    animation-name: fadeIn_Button;
+  }
+}
+
+.fadeout {
+  animation-duration: 2s;
+  animation-name: fadeOut;
+}
+
+@keyframes fadeIn_Logo {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn_Button {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    z-index: 1;
+  }
+  100% {
+    opacity: 0;
+    z-index: 1;
+  }
+}

@@ -1,6 +1,6 @@
-import userStore from "../../store/user.store";
+import userStore from "../../../store/user.store";
 import "./CreateModal.scss";
-import NotionIcon from "../../assets/images/notion-icon.png";
+import NotionIcon from "../../../assets/images/notion-icon.png";
 
 function MyGalleryLinkPartion() {
   const user = userStore((store) => store.user);

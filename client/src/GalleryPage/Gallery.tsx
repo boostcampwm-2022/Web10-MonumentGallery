@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
@@ -14,8 +13,11 @@ import galleryStore from "../store/gallery.store";
 
 import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
+// import DevTools from "../components/Devtools";
+import settingStore from "../store/setting.store";
 
 export default function Gallery() {
+  const speed = settingStore((store) => store.speed);
   const data = galleryStore((store) => store.data);
   const theme = galleryStore((store) => store.theme);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
@@ -32,12 +34,12 @@ export default function Gallery() {
       <Physics gravity={[0, -30, 0]}>
         <Light />
         <CollisionPlayerBody />
-        <MovementController speed={5} />
+        <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
+        {/* <DevTools /> */}
       </Physics>
       <ScreenshotCapturer />
-      <Stats />
     </Canvas>
   );
 }

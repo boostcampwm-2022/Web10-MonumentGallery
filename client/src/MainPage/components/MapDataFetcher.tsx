@@ -39,7 +39,6 @@ export default function MapDataFetcher() {
       const playerPosition = [camera.position.x, camera.position.z - 10];
       const newPositionKey = calculateGridPosition(playerPosition);
       if (positionKey !== newPositionKey) {
-        console.log(grid);
         setPositionKey(newPositionKey);
         const positions = generateRandomPosition("monument", data.length);
         if (grid[newPositionKey]) return;

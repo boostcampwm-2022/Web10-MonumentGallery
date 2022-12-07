@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import React, { Suspense, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Stats } from "@react-three/drei";
 
-import MainWorld from "./MainWorld";
+// import MainWorld from "./MainWorld";
+const MainWorld = React.lazy(() => import("./MainWorld"));
 import ScreenshotCapturer from "../components/ScreenshotCapturer";
+import Zoom from "./components/Zoom";
 
 import themeStore from "../store/theme.store";
 
@@ -22,10 +23,10 @@ export default function MainCanvas() {
       orthographic
     >
       <color attach="background" args={[backgroundColor]} />
-      <MainWorld />
-      <axesHelper />
-      <gridHelper args={[10000, 200]} position={[25, 0, 25]} />
-      <Stats />
+      <Suspense fallback={null}>
+        <MainWorld />
+      </Suspense>
+      <Zoom />
       <ScreenshotCapturer />
     </Canvas>
   );

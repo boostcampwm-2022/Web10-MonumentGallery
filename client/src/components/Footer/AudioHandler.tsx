@@ -32,17 +32,19 @@ export default function AudioHandler() {
           e.currentTarget.blur();
         }}
       >
-        <img width={24} height={24} src={isPlaying ? PauseIcon : PlayIcon} />
+        <img width={24} height={24} src={isPlaying ? PauseIcon : PlayIcon} alt="playIcon" />
       </button>
-      <input
-        className="footer-volume"
-        style={{
-          background: `linear-gradient(to right, #9e9e9e 0%, #9e9e9e ${volume}%, #ececec ${volume}%, #ececec 100%)`,
-        }}
-        type="range"
-        value={volume}
-        onChange={(e) => setVolume(+e.target.value)}
-      />
+      <label>
+        <input
+          className="footer-volume"
+          style={{
+            background: `linear-gradient(to right, #9e9e9e 0%, #9e9e9e ${volume}%, #ececec ${volume}%, #ececec 100%)`,
+          }}
+          type="range"
+          value={volume}
+          onChange={(e) => setVolume(+e.target.value)}
+        />
+      </label>
     </>
   );
 }

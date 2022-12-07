@@ -29,7 +29,7 @@ export default function DomElements({
             <UserInfo />
             <ThemeSeletor />
             <button>
-              <img width={24} src={HistoryIcon} onClick={() => setShowSidebar(!showSidebar)} />
+              <img width={24} alt="history" src={HistoryIcon} onClick={() => setShowSidebar(!showSidebar)} />
             </button>
           </Header>
           <ShareWrapper />

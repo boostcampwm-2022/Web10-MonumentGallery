@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
 
 interface DelayedProps {
-  children: React.ReactNode;
+  children: ReactNode;
   waitBeforeShow: number;
 }
 

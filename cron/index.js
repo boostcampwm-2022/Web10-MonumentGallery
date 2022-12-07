@@ -6,6 +6,7 @@ import {
   findAllUserNotShared,
   findMinID,
 } from "./model/userModel.js";
+import cron from "node-cron";
 
 async function deleteUserHistory(user) {
   const session = await mongoose.startSession();
@@ -58,7 +59,22 @@ async function deleteAllUserNotShared() {
   console.log("complete");
 }
 
-async function main() {
+// async function main() {
+//   dotenv.config();
+
+//   // mongoDB connection
+//   const mongoURI = process.env.MONGO_URL;
+//   mongoose.connect(mongoURI);
+//   const db = mongoose.connection;
+//   db.once("open", () => console.log("DB successfully connected"));
+//   db.on("error", (err) => console.log("DB connection failed : ", err));
+
+//   await deleteAllUserNotShared();
+
+//   db.close();
+// }
+
+cron.schedule("0 */12 * * *", async function () {
   dotenv.config();
 
   // mongoDB connection
@@ -71,6 +87,6 @@ async function main() {
   await deleteAllUserNotShared();
 
   db.close();
-}
+});
 
-main();
+console.log("start");

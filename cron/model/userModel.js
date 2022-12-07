@@ -7,11 +7,15 @@ export async function deleteUserHistoryByID(_id, session) {
   return _id;
 }
 
-export async function findAllUserNotShared(skip, limit) {
+export async function findAllUserNotShared(page, limit) {
   return await User.find({
+    _id: { $gt: page },
     isShared: false,
   })
-    .sort({ lastModified: -1 })
-    .skip(skip)
+    .sort({ _id: 1 })
     .limit(limit);
+}
+
+export async function findMinID() {
+  return await User.find().sort({ _id: 1 }).limit(1);
 }

@@ -50,7 +50,7 @@ function PortalMesh() {
 
 export default function Portal({ link, position, animator, collision }: PortalProps) {
   const { spring } = animator;
-  const animatedScale: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [1, 1]), []);
+  const animatedScale: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [0.7, 0.8]), []);
 
   useEffect(() => {
     if (!collision) return;

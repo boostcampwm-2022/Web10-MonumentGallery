@@ -3,7 +3,6 @@ import { Suspense, useState } from "react";
 
 import MainCanvas from "./MainCanvas";
 import CreateModal from "./components/CreateModal/CreateModal";
-import CanvasLoading from "../components/CanvasLoading";
 import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
@@ -11,7 +10,7 @@ import Footer from "../components/Footer";
 
 import userStore from "../store/user.store";
 import FloatLayout from "../layouts/FloatLayout";
-import SplashScreen from "./components/SplashScreen/SplashScreen";
+import Splash from "./components/SplashScreen/SplashScreen";
 
 function CreateMonumentButton({ showModal }: { showModal: () => void }) {
   const isLoggedIn = userStore((store) => store.isLoggedIn);
@@ -32,9 +31,9 @@ export default function MainPage() {
 
   return (
     <>
-      <SplashScreen />
+      <Splash />
       <div className="canvas-outer">
-        <Suspense fallback={<CanvasLoading />}>
+        <Suspense fallback={null}>
           <MainCanvas />
         </Suspense>
       </div>

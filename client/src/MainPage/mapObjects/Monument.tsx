@@ -1,12 +1,18 @@
-import { Text } from "@react-three/drei";
-import Monolith from "./Monolith";
-import TextRing from "./TextRing";
-import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
-import { Portal } from "./Portal";
 import { useState } from "react";
-import { Vector3Arr } from "../../@types/common";
-import { IMainDataResponse } from "../../@types/main";
+import { Text } from "@react-three/drei";
+import { CylinderCollider, RigidBody } from "@react-three/rapier";
+
+import Monolith from "./Monolith";
+import WordCloud from "./WordCloud";
+import Portal from "./Portal";
 import Delayed from "../../components/Delayed/Delayed";
+
+import useTriggeredSpring from "../../hooks/useTriggeredSpring";
+
+import type { Vector3Arr } from "../../@types/common";
+import type { IMainDataResponse } from "../../@types/main";
+
+import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 
 interface MonumentData {
   userName: string;
@@ -20,21 +26,24 @@ interface MonumentProps {
 
 export function Monument({ data, position }: MonumentProps) {
   const { userName, keywords, galleryURL } = data;
-  const [textRingVisible, setTextRingVisible] = useState(false);
+  const [collision, setCollision] = useState(false);
+  const springs = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
+
   return (
-    <group scale={[0.7, 0.7, 0.7]} position={position}>
-      <Text position={[0, 7, 0]} rotation={[0, Math.PI / 4, 0]} font={MapoFlowerIsland} fontSize={0.5} color="black">
+    <RigidBody type="fixed" colliders={false} rotation-y={Math.PI / 4} scale={0.7} position={position}>
+      <CylinderCollider
+        args={[2, 3]}
+        sensor
+        onIntersectionEnter={() => setCollision(true)}
+        onIntersectionExit={() => setCollision(false)}
+      />
+      <Text position={[0, 7, 0]} font={MapoFlowerIsland} fontSize={0.5} color="black">
         {userName}
       </Text>
-      <Monolith rotation={[0, Math.PI / 4, 0]} />
-      {textRingVisible &&
-        keywords.map((keyword, i) => (
-          <Delayed key={keyword + i} waitBeforeShow={i * 200 + 100}>
-            <TextRing text={keyword} position={[0, 1 + i, 0]} scale={[0.7 - 0.1 * i, 0.7 - 0.1 * i, 0.7 - 0.1 * i]} />
-          </Delayed>
-        ))}
-      <Portal link={galleryURL} position={[1, 0.2, 1]} setTextRingVisible={setTextRingVisible} />
-    </group>
+      <Monolith />
+      <WordCloud keywords={keywords} radius={4} position-y={4} animator={springs} />
+      <Portal link={galleryURL} position={[0, 0.2, 3]} animator={springs} collision={collision} />
+    </RigidBody>
   );
 }
 
@@ -51,7 +60,7 @@ export function Monuments({
   return (
     <>
       {positions.map(([positionX, positionZ], i) => (
-        <Delayed key={JSON.stringify([positionX, 0, positionZ])} waitBeforeShow={i * 200 + 100}>
+        <Delayed key={`${positionX}_${positionZ}`} waitBeforeShow={i * 200 + 100}>
           <Monument position={[gridPosition[0] + positionX, 0, gridPosition[1] + positionZ]} data={data[i]} />
         </Delayed>
       ))}

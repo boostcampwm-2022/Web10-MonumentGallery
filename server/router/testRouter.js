@@ -72,7 +72,7 @@ router.get(
         userDummyData.userName = val.toString();
         userDummyData.randIdx = getRandomInt(0, 10);
         userDummyData.lastModified = Date.now() - 10000 + getRandomInt(0, 10000);
-        userDummyData.isShared = true;
+        userDummyData.isShared = false;
         await User.create(nowUser);
         const galleryID = (await Gallery.create(galleryDummyData))._id.valueOf();
         const history = { [galleryID]: Date.now() };

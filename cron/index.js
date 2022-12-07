@@ -4,6 +4,7 @@ import { deleteByID } from "./model/galleryModel.js";
 import {
   deleteUserHistoryByID,
   findAllUserNotShared,
+  findMinID,
 } from "./model/userModel.js";
 
 async function deleteUserHistory(user) {
@@ -24,15 +25,19 @@ async function deleteUserHistory(user) {
     await session.abortTransaction();
     session.endSession();
     console.log(err);
+    console.log(user._id);
   }
 }
 
 async function deleteAllUserNotShared() {
-  let skip = 0;
+  let [page] = await findMinID();
   let isStart = true;
   let users = [];
 
+  if (page?._id) await deleteUserHistory(page);
+
   while (isStart || users.length == 20) {
+    console.log(page._id);
     isStart = false;
     users = await findAllUserNotShared(page._id, 20);
 
@@ -46,6 +51,8 @@ async function deleteAllUserNotShared() {
     //   })
     // );
 
+    // console.log(users);
+    if (users.length > 0) page = users.at(-1);
   }
 
   console.log("complete");
@@ -60,7 +67,10 @@ async function main() {
   const db = mongoose.connection;
   db.once("open", () => console.log("DB successfully connected"));
   db.on("error", (err) => console.log("DB connection failed : ", err));
+
   await deleteAllUserNotShared();
+
+  db.close();
 }
 
 main();

@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Stats } from "@react-three/drei";
 
 import MainWorld from "./MainWorld";
 import ScreenshotCapturer from "../components/ScreenshotCapturer";
@@ -23,9 +22,6 @@ export default function MainCanvas() {
     >
       <color attach="background" args={[backgroundColor]} />
       <MainWorld />
-      <axesHelper />
-      <gridHelper args={[10000, 200]} position={[25, 0, 25]} />
-      <Stats />
       <ScreenshotCapturer />
     </Canvas>
   );

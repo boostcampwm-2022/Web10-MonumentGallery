@@ -33,8 +33,8 @@ function ShadowLight({ position, ...props }: ShadowLightProps) {
       shadow-mapSize={[512, 512]}
       shadow-camera-far={128}
       shadow-camera-left={-20}
-      shadow-camera-right={20}
-      shadow-camera-top={20}
+      shadow-camera-right={50}
+      shadow-camera-top={50}
       shadow-camera-bottom={-20}
       {...props}
       ref={lightRef}

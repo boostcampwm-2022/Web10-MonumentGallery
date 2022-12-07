@@ -10,19 +10,20 @@ export default function Footer() {
     <div className="footer">
       <span className="footer-text">© Monument Gallery</span>
       <a href="https://github.com/boostcampwm-2022/Web10-MonumentGallery" target="_blank" rel="noreferrer">
-        <button className="footer-element">
-          <img height={24} src={GithubMark} />
+        <button type="button" className="footer-element">
+          <img width={24} height={24} src={GithubMark} alt="github" />
         </button>
       </a>
       <AudioHandler />
       <button
+        type="button"
         className="footer-element"
         onClick={(e) => {
           document.dispatchEvent(new CustomEvent("save-screenshot"));
           e.currentTarget.blur();
         }}
       >
-        <img height={24} src={ScreenShotIcon} />
+        <img width={24} height={24} src={ScreenShotIcon} alt="screenshot" />
       </button>
       <ExpandButton />
     </div>

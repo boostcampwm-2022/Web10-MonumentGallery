@@ -34,7 +34,7 @@ function ToastItem({ toast, position, autoDelete, autoDeleteTime }: ToastItemPro
       onClick={() => removeToast(toast)}
     >
       <div className="notification-image">
-        <img src={toast.icon} alt="" />
+        <img src={toast.icon} alt="notification" />
       </div>
       <div>
         <p className="notification-type">{toast.type}</p>

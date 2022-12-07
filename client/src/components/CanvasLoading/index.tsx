@@ -26,7 +26,7 @@ export default function Loading({ text = "당신의 멋진 공간이 만들어�
           <span className="loading-text">{text}</span>
           <Ellipsis />
         </div>
-        <img width={200} src={LoadingImg} />
+        <img width={200} height={100} src={LoadingImg} alt="canvas-loading" />
       </div>
     </div>
   );

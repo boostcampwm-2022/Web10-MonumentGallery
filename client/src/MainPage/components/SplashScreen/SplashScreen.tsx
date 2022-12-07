@@ -18,7 +18,7 @@ function SplashScreen() {
 
   return (
     <div className={`splash-screen ${fadeOut}`} hidden={!show}>
-      <img src={SplashScreenLogo}></img>
+      <img src={SplashScreenLogo} width={480} height={480} alt="splash"></img>
       {grid["[-1,-1]"] ? (
         <button
           onClick={() => {

@@ -8,13 +8,16 @@ export function createConnectionSSE(res) {
     "X-Accel-Buffering": "no",
   });
   res.write("data: " + JSON.stringify({ kind: "시작", progress: 0, data: {} }) + "\n\n");
+  res.flush();
 }
 
 export function writeMessageSSE(msg, res) {
   console.log(msg);
   res.write("data: " + msg + "\n\n");
+  res.flush();
 }
 
 export function endConnectionSSE(res, data) {
   res.write("data: " + JSON.stringify({ kind: "완료", progress: 100, data: data }) + "\n\n");
+  res.flush();
 }

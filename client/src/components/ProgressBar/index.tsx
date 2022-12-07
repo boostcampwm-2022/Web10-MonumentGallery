@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import { useSpring, animated } from "@react-spring/web";
 import "./style.scss";
 
 interface IOnLoadFunction {
@@ -20,7 +20,10 @@ interface IResponse {
 
 export default function ProgressBar({ eventSourceUrl, onLoad }: ProgressBarProps) {
   const [listening, setListeing] = useState(false);
-  const barRef = useRef(null!);
+  const [progress, setProgress] = useState(0);
+  const [reloader, setReload] = useState(4);
+  const style = useSpring({ translateX: progress + "%", duration: 1000 });
+
   const textRef = useRef<HTMLDivElement>(null!);
   let eventSource: EventSource;
   useEffect(() => {
@@ -30,27 +33,19 @@ export default function ProgressBar({ eventSourceUrl, onLoad }: ProgressBarProps
       });
       eventSource.onmessage = (event) => {
         const res: IResponse = JSON.parse(event.data);
-        gsap.to(barRef.current, {
-          x: `${res.progress}%`,
-          duration: 2,
-          onStart: () => {
-            textRef.current.innerText = res.kind;
-          },
-          onComplete: () => {
-            if (res.progress === 100) {
-              onLoad(res.data);
-            }
-          },
-        });
+        setProgress(res.progress);
+        textRef.current.innerText = res.kind;
+        if (res.progress === 100) onLoad(res.data);
       };
       eventSource.onerror = (e) => {
-        console.log(e);
         let timer = 3;
         const interval = setInterval(() => {
           textRef.current.innerText = `에러가 발생했습니다. ${timer}초 뒤 다시 시도합니다.`;
           timer--;
-          if (timer === 0) {
+          if (timer === -1) {
             setListeing(false);
+            setProgress(0);
+            if (reloader > 0) setReload((reloader) => reloader - 1);
             clearInterval(interval);
           }
         }, 1000);
@@ -59,13 +54,13 @@ export default function ProgressBar({ eventSourceUrl, onLoad }: ProgressBarProps
       setListeing(true);
       return () => eventSource?.close();
     }
-  }, []);
+  }, [reloader]);
 
   return (
     <>
       <div className="container">
         <div className="progress-bar__container">
-          <div className="progress-bar" ref={barRef}></div>
+          <animated.div className="progress-bar" style={style}></animated.div>
         </div>
       </div>
       <div className="progress-bar__text" ref={textRef}>

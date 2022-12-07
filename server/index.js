@@ -40,6 +40,14 @@ app.use("/test", testRouter);
 app.use("/api", galleryRouter);
 app.use("/", redirectRouter);
 
+app.get("/", (req, res, next) => {
+  if (req.path === "/") {
+    console.log(req.path);
+    res.cookie("searchState", "", { expires: 0 });
+  }
+  next();
+});
+
 // page routing
 if (process.env.NODE_ENV === "development") {
   console.log("dev!");

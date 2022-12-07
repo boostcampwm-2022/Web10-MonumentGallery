@@ -7,6 +7,7 @@ import { CapsuleCollider, RigidBody, RigidBodyApi } from "@react-three/rapier";
 import Ghost from "./Ghost";
 import { useKeyMovement } from "../../hooks/useKeyMovement";
 import type { Group } from "three";
+import settingStore from "../../store/setting.store";
 
 const _euler = new Euler(0, 0, 0, "YXZ");
 const _quaternion = new Quaternion();
@@ -46,10 +47,7 @@ function Player() {
 
   const ghostRef = useRef<Group>(null);
   const rigidRef = useRef<RigidBodyApi>(null);
-  // const speed = 10
-
-  // 개발용으로 속도 4배 늘려둠
-  const speed = 40;
+  const speed = settingStore((store) => store.speed);
 
   useEffect(() => {
     if (!ghostRef.current) return;

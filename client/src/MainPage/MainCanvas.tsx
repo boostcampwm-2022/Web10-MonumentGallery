@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 
 import MainWorld from "./MainWorld";
 import ScreenshotCapturer from "../components/ScreenshotCapturer";
+import Zoom from "./components/Zoom";
 
 import themeStore from "../store/theme.store";
 
@@ -22,6 +23,7 @@ export default function MainCanvas() {
     >
       <color attach="background" args={[backgroundColor]} />
       <MainWorld />
+      <Zoom />
       <ScreenshotCapturer />
     </Canvas>
   );

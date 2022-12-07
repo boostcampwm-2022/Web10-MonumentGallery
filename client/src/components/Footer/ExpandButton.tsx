@@ -22,7 +22,7 @@ export default function ExpandButton() {
 
   return (
     <button type="button" className="footer-element" onClick={onFullScreen}>
-      <img height={24} src={ExpandIcon} alt="expand" />
+      <img width={24} height={24} src={ExpandIcon} alt="expand" />
     </button>
   );
 }

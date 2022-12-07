@@ -74,13 +74,9 @@ async function getRootPages(notion, limitTime, type) {
 }
 
 export async function getRoot(notion, limitTime) {
-  const pageContents = {
-    ...(await getRootPages(notion, limitTime, "page")),
-    ...(await getRootPages(notion, limitTime, "database")),
-  };
-  const pageID = Object.keys(pageContents);
+  return [...(await getRootPages(notion, limitTime, "page")), ...(await getRootPages(notion, limitTime, "database"))];
+}
 
-  return { pageContents, pageID };
 }
 
 export async function getChildPages(notion, pageContents, pageID, cursor, limitTime) {

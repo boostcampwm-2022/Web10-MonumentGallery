@@ -2,7 +2,7 @@ import "./style.scss";
 import { Suspense, useState } from "react";
 
 import MainCanvas from "./MainCanvas";
-import CreateModal from "./components/CreateModal";
+import CreateModal from "./components/CreateModal/CreateModal";
 import CanvasLoading from "../components/CanvasLoading";
 import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";

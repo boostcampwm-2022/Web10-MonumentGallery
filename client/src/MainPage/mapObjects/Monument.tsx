@@ -32,7 +32,7 @@ export function Monument({ data, position }: MonumentProps) {
   return (
     <RigidBody type="fixed" colliders={false} rotation-y={Math.PI / 4} scale={0.7} position={position}>
       <CylinderCollider
-        args={[2, 3]}
+        args={[2, 4]}
         sensor
         onIntersectionEnter={() => setCollision(true)}
         onIntersectionExit={() => setCollision(false)}

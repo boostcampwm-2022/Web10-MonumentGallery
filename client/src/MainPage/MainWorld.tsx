@@ -6,7 +6,7 @@ import Player from "./mapObjects/Player";
 import Plane from "./mapObjects/Plane";
 import MapDataFetcher from "./components/MapDataFetcher";
 import Ground from "./mapObjects/Ground";
-import DevTools from "./components/Devtools";
+import DevTools from "../components/Devtools";
 
 export default function MainWorld() {
   return (

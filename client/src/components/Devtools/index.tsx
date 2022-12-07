@@ -2,7 +2,7 @@ import { Stats } from "@react-three/drei";
 import { Debug } from "@react-three/rapier";
 import { useEffect } from "react";
 import settingStore from "../../store/setting.store";
-import "./Devtools.scss";
+import "./style.scss";
 
 export default function DevTools() {
   const { showDevtool, setShowDevtool, speed, setSpeed } = settingStore();

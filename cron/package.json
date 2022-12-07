@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "dotenv": "^16.0.3",
-    "mongoose": "^6.8.0"
+    "mongoose": "^6.8.0",
+    "node-cron": "^3.0.2"
   },
   "name": "cron",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

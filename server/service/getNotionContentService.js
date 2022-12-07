@@ -403,17 +403,21 @@ async function getDataFromColumnList(notion, columnListId) {
     childDatabase: [],
   };
 
-  for (let i = 0; i < columns.results.length; i++) {
-    const columnData = await notion.blocks.children.list({
-      block_id: columns.results[i].id,
-      page_size: 50,
-    });
-    const processedData = processPageData(notion, columnData.results);
+  const columnDatas = await Promise.all(
+    columns.results.map(async (column) => {
+      const columnData = await notion.blocks.children.list({
+        block_id: column.id,
+        page_size: 50,
+      });
+      return processPageData(columnData.results);
+    }),
+  );
 
-    Object.keys(processedData).forEach((key) => {
-      res[key] = [...res[key], ...processedData[key]];
+  columnDatas.forEach((columnData) => {
+    Object.keys(columnData).forEach((key) => {
+      res[key] = [...res[key], ...columnData[key]];
     });
-  }
+  });
 
   return res;
 }

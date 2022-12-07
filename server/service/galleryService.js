@@ -163,20 +163,25 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 5, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "루트 페이지 불러오는 중...", progress: 10, data: {} }), res);
-  const { pageContents, pageID } = await getRoot(notion, limitTime);
+  let pageContents = await getRoot(notion, limitTime);
+  console.log(pageContents);
+  let deepth = 0;
 
-  for (let i = 0; i <= 85 && i < pageID.length; i++) {
-    // console.log(pageContents[pageID[i]]);
+  while (Object.keys(pageContents).length <= 85 && deepth++ < 2) {
+    // console.log(pageContents);
     writeMessageSSE(
       JSON.stringify({
-        kind: `${pageContents[pageID[i]]?.title} 페이지 불러오는 중...`,
-        progress: 15 + 5 * i <= 55 ? 15 + 5 * i : 55,
+        kind: `${deepth}단계의 페이지 불러오는 중...`,
+        progress: 20 + 10 * deepth <= 55 ? 20 + 10 * deepth : 55,
         data: {},
       }),
       res,
     );
-    await getChildPages(notion, pageContents, pageID, i, limitTime);
+    const childPages = await getChildPages(notion, pageContents, limitTime);
+    console.log(childPages);
+    pageContents = [...pageContents, ...childPages];
   }
+
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 60, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "이미지 가공 중...", progress: 65, data: {} }), res);
@@ -226,20 +231,9 @@ export async function searchGalleryAll(requestSearchState) {
   if (!requestSearchState) requestSearchState = initSearchState();
   const nowIdx = getRandomIndex(requestSearchState);
   if (nowIdx === -1) return { searchState: requestSearchState, gallerys: [] };
-  // console.log(nowIdx);
-  // let searchState = requestSearchState;
-  // let gallerys = [];
-  // let searchCnt = 0;
 
-  // while (gallerys.length < 15 && searchCnt++ < 10 && nowIdx !== -1) {
-  //   const searchData = await searchGalleryRandom(searchState, nowIdx);
-  //   searchState = searchData.searchState;
-  //   gallerys = [...gallerys, ...searchData.gallerys];
-  //   nowIdx = getRandomIndex(requestSearchState);
-  // }
   const { searchState, gallerys } = await searchGalleryRandom(requestSearchState, nowIdx);
 
-  // console.log(gallerys);
   if (gallerys.length === 0) {
     const recentGallerys = await searchGalleryRecent(15);
     if (recentGallerys.length < 15) {
@@ -296,7 +290,7 @@ async function searchGalleryRandom(searchState, nowIdx) {
       );
       //map에 null들어가면 어케 되려나
       const gallery = await findGalleryByID(lastGalleryID);
-
+      console.log(user._id);
       return {
         userName: user.userName,
         keywords: gallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),

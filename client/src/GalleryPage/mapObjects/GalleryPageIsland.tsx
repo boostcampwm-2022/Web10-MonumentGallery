@@ -36,7 +36,7 @@ export default function GalleryPageIsland({
       />
       <AnimatedTitle text={title} animator={springs} />
       <Island color={(theme && ISLAND_COLORS[theme]) || THEME.DREAM} />
-      <MemorialStones subtitles={subtitle} />
+      <MemorialStones subtitles={subtitle} animator={springs} />
       <SubWordCloud keywords={keywords} radius={6} scale={0.8} animator={springs} />
       {links && <LinkPedals links={links} />}
       {imagePixel && <PictureFragments pixels={imagePixel} />}

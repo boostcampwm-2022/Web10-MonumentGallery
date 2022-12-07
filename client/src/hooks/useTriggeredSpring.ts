@@ -1,9 +1,10 @@
 import { SpringConfig, useSpring } from "@react-spring/three";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export default function useTriggeredSpring(trigged: boolean, config: SpringConfig) {
   const [ready, setReady] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const active = useMemo(() => !!(ready || playing), [ready, playing]);
 
   const { spring } = useSpring({
     spring: ready,
@@ -20,5 +21,5 @@ export default function useTriggeredSpring(trigged: boolean, config: SpringConfi
     }
   }, [trigged]);
 
-  return { spring, ready, playing };
+  return { spring, ready, playing, active };
 }

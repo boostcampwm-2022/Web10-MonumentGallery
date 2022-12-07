@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
+import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
@@ -8,9 +9,11 @@ import CollisionPlayerBody from "./components/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
 import ScreenshotCapturer from "../components/ScreenshotCapturer";
+
+import galleryStore from "../store/gallery.store";
+
 import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
-import galleryStore from "../store/gallery.store";
 
 export default function Gallery() {
   const data = galleryStore((store) => store.data);
@@ -34,6 +37,7 @@ export default function Gallery() {
         <GalleryWorld data={data} />
       </Physics>
       <ScreenshotCapturer />
+      <Stats />
     </Canvas>
   );
 }

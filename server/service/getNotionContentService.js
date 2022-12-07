@@ -77,21 +77,44 @@ export async function getRoot(notion, limitTime) {
   return [...(await getRootPages(notion, limitTime, "page")), ...(await getRootPages(notion, limitTime, "database"))];
 }
 
+function sumArray(ary) {
+  return ary.reduce((acc, cur) => {
+    acc = [...acc, ...cur];
+    return acc;
+  }, []);
 }
 
-export async function getChildPages(notion, pageContents, pageID, cursor, limitTime) {
-  if (cursor >= pageID.length || pageID.length > 85) return;
-  const cursorID = pageID[cursor];
-  for (let i = 0; i < pageContents[cursorID].childPage.length && pageID.length <= 85; i++) {
-    const nowPage = pageContents[cursorID].childPage[i];
-    if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
-    pageID.push(nowPage.id);
-    if (nowPage.type === "page") {
-      pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
-    } else {
-      pageContents[nowPage.id] = sumObject(nowPage, await getDataFromDatabase(notion, nowPage.id));
-    }
-  }
+export async function getChildPages(notion, pageContents, limitTime) {
+  // if (cursor >= pageID.length || pageID.length > 85) return pageContents;
+
+  return sumArray(
+    await Promise.all(
+      pageContents.map(async (page) => {
+        return await Promise.all(
+          page.childPage.map(async (page) => {
+            return sumObject(
+              page,
+              page.type === "page"
+                ? await getDataFromPage(notion, page.id)
+                : await getDataFromDatabase(notion, page.id),
+            );
+          }),
+        );
+      }),
+    ),
+  );
+
+  // const cursorID = pageID[cursor];
+  // for (let i = 0; i < pageContents[cursorID].childPage.length && pageID.length <= 85; i++) {
+  //   const nowPage = pageContents[cursorID].childPage[i];
+  //   if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
+  //   pageID.push(nowPage.id);
+  //   if (nowPage.type === "page") {
+  //     pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
+  //   } else {
+  //     pageContents[nowPage.id] = sumObject(nowPage, await getDataFromDatabase(notion, nowPage.id));
+  //   }
+  // }
 }
 async function getPages(notion, limitTime) {
   //root page 처리

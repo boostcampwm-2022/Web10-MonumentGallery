@@ -2,6 +2,7 @@ import express from "express";
 import proxy from "express-http-proxy";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import compression from "compression";
 import dotenv from "dotenv";
 
 import { authMiddleware, catchAuthError } from "./middlewares/authMiddleware.js";
@@ -29,6 +30,7 @@ const db = mongoose.connection;
 db.once("open", () => console.log("DB successfully connected"));
 db.on("error", (err) => console.log("DB connection failed : ", err));
 
+app.use(compression());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));

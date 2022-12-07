@@ -13,7 +13,7 @@ import galleryStore from "../store/gallery.store";
 
 import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
-import DevTools from "../components/Devtools";
+// import DevTools from "../components/Devtools";
 import settingStore from "../store/setting.store";
 
 export default function Gallery() {
@@ -37,7 +37,7 @@ export default function Gallery() {
         <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
-        <DevTools />
+        {/* <DevTools /> */}
       </Physics>
       <ScreenshotCapturer />
     </Canvas>

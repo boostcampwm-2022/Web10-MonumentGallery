@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import React, { Suspense, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 
-import MainWorld from "./MainWorld";
+// import MainWorld from "./MainWorld";
+const MainWorld = React.lazy(() => import("./MainWorld"));
 import ScreenshotCapturer from "../components/ScreenshotCapturer";
 import Zoom from "./components/Zoom";
 
@@ -22,7 +23,9 @@ export default function MainCanvas() {
       orthographic
     >
       <color attach="background" args={[backgroundColor]} />
-      <MainWorld />
+      <Suspense fallback={null}>
+        <MainWorld />
+      </Suspense>
       <Zoom />
       <ScreenshotCapturer />
     </Canvas>

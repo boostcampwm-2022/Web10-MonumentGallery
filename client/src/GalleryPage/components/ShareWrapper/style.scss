@@ -1,0 +1,12 @@
+.share-wrapper {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  width: 150px;
+  height: 60px;
+  display: flex;
+  gap: 25px;
+  &.hidden {
+    display: none;
+  }
+}

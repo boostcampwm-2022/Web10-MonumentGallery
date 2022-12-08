@@ -8,7 +8,7 @@ import { generateRandomPastelColors } from "../../utils/random";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 
 import { COLORS } from "../../@types/colors";
-import type { ITriggeredSpringState } from "../../@types/common";
+import type { ITriggeredSpringState } from "../../@types/animator";
 
 interface AnimatedTitleProps {
   text: string;
@@ -16,7 +16,7 @@ interface AnimatedTitleProps {
 }
 
 export default function AnimatedTitle({ text, animator }: AnimatedTitleProps) {
-  const { spring, ready, playing } = animator;
+  const { spring, playing, active } = animator;
   const textGroupRef = useBillboard<THREE.Group>({ follow: !playing });
 
   const textScale: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-2, 4]), []);
@@ -28,7 +28,7 @@ export default function AnimatedTitle({ text, animator }: AnimatedTitleProps) {
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
   return (
-    <group visible={!!(ready || playing)}>
+    <group visible={active}>
       <animated.group ref={textGroupRef} position-y={textY}>
         <animated.mesh rotation-y={rotation} scale={textScale}>
           <Text font={MapoFlowerIsland} color="black" fontSize={0.1} anchorX="center" anchorY="middle">

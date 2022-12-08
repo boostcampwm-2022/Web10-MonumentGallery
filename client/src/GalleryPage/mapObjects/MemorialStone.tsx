@@ -1,20 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Object3D } from "three";
 import { Text } from "@react-three/drei";
+import { animated } from "@react-spring/three";
 
 import Pedestal from "./Pedestal";
 import { useBillboard } from "../../hooks/useBillboard";
 
-import { IGalleryPageSubTitle } from "../../@types/gallery";
 import { COLORS } from "../../@types/colors";
+import type { ITriggeredSpringState } from "../../@types/animator";
+import type { IGalleryPageSubTitle } from "../../@types/gallery";
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
 
 interface MemorialStonesProps {
   subtitles: IGalleryPageSubTitle[];
+  animator: ITriggeredSpringState;
 }
 
 interface MemorialStoneProps {
   subTitle: IGalleryPageSubTitle;
+  animator: ITriggeredSpringState;
   position: number[];
 }
 
@@ -112,7 +116,7 @@ function getStyleByTitleType(type: string) {
   return { textSize, stoneColor };
 }
 
-function MemorialStone({ subTitle, position }: MemorialStoneProps) {
+function MemorialStone({ subTitle, position, animator }: MemorialStoneProps) {
   const { text, hType } = subTitle;
   const { textSize, stoneColor } = getStyleByTitleType(hType);
   const [pText, setPText] = useState("");
@@ -122,9 +126,14 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
     setPText(visibleLetters.join(" "));
     return { visibleLetters, invisibleLetters };
   }, []);
+  const yPositionOrigin = textSize * (visibleLetters.length / 2) + 0.5;
 
   const subtitleMeshRef = useBillboard<THREE.Mesh>({ lockElevation: true });
   const subtitleRef = useRef<Object3D>(null);
+
+  const { spring, active } = animator;
+  const yPosition = useMemo(() => spring.to([0, 1], [-yPositionOrigin, yPositionOrigin]), []);
+  const scale = useMemo(() => spring.to([0, 1], [0, 1]), []);
 
   useEffect(() => {
     const needAnimation = invisibleLetters.length > 0 ? true : false;
@@ -153,24 +162,26 @@ function MemorialStone({ subTitle, position }: MemorialStoneProps) {
   return (
     <group position={[position[0], 0, position[1]]} scale={textSize}>
       <Pedestal scale={0.5} color={stoneColor} />
-      <mesh ref={subtitleMeshRef} position-y={textSize * (visibleLetters.length / 2) + 0.5}>
-        <Text
-          ref={subtitleRef}
-          font={MapoFont}
-          fontSize={textSize}
-          color={"black"}
-          maxWidth={0.1}
-          textAlign={"center"}
-          lineHeight={1}
-        >
-          {pText}
-        </Text>
-      </mesh>
+      <animated.group position-y={yPosition} scale={scale} visible={active}>
+        <mesh ref={subtitleMeshRef}>
+          <Text
+            ref={subtitleRef}
+            font={MapoFont}
+            fontSize={textSize}
+            color={"black"}
+            maxWidth={0.1}
+            textAlign={"center"}
+            lineHeight={1}
+          >
+            {pText}
+          </Text>
+        </mesh>
+      </animated.group>
     </group>
   );
 }
 
-export default function MemorialStones({ subtitles }: MemorialStonesProps) {
+export default function MemorialStones({ subtitles, animator }: MemorialStonesProps) {
   const stoneInfoList = useMemo(() => {
     return calculateMemorialStonePosition(subtitles);
   }, []);
@@ -180,7 +191,7 @@ export default function MemorialStones({ subtitles }: MemorialStonesProps) {
       {stoneInfoList.map((stoneInfo, i) => {
         const { subtitle, stonePosition } = stoneInfo;
         const key = `${subtitle}+${i}`;
-        return <MemorialStone subTitle={subtitle} position={stonePosition} key={key} />;
+        return <MemorialStone subTitle={subtitle} position={stonePosition} animator={animator} key={key} />;
       })}
     </>
   );

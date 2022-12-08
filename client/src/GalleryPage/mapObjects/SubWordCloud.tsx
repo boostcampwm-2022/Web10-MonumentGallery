@@ -6,7 +6,8 @@ import { animated, Interpolation } from "@react-spring/three";
 
 import { IWordPointData, makeWordsPointData, getCircluarDistributeIndex } from "../../utils/wordCloudUtils";
 
-import type { Vector3Arr, ITriggeredSpringState } from "../../@types/common";
+import type { Vector3Arr } from "../../@types/common";
+import type { ITriggeredSpringState } from "../../@types/animator";
 import type { IKeywordMap } from "../../@types/gallery";
 
 import MapoFont from "../../assets/MapoFlowerIsland.otf";
@@ -153,7 +154,7 @@ function WordHelix({ orbitData, radius, scale }: WordHelixProps) {
 // 원통형 워드클라우드 컴포넌트입니다.
 export default function SubWordCloud({ keywords, radius, animator, ...props }: SubWordCloudProps) {
   const objectRef = useRef<Group>(null);
-  const { spring, ready, playing } = animator;
+  const { spring, active } = animator;
 
   const orbits = useMemo<IOrbitData[]>(() => {
     const wordData = makeWordsPointData(keywords);
@@ -171,7 +172,7 @@ export default function SubWordCloud({ keywords, radius, animator, ...props }: S
   return (
     <animated.group
       rotation-order="YXZ"
-      visible={!!(ready || playing)}
+      visible={active}
       position-y={yPosition}
       {...props}
       scale={scale}

@@ -5,7 +5,7 @@ import Island from "./Island";
 import MemorialStones from "./MemorialStone";
 import AnimatedTitle from "./AnimatedTitle";
 import SubWordCloud from "./SubWordCloud";
-import LinkPedals from "./LinkPedal";
+import LinkPedals from "./LinkPedals";
 import PictureFragments from "./PictureFragments";
 
 import useTriggeredSpring from "../../hooks/useTriggeredSpring";
@@ -24,7 +24,7 @@ export default function GalleryPageIsland({
   const [x, z] = position;
   const [collision, setCollision] = useState(false);
   const springs = useTriggeredSpring(collision, { tension: 500, friction: 150, precision: 0.04 });
-  const { theme } = galleryStore();
+  const theme = galleryStore((store) => store.theme);
 
   return (
     <RigidBody type="fixed" colliders={false} position={[x, 0, z]}>
@@ -36,7 +36,7 @@ export default function GalleryPageIsland({
       />
       <AnimatedTitle text={title} animator={springs} />
       <Island color={(theme && ISLAND_COLORS[theme]) || THEME.DREAM} />
-      <MemorialStones subtitles={subtitle} />
+      <MemorialStones subtitles={subtitle} animator={springs} />
       <SubWordCloud keywords={keywords} radius={6} scale={0.8} animator={springs} />
       {links && <LinkPedals links={links} />}
       {imagePixel && <PictureFragments pixels={imagePixel} />}

@@ -3,7 +3,6 @@ import {
   Color,
   Vector3,
   Quaternion,
-  Uint8BufferAttribute,
   Float32BufferAttribute,
   BufferAttribute,
   InterleavedBufferAttribute,

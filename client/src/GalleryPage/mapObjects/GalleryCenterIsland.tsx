@@ -14,7 +14,7 @@ interface GalleryCenterIslandProps {
 }
 
 export default function GalleryCenterIsland({ keywords, groupKeywords }: GalleryCenterIslandProps) {
-  const { theme } = galleryStore();
+  const theme = galleryStore((store) => store.theme);
   return (
     <group>
       <Island islandScale={8} color={(theme && CENTER_ISLAND_COLORS[theme]) || THEME.DREAM} />

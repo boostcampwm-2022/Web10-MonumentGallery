@@ -4,15 +4,22 @@ import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
 import Light from "./mapObjects/Light";
-import CollisionPlayerBody from "./mapObjects/CollisionPlayerBody";
+import CollisionPlayerBody from "./components/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
-import { BACKGROUND_COLORS } from "../@types/colors";
-import { THEME } from "../@types/gallery";
+import ScreenshotCapturer from "../components/ScreenshotCapturer";
+
 import galleryStore from "../store/gallery.store";
 
+import { BACKGROUND_COLORS } from "../@types/colors";
+import { THEME } from "../@types/gallery";
+import DevTools from "../components/Devtools";
+import settingStore from "../store/setting.store";
+
 export default function Gallery() {
-  const { data, theme } = galleryStore();
+  const speed = settingStore((store) => store.speed);
+  const data = galleryStore((store) => store.data);
+  const theme = galleryStore((store) => store.theme);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
 
   return (
@@ -21,17 +28,18 @@ export default function Gallery() {
       className="canvas-inner"
       camera={{ fov: 75, near: 0.1, far: 50, position: [0, 1.5, 5], rotation: [0.4, 0, 0] }}
       style={{ backgroundColor: (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM }}
-      linear={false}
     >
       <color attach="background" args={[backgroundColor]} />
       <fog attach="fog" args={[backgroundColor, 30, 50]} />
       <Physics gravity={[0, -30, 0]}>
         <Light />
         <CollisionPlayerBody />
-        <MovementController speed={5} />
+        <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
+        {/*<DevTools showDevtool={true} speed={5} />*/}
       </Physics>
+      <ScreenshotCapturer />
     </Canvas>
   );
 }

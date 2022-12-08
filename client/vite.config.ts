@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import eslint from "vite-plugin-eslint";
 import { devRouter } from "./vite-devRouter.js";
+import viteCompression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,6 +15,7 @@ export default defineConfig({
     ]),
     react(),
     eslint(),
+    viteCompression(),
   ],
   build: {
     rollupOptions: {
@@ -22,6 +24,18 @@ export default defineConfig({
         create: path.resolve(__dirname, "create.html"),
         gallery: path.resolve(__dirname, "gallery.html"),
       },
+      // output: {
+      //   manualChunks(id) {
+      //     const chunks = ["axios", "react", "three", "zustand", "rapier"];
+      //     if (id.includes("/node_modules")) {
+      //       for (const chunkName of chunks) {
+      //         if (id.includes(chunkName)) {
+      //           return chunkName;
+      //         }
+      //       }
+      //     }
+      //   },
+      // },
     },
     outDir: "../server/dist",
   },

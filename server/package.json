@@ -18,6 +18,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "compression": "^1.7.4",
     "concurrently": "^7.5.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.27.0",

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useMemo, ReactNode } from "react";
 import { Color, Vector3, Quaternion, Mesh, Camera, Object3D, Group } from "three";
 import { useThree, useFrame, MeshProps, GroupProps } from "@react-three/fiber";
-// import { Float } from "@react-three/drei";
 import { useSpring, animated, Interpolation } from "@react-spring/three";
 
 import PixelFragmentGeometry from "./pixelFragmentGeometry";

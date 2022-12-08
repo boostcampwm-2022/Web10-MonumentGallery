@@ -17,7 +17,7 @@ interface ToastItemProps {
 }
 
 function ToastItem({ toast, position, autoDelete, autoDeleteTime }: ToastItemProps) {
-  const { removeToast } = toastStore();
+  const removeToast = toastStore((store) => store.removeToast);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -34,7 +34,7 @@ function ToastItem({ toast, position, autoDelete, autoDeleteTime }: ToastItemPro
       onClick={() => removeToast(toast)}
     >
       <div className="notification-image">
-        <img src={toast.icon} alt="" />
+        <img src={toast.icon} alt="notification" />
       </div>
       <div>
         <p className="notification-type">{toast.type}</p>
@@ -49,7 +49,8 @@ Toast.defaultProps = {
 };
 
 export function Toast({ position, autoDelete, autoDeleteTime }: ToastProps) {
-  const { toastList, removeAllToast } = toastStore();
+  const toastList = toastStore((store) => store.toastList);
+  const removeAllToast = toastStore((store) => store.removeAllToast);
 
   return (
     <div className={`notification-container ${position}`}>

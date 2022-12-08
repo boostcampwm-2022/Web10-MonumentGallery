@@ -95,8 +95,6 @@ function sumArray(ary) {
 }
 
 export async function getChildPages(notion, pageContents, limitTime) {
-  // if (cursor >= pageID.length || pageID.length > 85) return pageContents;
-
   return changeArrayToObject(
     sumArray(
       await Promise.all(
@@ -117,18 +115,6 @@ export async function getChildPages(notion, pageContents, limitTime) {
       ),
     ),
   );
-
-  // const cursorID = pageID[cursor];
-  // for (let i = 0; i < pageContents[cursorID].childPage.length && pageID.length <= 85; i++) {
-  //   const nowPage = pageContents[cursorID].childPage[i];
-  //   if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
-  //   pageID.push(nowPage.id);
-  //   if (nowPage.type === "page") {
-  //     pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
-  //   } else {
-  //     pageContents[nowPage.id] = sumObject(nowPage, await getDataFromDatabase(notion, nowPage.id));
-  //   }
-  // }
 }
 async function getPages(notion, limitTime) {
   //deprecated

@@ -164,7 +164,7 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 10, data: {} }), res);
   let pageContents = await getRoot(notion, limitTime);
-  // console.log(pageContents);
+  console.log(pageContents);
   let deepth = 0;
 
   while (Object.keys(pageContents).length <= 85 && deepth++ < 2) {
@@ -179,9 +179,13 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
     );
     const childPages = await getChildPages(notion, pageContents, limitTime);
     // console.log(childPages);
-    pageContents = [...pageContents, ...childPages];
+    pageContents = { ...pageContents, ...childPages };
   }
-  pageContents = pageContents.splice(0, 85);
+  pageContents = Object.keys(pageContents)
+    .splice(0, 85)
+    .map((pageID) => {
+      return pageContents[pageID];
+    });
 
   console.log("notionData 처리 시간", Date.now() - nowTime);
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 60, data: {} }), res);

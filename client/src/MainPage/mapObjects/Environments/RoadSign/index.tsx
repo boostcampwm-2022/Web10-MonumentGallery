@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import RoadSignGLB from "../../../assets/models/road-sign.glb?url";
+import RoadSignGLB from "../../../../assets/models/road-sign.glb?url";
 
 import { Html, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useSpring, animated } from "@react-spring/three";
 import { useEffect, useRef, useState } from "react";
 
-import { useFrame, useThree } from "@react-three/fiber";
-import CloseIcon from "../../../assets/images/close.png";
-import "./RoadSign.scss";
-import FloatLayout from "../../../layouts/FloatLayout";
+import { useThree } from "@react-three/fiber";
+import CloseIcon from "../../../../assets/images/close.png";
+import FullScreenModal from "../../../../components/modal/FullScreenModal";
+import RoadSignHtml from "./RoadSignHtml";
+import "./style.scss";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -30,6 +31,7 @@ export default function RoadSign(
   const { nodes, materials } = useGLTF(RoadSignGLB) as unknown as GLTFResult;
   const ref = useRef<THREE.Group>(null);
   const [move, setMove] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const { camera } = useThree();
 
   const [springs, api] = useSpring(() => ({
@@ -38,12 +40,12 @@ export default function RoadSign(
   }));
 
   useEffect(() => {
+    console.log({ move, show: props.show, showModal });
     if (!props.show) return;
     let timeout: NodeJS.Timeout;
     let floating = false;
     const bounce = () => {
-      if (!ref.current) return;
-      if (!move) return;
+      if (!ref.current || !move || showModal) return;
       api.start({
         position: [
           camera.position.x + 4 - 0.79,
@@ -56,7 +58,7 @@ export default function RoadSign(
     };
     bounce();
     return () => clearTimeout(timeout);
-  }, [move, props.show]);
+  }, [move, props.show, showModal]);
 
   if (!props.show) return null;
 
@@ -67,18 +69,24 @@ export default function RoadSign(
         <group rotation={[Math.PI / 2, 0, 0]}>
           <group position={[0.21, 4.91, 0.02]}>
             <mesh castShadow receiveShadow geometry={nodes.Object_6.geometry} material={materials["WoodLight.001"]}>
-              <Html position={[0.1, 0, -0.1]} rotation={[0, Math.PI / 2, 0]} transform occlude>
+              <Html
+                position={[0.1, 0, -0.1]}
+                rotation={[0, Math.PI / 2, 0]}
+                transform={!showModal}
+                occlude
+                zIndexRange={[1, 10]}
+              >
                 <div
                   className="road-sign"
                   onPointerEnter={() => setMove(false)}
                   onPointerLeave={() => setMove(true)}
-                  onClick={() => console.log("click")}
+                  onClick={() => setShowModal(true)}
                 >
                   <div>
-                    <span>모뉴먼트 갤러리</span>
+                    <span>{showModal ? "" : "모뉴먼트 갤러리"}</span>
                   </div>
                   <div>
-                    <span>서비스 소개 클릭!</span>
+                    <span>{showModal ? "" : "서비스 소개 클릭!"}</span>
                   </div>
                   <button
                     className="sign-button"
@@ -87,9 +95,27 @@ export default function RoadSign(
                       props.setShow(false);
                     }}
                   >
-                    <img width={6} src={CloseIcon} alt="closeIcon" />
+                    {!showModal && <img width={6} src={CloseIcon} alt="closeIcon" />}
                   </button>
                 </div>
+                <FullScreenModal
+                  css={{ width: "70vw", height: "60vh", opacity: "0.8" }}
+                  show={showModal}
+                  setShow={setShowModal}
+                >
+                  <div className="modal" onWheel={(e) => e.stopPropagation()}>
+                    <RoadSignHtml />
+                    <button
+                      className="sign-modal-close-button"
+                      onClick={() => {
+                        setShowModal(false);
+                        setMove(true);
+                      }}
+                    >
+                      <img width={15} src={CloseIcon} alt="closeIcon" />
+                    </button>
+                  </div>
+                </FullScreenModal>
               </Html>
             </mesh>
           </group>

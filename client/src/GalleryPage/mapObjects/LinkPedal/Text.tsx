@@ -7,13 +7,12 @@ interface LinkPedalHtmlProps {
 }
 
 export default function LinkPedalHtml({ href, visible }: LinkPedalHtmlProps) {
+  if (!visible) return null;
   return (
-    <Html center className="pedal-html" hidden={!visible}>
+    <Html center className="pedal-html" distanceFactor={5}>
       <div>
         <div>Enter 클릭 시 이동</div>
-        <a href={href} target="_blank" rel="noreferrer">
-          {href}
-        </a>
+        <div className="pedal-link">{href}</div>
       </div>
     </Html>
   );

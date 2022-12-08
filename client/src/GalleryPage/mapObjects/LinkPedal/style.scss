@@ -1,16 +1,13 @@
 .pedal-html {
-  color: rgb(227, 240, 148);
+  color: #222;
   text-align: center;
   width: 300px;
   font-size: 23px;
-  a {
+  pointer-events: none;
+  .pedal-link {
+    color: #222;
+    font-size: 16px;
+    font-weight: 900;
     text-decoration: none;
-    color: rgb(227, 240, 148);
-    cursor: pointer;
-    transition: all ease 0.3s;
-    &:hover {
-      font-weight: 900;
-      color: #0d7a79;
-    }
   }
 }

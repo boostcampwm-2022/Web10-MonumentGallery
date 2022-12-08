@@ -37,7 +37,7 @@ export default function Gallery() {
         <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
-        {/* <DevTools /> */}
+        {/*<DevTools />*/}
       </Physics>
       <ScreenshotCapturer />
     </Canvas>

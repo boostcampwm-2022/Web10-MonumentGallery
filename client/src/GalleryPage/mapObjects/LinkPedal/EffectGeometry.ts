@@ -65,8 +65,6 @@ class BoxEffectGeometry extends BufferGeometry {
     const pos3 = [basePos[0] * width - rightBasis[0] * width, 0, basePos[1] * width - rightBasis[1] * width];
     const pos4 = [basePos[0] * width + rightBasis[0] * width, 0, basePos[1] * width + rightBasis[1] * width];
 
-    console.log({ pos1, pos2, pos3, pos4 });
-
     const uv1 = [i / 4, 0];
     const uv2 = [(i + 1) / 4, 0];
     const uv3 = [i / 4, 1];

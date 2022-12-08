@@ -34,6 +34,7 @@ function LinkPedalFloor({ setActive, onClick }: LinkPedalFloorProps) {
 }
 
 export default function LinkPedal({ link, position }: LinkPedalProps) {
+  const [active, setActive] = useState(false);
   const [collision, setCollision] = useState(false);
 
   function openLink() {
@@ -54,14 +55,20 @@ export default function LinkPedal({ link, position }: LinkPedalProps) {
   return (
     <RigidBody type="fixed" colliders={false} position={position}>
       <CuboidCollider
-        args={[1, 1, 1]}
+        args={[0.5, 1, 0.5]}
         sensor
-        onIntersectionEnter={() => setCollision(true)}
-        onIntersectionExit={() => setCollision(false)}
+        onIntersectionEnter={() => {
+          setCollision(true);
+          setActive(true);
+        }}
+        onIntersectionExit={() => {
+          setCollision(false);
+          setActive(false);
+        }}
       />
-      <LinkPedalFloor setActive={setCollision} onClick={openLink} />
-      <LinkPedalEffect active={collision} />
-      <LinkPedalHtml href={link.href} visible={collision} />
+      <LinkPedalFloor setActive={setActive} onClick={openLink} />
+      <LinkPedalEffect active={active || collision} />
+      <LinkPedalHtml href={link.href} visible={active || collision} />
     </RigidBody>
   );
 }

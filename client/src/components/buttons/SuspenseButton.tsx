@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import Spinner from "../../components/Spinner";
 import { Resource } from "../../utils/suspender";
 
 interface SuspenseButtonProps {
@@ -16,7 +17,7 @@ export default function SuspenseButton({ children, resource, fallback, name, onC
         <Suspense
           fallback={
             <button>
-              <i className="fa fa-circle-o-notch fa-spin"></i> {fallback}
+              <Spinner /> {fallback}
             </button>
           }
         >

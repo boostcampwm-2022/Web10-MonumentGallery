@@ -44,7 +44,6 @@ app.use("/", redirectRouter);
 
 app.get("/", (req, res, next) => {
   if (req.path === "/") {
-    console.log(req.path);
     res.cookie("searchState", "", { expires: 0 });
   }
   next();

@@ -1,6 +1,8 @@
+import { Suspense, useState } from "react";
+import Spinner from "../../../components/Spinner";
+
 import "./SplashScreen.scss";
 import SplashScreenLogo from "../../../assets/images/splashScreenLogo.png";
-import { Suspense, useState } from "react";
 import { splashSelector } from "../../../store/selectors";
 import mainStore from "../../../store/main.store";
 
@@ -32,7 +34,7 @@ function SplashScreen() {
         </button>
       ) : (
         <button>
-          <i className="fa fa-circle-o-notch fa-spin"></i>
+          <Spinner />
         </button>
       )}
     </div>

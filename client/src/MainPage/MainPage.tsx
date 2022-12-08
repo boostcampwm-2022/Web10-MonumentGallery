@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import userStore from "../store/user.store";
 import FloatLayout from "../layouts/FloatLayout";
 import Splash from "./components/SplashScreen/SplashScreen";
+import ThemeSeletor from "../components/ThemeSelector";
 
 function CreateMonumentButton({ showModal }: { showModal: () => void }) {
   const isLoggedIn = userStore((store) => store.isLoggedIn);
@@ -39,6 +40,7 @@ export default function MainPage() {
       </div>
       <FloatLayout>
         <Header>
+          <ThemeSeletor />
           <UserInfo />
         </Header>
         <CreateMonumentButton showModal={showModal} />

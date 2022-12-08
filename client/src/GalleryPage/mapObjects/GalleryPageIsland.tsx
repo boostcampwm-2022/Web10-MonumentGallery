@@ -5,7 +5,7 @@ import Island from "./Island";
 import MemorialStones from "./MemorialStone";
 import AnimatedTitle from "./AnimatedTitle";
 import SubWordCloud from "./SubWordCloud";
-import LinkPedals from "./LinkPedal";
+import LinkPedals from "./LinkPedals";
 import PictureFragments from "./PictureFragments";
 
 import useTriggeredSpring from "../../hooks/useTriggeredSpring";

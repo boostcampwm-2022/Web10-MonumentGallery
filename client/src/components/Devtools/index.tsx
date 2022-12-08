@@ -34,7 +34,6 @@ export default function DevTools() {
     };
 
     showDevtoolInput.type = "checkbox";
-    console.log(showDevtool);
     showDevtoolInput.checked = showDevtool;
     showDevtoolInput.onchange = (e: any) => {
       setShowDevtool(!showDevtool);

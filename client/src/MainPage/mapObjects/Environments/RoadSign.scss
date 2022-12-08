@@ -1,0 +1,19 @@
+.road-sign {
+  font-family: Nato-sans;
+  text-align: center;
+  user-select: none;
+  width: 100px;
+  span {
+    font-size: 10px;
+  }
+  .sign-button {
+    display: flex;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    &:focus-visible {
+      outline: none;
+    }
+  }
+  transform: translate(-5%, 0);
+}

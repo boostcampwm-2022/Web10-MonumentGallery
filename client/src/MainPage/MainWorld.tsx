@@ -4,10 +4,10 @@ import Light from "../GalleryPage/mapObjects/Light";
 
 import ErrorBoundary from "../components/common/ErrorBoundary";
 import Player from "./mapObjects/Player";
-import Plane from "./mapObjects/Plane";
 import MapDataFetcher from "./components/MapDataFetcher";
 import Ground from "./mapObjects/Ground";
 import DevTools from "../components/Devtools";
+import Environments from "./mapObjects/Environments";
 
 export default function MainWorld() {
   return (
@@ -19,8 +19,8 @@ export default function MainWorld() {
       </ErrorBoundary>
       <Light />
       <Ground />
+      <Environments />
       <Player />
-      <Plane />
       <DevTools />
     </Physics>
   );

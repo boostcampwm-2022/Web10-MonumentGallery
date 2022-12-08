@@ -4,11 +4,17 @@ import { useEffect } from "react";
 import settingStore from "../../store/setting.store";
 import "./style.scss";
 
-export default function DevTools() {
+interface DevToolsProps {
+  showDevtool?: boolean;
+  speed?: number;
+}
+
+export default function DevTools({ showDevtool: initialShowDevtool, speed: initialSpeed }: DevToolsProps) {
   const { showDevtool, setShowDevtool, speed, setSpeed } = settingStore();
 
   useEffect(() => {
-    setSpeed(40);
+    if (initialShowDevtool !== undefined) setShowDevtool(initialShowDevtool);
+    if (initialSpeed !== undefined) setSpeed(initialSpeed);
   }, []);
 
   useEffect(() => {
@@ -35,7 +41,7 @@ export default function DevTools() {
 
     showDevtoolInput.type = "checkbox";
     showDevtoolInput.checked = showDevtool;
-    showDevtoolInput.onchange = (e: any) => {
+    showDevtoolInput.onchange = () => {
       setShowDevtool(!showDevtool);
     };
 

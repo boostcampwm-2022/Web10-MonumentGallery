@@ -7,8 +7,8 @@ const urlRegEx =
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/gim;
 
 export async function getRawContentsFromNotion(notionAccessToken, period) {
+  //deprecated
   const limitTime = getLimitTime(period);
-  // const limitTime = Date.now();
   const notion = new Client({ auth: notionAccessToken });
 
   return await getPages(notion, limitTime);
@@ -22,6 +22,7 @@ function getPageBasic(result, type) {
     innerText = getTextFromTextObject(result?.title).length > 0 ? getTextFromTextObject(result?.title)[0] : "-";
   }
   return {
+    id: result.id,
     title: innerText,
     createdTime: result.created_time,
     lastEditedTime: result.last_edited_time,
@@ -32,6 +33,7 @@ function getPageBasic(result, type) {
 export function sumObject(obj1, obj2) {
   //obj1이 기준임
   return {
+    id: obj1?.id,
     title: obj1?.title,
     createdTime: obj1?.createdTime,
     lastEditedTime: obj1?.lastEditedTime,
@@ -47,59 +49,75 @@ export function sumObject(obj1, obj2) {
     paragraph: obj2?.paragraph,
   };
 }
-
+function changeArrayToObject(ary) {
+  return ary.reduce((acc, cur) => {
+    if (cur?.id) acc[cur.id] = cur;
+    return acc;
+  }, {});
+}
 async function getRootPages(notion, limitTime, type) {
-  const pageContents = {};
-  const pageID = [];
-
   const pageResponse = await notion.search({
     filter: { property: "object", value: type },
   });
 
-  pageResponse.results.forEach(async (result) => {
+  const pageContents = pageResponse.results.reduce((acc, result) => {
     if (
       result.object === type &&
       result.parent.type === "workspace" &&
-      Date.parse(result.last_edited_time) > limitTime
+      Date.parse(result.last_edited_time) >= limitTime
     ) {
-      pageID.push(result.id);
-      pageContents[result.id] = getPageBasic(result, type);
+      acc[result.id] = getPageBasic(result, type);
     }
-  });
+    return acc;
+  }, {});
 
-  for (let i = 0; i < pageID.length; i++) {
-    const pageData =
-      type === "page" ? await getDataFromPage(notion, pageID[i]) : await getDataFromDatabase(notion, pageID[i]);
-    pageContents[pageID[i]] = sumObject(pageContents[pageID[i]], pageData);
-  }
-  return pageContents;
+  return changeArrayToObject(
+    await Promise.all(
+      Object.keys(pageContents).map(async (pageID) => {
+        return sumObject(
+          pageContents[pageID],
+          type === "page" ? await getDataFromPage(notion, pageID) : await getDataFromDatabase(notion, pageID),
+        );
+      }),
+    ),
+  );
 }
 
 export async function getRoot(notion, limitTime) {
-  const pageContents = {
-    ...(await getRootPages(notion, limitTime, "page")),
-    ...(await getRootPages(notion, limitTime, "database")),
-  };
-  const pageID = Object.keys(pageContents);
-
-  return { pageContents, pageID };
+  return { ...(await getRootPages(notion, limitTime, "page")), ...(await getRootPages(notion, limitTime, "database")) };
 }
 
-export async function getChildPages(notion, pageContents, pageID, cursor, limitTime) {
-  if (cursor >= pageID.length || pageID.length > 85) return;
-  const cursorID = pageID[cursor];
-  for (let i = 0; i < pageContents[cursorID].childPage.length && pageID.length <= 85; i++) {
-    const nowPage = pageContents[cursorID].childPage[i];
-    if (nowPage.id in pageContents || nowPage.lastEditedTime > limitTime) continue;
-    pageID.push(nowPage.id);
-    if (nowPage.type === "page") {
-      pageContents[nowPage.id] = sumObject(nowPage, await getDataFromPage(notion, nowPage.id));
-    } else {
-      pageContents[nowPage.id] = sumObject(nowPage, await getDataFromDatabase(notion, nowPage.id));
-    }
-  }
+function sumArray(ary) {
+  return ary.reduce((acc, cur) => {
+    acc = [...acc, ...cur];
+    return acc;
+  }, []);
+}
+
+export async function getChildPages(notion, pageContents, limitTime) {
+  return changeArrayToObject(
+    sumArray(
+      await Promise.all(
+        Object.keys(pageContents).map(async (pageID) => {
+          return await Promise.all(
+            pageContents[pageID].childPage
+              .filter((page) => Date.parse(page.lastEditedTime) >= limitTime)
+              .map(async (page) => {
+                return sumObject(
+                  page,
+                  page.type === "page"
+                    ? await getDataFromPage(notion, page.id)
+                    : await getDataFromDatabase(notion, page.id),
+                );
+              }),
+          );
+        }),
+      ),
+    ),
+  );
 }
 async function getPages(notion, limitTime) {
+  //deprecated
   //root page 처리
   const pageContents = {
     ...(await getRootPages(notion, limitTime, "page")),
@@ -136,62 +154,66 @@ export async function getDataFromPage(notion, pageId) {
     page_size: 50,
   });
 
-  const res = processPageData(notion, content.results);
+  const res = processPageData(content.results);
 
   //columnList 처리
-  if (res.columnList.length > 0) {
-    for (let i = 0; i < res.columnList.length; i++) {
-      const columnList = await getDataFromColumnList(notion, res.columnList[i]);
-      Object.keys(columnList).forEach((key) => {
-        res[key] = [...res[key], ...columnList[key]];
-      });
-    }
-    delete res.columnList;
-  }
+  const columnLists = await Promise.all(
+    res.columnList.map(async (column) => {
+      return await getDataFromColumnList(notion, column);
+    }),
+  );
+
+  columnLists.forEach((columnList) => {
+    Object.keys(columnList).forEach((key) => {
+      res[key] = [...res[key], ...columnList[key]];
+    });
+  });
 
   //자식 페이지 url 처리
+  res.childPage = await Promise.all(
+    res.childPage.map(async (page) => {
+      const nowPage = await notion.pages.retrieve({ page_id: page.id });
+      page.myUrl = nowPage.url;
+      return page;
+    }),
+  );
 
-  if (res.childPage.length > 0) {
-    for (let i = 0; i < res.childPage.length; i++) {
-      const childPage = await notion.pages.retrieve({ page_id: res.childPage[i].id });
-      res.childPage[i].myUrl = childPage.url;
+  //자식 DB처리
+  const childDatabases = await Promise.all(
+    res.childDatabase.map(async (databaseID) => {
+      return await notion.databases.retrieve({ database_id: databaseID });
+    }),
+  );
+
+  childDatabases.forEach(async (childDatabase) => {
+    //is_inline에 따라 다르게 처리
+    if (!childDatabase.is_inline) {
+      //인라인이 아닐 경우 -> 페이지로 간주
+      const innerText = getTextFromTextObject(childDatabase?.title);
+      res.childPage.push({
+        type: "database",
+        id: childDatabase.id,
+        title: innerText?.length > 0 ? innerText[0] : "-",
+        createdTime: childDatabase.created_time,
+        lastEditedTime: childDatabase.last_edited_time,
+        myUrl: childDatabase.url,
+      });
+    } else {
+      //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> paragraph
+      res.h3 = [...res.h3, ...getTextFromTextObject(childDatabase?.title)];
+      const databaseData = await notion.databases.query({
+        database_id: childDatabase.id,
+      });
+      databaseData.results.forEach((data) => {
+        if (getTitleFromProperties(data.properties)) res.paragraph.push(getTitleFromProperties(data.properties));
+      });
     }
-  }
-
-  //자식 데이터베이스 처리
-  if (res.childDatabase.length > 0) {
-    for (let i = 0; i < res.childDatabase.length; i++) {
-      const childDatabase = await notion.databases.retrieve({ database_id: res.childDatabase[i] });
-
-      //is_inline에 따라 다르게 처리
-      if (!childDatabase.is_inline) {
-        //인라인이 아닐 경우 -> 페이지로 간주
-        const innerText = getTextFromTextObject(childDatabase?.title);
-        res.childPage.push({
-          type: "database",
-          id: res.childDatabase[i],
-          title: innerText?.length > 0 ? innerText[0] : "-",
-          createdTime: childDatabase.created_time,
-          lastEditedTime: childDatabase.last_edited_time,
-          myUrl: childDatabase.url,
-        });
-      } else {
-        //인라인일 경우 -> 부모 페이지에 종속, 제목 -> h3, 페이지들 -> paragraph
-        res.h3 = [...res.h3, ...getTextFromTextObject(childDatabase?.title)];
-        const databaseData = await notion.databases.query({
-          database_id: childDatabase.id,
-        });
-        databaseData.results.forEach((data) => {
-          if (getTitleFromProperties(data.properties)) res.paragraph.push(getTitleFromProperties(data.properties));
-        });
-      }
-    }
-  }
+  });
 
   return res;
 }
 
-function processPageData(notion, data) {
+function processPageData(data) {
   // 다른 함수들과 res의 형식이 강결합돼있으므로 여기 수정 시 모두 수정해야함
   const res = {
     position: [],
@@ -382,17 +404,21 @@ async function getDataFromColumnList(notion, columnListId) {
     childDatabase: [],
   };
 
-  for (let i = 0; i < columns.results.length; i++) {
-    const columnData = await notion.blocks.children.list({
-      block_id: columns.results[i].id,
-      page_size: 50,
-    });
-    const processedData = processPageData(notion, columnData.results);
+  const columnDatas = await Promise.all(
+    columns.results.map(async (column) => {
+      const columnData = await notion.blocks.children.list({
+        block_id: column.id,
+        page_size: 50,
+      });
+      return processPageData(columnData.results);
+    }),
+  );
 
-    Object.keys(processedData).forEach((key) => {
-      res[key] = [...res[key], ...processedData[key]];
+  columnDatas.forEach((columnData) => {
+    Object.keys(columnData).forEach((key) => {
+      res[key] = [...res[key], ...columnData[key]];
     });
-  }
+  });
 
   return res;
 }

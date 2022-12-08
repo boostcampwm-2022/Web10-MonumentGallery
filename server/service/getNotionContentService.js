@@ -46,7 +46,12 @@ export function sumObject(obj1, obj2) {
     paragraph: obj2?.paragraph,
   };
 }
-
+function changeArrayToObject(ary) {
+  return ary.reduce((acc, cur) => {
+    if (cur?.id) acc[cur.id] = cur;
+    return acc;
+  }, {});
+}
 async function getRootPages(notion, limitTime, type) {
   const pageResponse = await notion.search({
     filter: { property: "object", value: type },

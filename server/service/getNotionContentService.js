@@ -7,6 +7,7 @@ const urlRegEx =
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/gim;
 
 export async function getRawContentsFromNotion(notionAccessToken, period) {
+  //deprecated
   const limitTime = getLimitTime(period);
   const notion = new Client({ auth: notionAccessToken });
 
@@ -63,7 +64,7 @@ async function getRootPages(notion, limitTime, type) {
     if (
       result.object === type &&
       result.parent.type === "workspace" &&
-      Date.parse(result.last_edited_time) > limitTime
+      Date.parse(result.last_edited_time) >= limitTime
     ) {
       acc[result.id] = getPageBasic(result, type);
     }
@@ -101,14 +102,16 @@ export async function getChildPages(notion, pageContents, limitTime) {
       await Promise.all(
         Object.keys(pageContents).map(async (pageID) => {
           return await Promise.all(
-            pageContents[pageID].childPage.map(async (page) => {
-              return sumObject(
-                page,
-                page.type === "page"
-                  ? await getDataFromPage(notion, page.id)
-                  : await getDataFromDatabase(notion, page.id),
-              );
-            }),
+            pageContents[pageID].childPage
+              .filter((page) => Date.parse(page.lastEditedTime) >= limitTime)
+              .map(async (page) => {
+                return sumObject(
+                  page,
+                  page.type === "page"
+                    ? await getDataFromPage(notion, page.id)
+                    : await getDataFromDatabase(notion, page.id),
+                );
+              }),
           );
         }),
       ),
@@ -128,6 +131,7 @@ export async function getChildPages(notion, pageContents, limitTime) {
   // }
 }
 async function getPages(notion, limitTime) {
+  //deprecated
   //root page 처리
   const pageContents = {
     ...(await getRootPages(notion, limitTime, "page")),

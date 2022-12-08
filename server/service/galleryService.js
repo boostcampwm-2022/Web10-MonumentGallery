@@ -159,29 +159,31 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
   createConnectionSSE(res);
   const limitTime = getLimitTime(period);
   const notion = new Client({ auth: notionAccessToken });
-
+  const nowTime = Date.now();
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 5, data: {} }), res);
 
-  writeMessageSSE(JSON.stringify({ kind: "루트 페이지 불러오는 중...", progress: 10, data: {} }), res);
+  writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 10, data: {} }), res);
   let pageContents = await getRoot(notion, limitTime);
-  console.log(pageContents);
+  // console.log(pageContents);
   let deepth = 0;
 
   while (Object.keys(pageContents).length <= 85 && deepth++ < 2) {
     // console.log(pageContents);
     writeMessageSSE(
       JSON.stringify({
-        kind: `${deepth}단계의 페이지 불러오는 중...`,
+        kind: `노션 데이터 불러오는 중...`,
         progress: 20 + 10 * deepth <= 55 ? 20 + 10 * deepth : 55,
         data: {},
       }),
       res,
     );
     const childPages = await getChildPages(notion, pageContents, limitTime);
-    console.log(childPages);
+    // console.log(childPages);
     pageContents = [...pageContents, ...childPages];
   }
+  pageContents = pageContents.splice(0, 85);
 
+  console.log("notionData 처리 시간", Date.now() - nowTime);
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 60, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "이미지 가공 중...", progress: 65, data: {} }), res);

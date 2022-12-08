@@ -191,7 +191,7 @@ export async function getDataFromPage(notion, pageId) {
       const innerText = getTextFromTextObject(childDatabase?.title);
       res.childPage.push({
         type: "database",
-        id: res.childDatabase[i],
+        id: childDatabase.id,
         title: innerText?.length > 0 ? innerText[0] : "-",
         createdTime: childDatabase.created_time,
         lastEditedTime: childDatabase.last_edited_time,

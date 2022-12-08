@@ -40,25 +40,24 @@ export default function RoadSign(
   }));
 
   useEffect(() => {
-    console.log({ move, show: props.show, showModal });
     if (!props.show) return;
     let timeout: NodeJS.Timeout;
     let floating = false;
     const bounce = () => {
-      if (!ref.current || !move || showModal) return;
+      if (!ref.current || !move) return;
       api.start({
         position: [
-          camera.position.x + 4 - 0.79,
+          camera.position.x - 3 - 0.79,
           floating ? camera.position.y - 20 + 2.6 : camera.position.y - 20 + 1.3,
           camera.position.z - 15 + 0.62,
         ],
       });
       floating = !floating;
-      timeout = setTimeout(bounce, 1.5 * 1000);
+      timeout = setTimeout(bounce, floating ? 1.2 * 1000 : 0.2 * 1000);
     };
     bounce();
     return () => clearTimeout(timeout);
-  }, [move, props.show, showModal]);
+  }, [move, props.show]);
 
   if (!props.show) return null;
 
@@ -98,11 +97,7 @@ export default function RoadSign(
                     {!showModal && <img width={6} src={CloseIcon} alt="closeIcon" />}
                   </button>
                 </div>
-                <FullScreenModal
-                  css={{ width: "70vw", height: "60vh", opacity: "0.8" }}
-                  show={showModal}
-                  setShow={setShowModal}
-                >
+                <FullScreenModal css={{ width: "70vw", height: "80vh" }} show={showModal} setShow={setShowModal}>
                   <div className="modal" onWheel={(e) => e.stopPropagation()}>
                     <RoadSignHtml />
                     <button

@@ -3,6 +3,7 @@
   justify-content: space-between;
   padding: 15px;
   width: 100vw;
+  pointer-events: none;
   .logo {
     position: fixed;
     z-index: 1;

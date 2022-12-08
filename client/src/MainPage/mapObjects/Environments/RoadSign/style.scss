@@ -3,6 +3,7 @@
   text-align: center;
   user-select: none;
   width: 100px;
+  cursor: pointer;
   span {
     font-size: 10px;
   }
@@ -19,6 +20,8 @@
 }
 
 .modal {
+  font-family: Nato-sans;
+  font-size: 20px;
   height: 100%;
   display: flex;
   justify-content: center;

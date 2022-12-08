@@ -45,19 +45,19 @@ function attachAllDataForDB(rawContent, notionKeyword, theme, positionData) {
         keywords: getTop30Keywords(notionKeyword.ppPages[page.id].keywords),
         title: rawContent[page.id].title ? rawContent[page.id].title : "-",
         subtitle: [
-          ...notionKeyword.ppPages[page.id].h1_keywords.map((keyword) => {
+          ...rawContent[page.id].h1.map((keyword) => {
             return {
               hType: "h1",
               text: keyword,
             };
           }),
-          ...notionKeyword.ppPages[page.id].h2_keywords.map((keyword) => {
+          ...rawContent[page.id].h2.map((keyword) => {
             return {
               hType: "h2",
               text: keyword,
             };
           }),
-          ...notionKeyword.ppPages[page.id].h3_keywords.map((keyword) => {
+          ...rawContent[page.id].h3.map((keyword) => {
             return {
               hType: "h3",
               text: keyword,

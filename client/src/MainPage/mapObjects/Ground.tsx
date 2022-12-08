@@ -1,13 +1,12 @@
 import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
-import springGround from "../../assets/images/spring-ground.png";
-import summerGround from "../../assets/images/summer-ground.png";
-import autumnGround from "../../assets/images/autumn-ground.png";
-import winterGround from "../../assets/images/winter-ground.png";
-import dreamGround from "../../assets/images/dream-ground.png";
+import galleryStore from "../../store/gallery.store";
+import { THEME } from "../../@types/gallery";
+import { GROUND_TEXTURES } from "../../@types/main";
 
 export default function Ground() {
-  const texture = useTexture(springGround);
+  const theme = galleryStore((store) => store.theme);
+  const texture = useTexture(GROUND_TEXTURES[theme || THEME.DREAM]);
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   return (
     <mesh receiveShadow position={[0, 0.1, 0]} rotation-x={-Math.PI / 2}>

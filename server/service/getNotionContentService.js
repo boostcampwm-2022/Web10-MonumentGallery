@@ -21,6 +21,7 @@ function getPageBasic(result, type) {
     innerText = getTextFromTextObject(result?.title).length > 0 ? getTextFromTextObject(result?.title)[0] : "-";
   }
   return {
+    id: result.id,
     title: innerText,
     createdTime: result.created_time,
     lastEditedTime: result.last_edited_time,
@@ -31,6 +32,7 @@ function getPageBasic(result, type) {
 export function sumObject(obj1, obj2) {
   //obj1이 기준임
   return {
+    id: obj1?.id,
     title: obj1?.title,
     createdTime: obj1?.createdTime,
     lastEditedTime: obj1?.lastEditedTime,
@@ -68,18 +70,20 @@ async function getRootPages(notion, limitTime, type) {
     return acc;
   }, {});
 
-  return await Promise.all(
-    Object.keys(pageContents).map(async (pageID) => {
-      return sumObject(
-        pageContents[pageID],
-        type === "page" ? await getDataFromPage(notion, pageID) : await getDataFromDatabase(notion, pageID),
-      );
-    }),
+  return changeArrayToObject(
+    await Promise.all(
+      Object.keys(pageContents).map(async (pageID) => {
+        return sumObject(
+          pageContents[pageID],
+          type === "page" ? await getDataFromPage(notion, pageID) : await getDataFromDatabase(notion, pageID),
+        );
+      }),
+    ),
   );
 }
 
 export async function getRoot(notion, limitTime) {
-  return [...(await getRootPages(notion, limitTime, "page")), ...(await getRootPages(notion, limitTime, "database"))];
+  return { ...(await getRootPages(notion, limitTime, "page")), ...(await getRootPages(notion, limitTime, "database")) };
 }
 
 function sumArray(ary) {
@@ -92,20 +96,22 @@ function sumArray(ary) {
 export async function getChildPages(notion, pageContents, limitTime) {
   // if (cursor >= pageID.length || pageID.length > 85) return pageContents;
 
-  return sumArray(
-    await Promise.all(
-      pageContents.map(async (page) => {
-        return await Promise.all(
-          page.childPage.map(async (page) => {
-            return sumObject(
-              page,
-              page.type === "page"
-                ? await getDataFromPage(notion, page.id)
-                : await getDataFromDatabase(notion, page.id),
-            );
-          }),
-        );
-      }),
+  return changeArrayToObject(
+    sumArray(
+      await Promise.all(
+        Object.keys(pageContents).map(async (pageID) => {
+          return await Promise.all(
+            pageContents[pageID].childPage.map(async (page) => {
+              return sumObject(
+                page,
+                page.type === "page"
+                  ? await getDataFromPage(notion, page.id)
+                  : await getDataFromDatabase(notion, page.id),
+              );
+            }),
+          );
+        }),
+      ),
     ),
   );
 

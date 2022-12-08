@@ -5,7 +5,6 @@ export default function useAudio(audioRef: React.RefObject<HTMLAudioElement>) {
   const { sourceUrl, isPlaying, volume } = audioStore();
 
   useEffect(() => {
-    console.log("play effect");
     if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.play();

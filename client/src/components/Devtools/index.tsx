@@ -40,7 +40,6 @@ export default function DevTools({ showDevtool: initialShowDevtool, speed: initi
     };
 
     showDevtoolInput.type = "checkbox";
-    console.log(showDevtool);
     showDevtoolInput.checked = showDevtool;
     showDevtoolInput.onchange = () => {
       setShowDevtool(!showDevtool);

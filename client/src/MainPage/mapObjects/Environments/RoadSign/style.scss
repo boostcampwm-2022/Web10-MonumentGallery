@@ -1,0 +1,80 @@
+button:focus-visible {
+  outline: none;
+}
+
+.road-sign {
+  font-family: Nato-sans;
+  text-align: center;
+  user-select: none;
+  width: 100px;
+  cursor: pointer;
+  span {
+    font-size: 10px;
+  }
+  .sign-button {
+    display: flex;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+  }
+  transform: translate(-5%, 0);
+}
+
+.modal {
+  font-family: Nato-sans;
+  font-size: 20px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow: scroll;
+
+  .mapo-flower-span {
+    font-family: MapoFlowerIsland;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c9c9c9;
+    border-radius: 25px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: none;
+  }
+  .sign-html-intro {
+    font-size: 16px;
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 5px 0px;
+    }
+  }
+  .sign-html-notion-button {
+    width: 50%;
+    height: 30px;
+    font-size: 15px;
+    color: #ffffff;
+    background-color: #2c2c2c;
+    margin: 20px 0px;
+    border-radius: 10px;
+  }
+  .sign-html-iframe {
+    width: 65vw;
+    height: 70vh;
+    border: 0;
+    padding: 0;
+  }
+}
+
+.sign-modal-close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}

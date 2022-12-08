@@ -85,7 +85,7 @@ export default function RoadSign(
                     <span>{showModal ? "" : "모뉴먼트 갤러리"}</span>
                   </div>
                   <div>
-                    <span>{showModal ? "" : "서비스 소개 클릭!"}</span>
+                    <span>{showModal ? "" : "사용법 및 소개 클릭!"}</span>
                   </div>
                   <button
                     className="sign-button"
@@ -97,7 +97,11 @@ export default function RoadSign(
                     {!showModal && <img width={6} src={CloseIcon} alt="closeIcon" />}
                   </button>
                 </div>
-                <FullScreenModal css={{ width: "70vw", height: "80vh" }} show={showModal} setShow={setShowModal}>
+                <FullScreenModal
+                  css={{ width: "70vw", height: "80vh", opacity: "0.9" }}
+                  show={showModal}
+                  setShow={setShowModal}
+                >
                   <div className="modal" onWheel={(e) => e.stopPropagation()}>
                     <RoadSignHtml />
                     <button

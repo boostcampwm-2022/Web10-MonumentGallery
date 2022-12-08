@@ -31,6 +31,9 @@ function getPageBasic(result, type) {
 }
 
 export function sumObject(obj1, obj2) {
+  const links = [...obj2.links];
+  if (obj1.myUrl) links.push({ href: obj1.myUrl, favicon: "" });
+
   //obj1이 기준임
   return {
     id: obj1?.id,
@@ -44,7 +47,7 @@ export function sumObject(obj1, obj2) {
     h1: obj2?.h1,
     h2: obj2?.h2,
     h3: obj2?.h3,
-    links: [...obj2.links, { href: obj1.myUrl, favicon: "" }],
+    links: links,
     image: obj2?.image,
     paragraph: obj2?.paragraph,
   };
@@ -316,7 +319,7 @@ function processPageData(data) {
         // console.log("임베드링크: ", val.embed);
         if (val.embed?.url) {
           res.links.push({
-            href: val.embed.link,
+            href: val.embed.url,
             favicon: "",
           });
         }
@@ -378,6 +381,7 @@ export async function getDataFromDatabase(notion, databaseId) {
       title: getTitleFromProperties(data.properties),
       createdTime: data.created_time,
       lastEditedTime: data.last_edited_time,
+      myUrl: data.url,
     });
   });
 

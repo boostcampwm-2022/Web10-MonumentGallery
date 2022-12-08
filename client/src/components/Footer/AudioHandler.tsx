@@ -11,16 +11,16 @@ export default function AudioHandler() {
   const [autoplay, setAutoplay] = useState(false);
   useAudio(audioRef);
 
-  // useEffect(() => {
-  //   function onAutoplayInteraction() {
-  //     if (!autoplay) {
-  //       setIsPlaying(true);
-  //       setAutoplay(true);
-  //     }
-  //   }
-  //   document.addEventListener("keydown", onAutoplayInteraction);
-  //   return () => document.removeEventListener("keydown", onAutoplayInteraction);
-  // }, [autoplay]);
+  useEffect(() => {
+    function onAutoplayInteraction() {
+      if (!autoplay) {
+        setIsPlaying(true);
+        setAutoplay(true);
+      }
+    }
+    document.addEventListener("keydown", onAutoplayInteraction);
+    return () => document.removeEventListener("keydown", onAutoplayInteraction);
+  }, [autoplay]);
 
   return (
     <>

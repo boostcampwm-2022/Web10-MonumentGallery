@@ -37,7 +37,7 @@ export default function ProgressBar({ eventSourceUrl, onLoad }: ProgressBarProps
         textRef.current.innerText = res.kind;
         if (res.progress === 100) onLoad(res.data);
       };
-      eventSource.onerror = (e) => {
+      eventSource.onerror = () => {
         let timer = 3;
         const interval = setInterval(() => {
           textRef.current.innerText = `에러가 발생했습니다. ${timer}초 뒤 다시 시도합니다.`;

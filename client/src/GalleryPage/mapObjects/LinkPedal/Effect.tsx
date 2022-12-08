@@ -20,7 +20,7 @@ interface LinkPedalEffectProps {
 
 export default function LinkPedalEffect({ active }: LinkPedalEffectProps) {
   const { spring, active: animActive } = useTriggeredSpring(active, {});
-  const positionY = useMemo(() => spring.to([0, 1], [-0.3, 0]), []);
+  const positionY = useMemo(() => spring.to([0, 1], [-0.5, 0]), []);
   const uniforms = useRef(effectShaderUniforms());
 
   useFrame(({ clock }) => {
@@ -31,7 +31,7 @@ export default function LinkPedalEffect({ active }: LinkPedalEffectProps) {
 
   return (
     <animated.mesh position-y={positionY} visible={animActive}>
-      <boxEffectGeometry />
+      <boxEffectGeometry args={[1, 0.5]} />
       <shaderMaterial {...effectShader} uniforms={uniforms.current} />
     </animated.mesh>
   );

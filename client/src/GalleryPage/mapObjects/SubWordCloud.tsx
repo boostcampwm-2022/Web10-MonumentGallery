@@ -10,7 +10,7 @@ import type { Vector3Arr } from "../../@types/common";
 import type { ITriggeredSpringState } from "../../@types/animator";
 import type { IKeywordMap } from "../../@types/gallery";
 
-import MapoFont from "../../assets/MapoFlowerIsland.otf";
+import MapoFont from "../../assets/fonts/MapoFlowerIsland.otf";
 
 interface WordObjectProps {
   data: IWordPointData;

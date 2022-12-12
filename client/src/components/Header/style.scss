@@ -7,14 +7,21 @@
   .header-info {
     display: flex;
     justify-content: flex-start;
-    & > a {
-      display: inline-block;
-      width: 220px;
-      .logo {
-        position: fixed;
-        z-index: 1;
-        color: #ffffff;
-        font-size: 25px;
+    .logo {
+      width: 250px;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-right: 20px;
+      .logo-ico {
+        width: 40px;
+        height: 40px;
+      }
+      .logo-title {
+        font-size: 24px;
+        color: white;
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
       }
     }
@@ -23,12 +30,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-right: 30px;
       font-weight: 200;
       font-family: "Nato-sans";
       color: #ffffff;
       filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-      font-size: 20px;
+      font-size: 14px;
     }
   }
 
@@ -36,6 +42,14 @@
     display: flex;
     position: inherit;
     z-index: 1;
+
+    .theme-select-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Nato-sans";
+    }
+
     .userinfo {
       display: flex;
       justify-content: center;

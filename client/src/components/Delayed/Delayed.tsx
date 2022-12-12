@@ -7,7 +7,7 @@ interface DelayedProps {
 }
 
 function Delayed({ children, waitBeforeShow = 500 }: DelayedProps) {
-  const [isShown, setIsShown] = useState(false);
+  const [isShown, setIsShown] = useState(waitBeforeShow <= 0);
 
   useEffect(() => {
     const timer = setTimeout(() => {

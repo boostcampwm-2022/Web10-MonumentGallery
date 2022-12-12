@@ -2,8 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import useAudio from "../../hooks/useAudio";
 import audioStore from "../../store/audio.store";
 
-import PlayIcon from "../../assets/images/play.png";
-import PauseIcon from "../../assets/images/pause.png";
+import PlayIcon from "../../assets/images/play.svg";
+import PauseIcon from "../../assets/images/pause.svg";
 
 export default function AudioHandler() {
   const audioRef = useRef<HTMLAudioElement>(null);

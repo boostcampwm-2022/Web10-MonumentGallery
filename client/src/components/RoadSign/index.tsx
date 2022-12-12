@@ -88,72 +88,67 @@ export default function RoadSign(
   return (
     // @ts-ignore
     <animated.group ref={ref} {...props} {...springs} dispose={null}>
-      <group rotation={[-Math.PI / 2, 0, 0]}>
-        <group rotation={[Math.PI / 2, 0, 0]}>
-          <group position={[0.21, 4.91, 0.02]}>
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Object_6.geometry}
-              material={materials["WoodLight.001"]}
+      <group position={[0.21, 4.91, 0.02]}>
+        <mesh
+          receiveShadow
+          geometry={nodes.Object_6.geometry}
+          material={materials["WoodLight.001"]}
+          onClick={onRoadSignClick}
+        >
+          <Html
+            position={[0.1, 0, -0.1]}
+            rotation={[0, Math.PI / 2, 0]}
+            transform={!showModal}
+            occlude
+            wrapperClass="road-sign-html"
+            zIndexRange={[1, 10]}
+          >
+            <div
+              className="road-sign"
+              onPointerEnter={() => setMove(false)}
+              onPointerLeave={() => setMove(true)}
               onClick={onRoadSignClick}
             >
-              <Html
-                position={[0.1, 0, -0.1]}
-                rotation={[0, Math.PI / 2, 0]}
-                transform={!showModal}
-                occlude
-                wrapperClass="road-sign-html"
-                zIndexRange={[1, 10]}
+              <div>
+                <span>{showModal ? "" : "모뉴먼트 갤러리"}</span>
+              </div>
+              <div>
+                <span>{showModal ? "" : "사용법 및 소개 클릭!"}</span>
+              </div>
+              <button
+                className="sign-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCookie({ name: props.name, value: "true", maxAge: 60 * 60 * 24 });
+                  props.setShow(false);
+                }}
               >
-                <div
-                  className="road-sign"
-                  onPointerEnter={() => setMove(false)}
-                  onPointerLeave={() => setMove(true)}
-                  onClick={onRoadSignClick}
+                {!showModal && <img width={6} src={CloseIcon} alt="closeIcon" />}
+              </button>
+            </div>
+            <FullScreenModal
+              css={{ width: "60%", minWidth: "800px", height: "80%", opacity: "0.9" }}
+              show={showModal}
+              setShow={setShowModal}
+            >
+              <div className="road-sign-modal" onWheel={(e) => e.stopPropagation()}>
+                {props.children}
+                <button
+                  className="sign-modal-close-button"
+                  onClick={() => {
+                    setShowModal(false);
+                    setMove(true);
+                  }}
                 >
-                  <div>
-                    <span>{showModal ? "" : "모뉴먼트 갤러리"}</span>
-                  </div>
-                  <div>
-                    <span>{showModal ? "" : "사용법 및 소개 클릭!"}</span>
-                  </div>
-                  <button
-                    className="sign-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCookie({ name: props.name, value: "true", maxAge: 60 * 60 * 24 });
-                      props.setShow(false);
-                    }}
-                  >
-                    {!showModal && <img width={6} src={CloseIcon} alt="closeIcon" />}
-                  </button>
-                </div>
-                <FullScreenModal
-                  css={{ width: "60%", minWidth: "800px", height: "80%", opacity: "0.9" }}
-                  show={showModal}
-                  setShow={setShowModal}
-                >
-                  <div className="road-sign-modal" onWheel={(e) => e.stopPropagation()}>
-                    {props.children}
-                    <button
-                      className="sign-modal-close-button"
-                      onClick={() => {
-                        setShowModal(false);
-                        setMove(true);
-                      }}
-                    >
-                      <img width={15} src={CloseIcon} alt="closeIcon" />
-                    </button>
-                  </div>
-                </FullScreenModal>
-              </Html>
-            </mesh>
-          </group>
-          <group position={[0.27, 5.36, -0.01]} rotation={[0, 0, -Math.PI / 2]}>
-            <mesh castShadow receiveShadow geometry={nodes.Object_8.geometry} material={materials["iron.001"]} />
-          </group>
-        </group>
+                  <img width={15} src={CloseIcon} alt="closeIcon" />
+                </button>
+              </div>
+            </FullScreenModal>
+          </Html>
+        </mesh>
+      </group>
+      <group position={[0.27, 5.36, -0.01]} rotation={[0, 0, -Math.PI / 2]}>
+        <mesh receiveShadow geometry={nodes.Object_8.geometry} material={materials["iron.001"]} />
       </group>
     </animated.group>
   );

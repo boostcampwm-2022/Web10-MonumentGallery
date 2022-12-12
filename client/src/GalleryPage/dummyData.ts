@@ -2,7 +2,9 @@ import { IGalleryMapData } from "../@types/gallery";
 
 // dummy data
 const dummyData: IGalleryMapData = {
+  id: "sample",
   theme: "SPRING",
+  userName: "TUTORIAL",
   totalKeywords: {
     부스트캠프: 2,
     쏜애플: 3,

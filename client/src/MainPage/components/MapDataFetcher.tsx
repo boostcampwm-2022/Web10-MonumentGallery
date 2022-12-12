@@ -8,9 +8,13 @@ export default function MapDataFetcher() {
   const { camera } = useThree();
   const setGrid = mainStore((store) => store.setGrid);
   const grid = mainStore((store) => store.grid);
+  const search = mainStore((store) => store.search);
+  const setSearch = mainStore((store) => store.setSearch);
   const getData = mainStore((store) => store.getData);
   const [positionKey, setPositionKey] = useState(JSON.stringify([-1, -1]));
-  const data = getData(positionKey);
+
+  console.log(search);
+  const data = getData(positionKey, search);
 
   function calculateGridPosition(position: number[]) {
     return JSON.stringify([Math.floor((position[0] - 25) / 50), Math.floor((position[1] - 25) / 50)]);
@@ -40,17 +44,18 @@ export default function MapDataFetcher() {
       const newPositionKey = calculateGridPosition(playerPosition);
       if (positionKey !== newPositionKey) {
         setPositionKey(newPositionKey);
-        const positions = generateRandomPosition("monument", data.length);
+        const positions = generateRandomPosition("monument", data.gallery.length);
         if (grid[newPositionKey]) return;
-        setGrid(data, newPositionKey, positions);
+        setGrid(data.gallery, newPositionKey, positions);
       }
     }
   });
 
   useEffect(() => {
+    setSearch(data.searchState);
     if (positionKey === "[-1,-1]") {
       if (grid[positionKey]) return;
-      setGrid(data, positionKey, generateRandomPosition("monument", data.length));
+      setGrid(data.gallery, positionKey, generateRandomPosition("monument", data.gallery.length));
     }
   }, [data]);
 
@@ -59,7 +64,7 @@ export default function MapDataFetcher() {
       {getNearByPositionKeys().map((pkey) => (
         <Monuments
           key={pkey}
-          data={grid[pkey]?.data}
+          gallery={grid[pkey]?.gallery}
           gridPosition={JSON.parse(pkey).map((e: number) => Math.floor((e + 1) * 50))}
           positions={grid[pkey]?.positions}
         />

@@ -28,9 +28,8 @@ button:focus-visible {
   font-family: Nato-sans;
   font-size: 20px;
   height: 100%;
-  display: flex;
+  display: grid;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
   overflow: scroll;
 
@@ -61,7 +60,7 @@ button:focus-visible {
     }
   }
   .sign-html-notion-button {
-    width: 50%;
+    width: 200px;
     height: 30px;
     font-size: 15px;
     color: #ffffff;

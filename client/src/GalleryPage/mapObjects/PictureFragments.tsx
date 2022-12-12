@@ -69,7 +69,6 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   }, [pixels]);
 
   const [activate, setActivate] = useState(false);
-  const [nowToggled, setNowToggled] = useState(false);
   const [destPosition, setDestPosition] = useState(new Vector3());
   const [destRotation, setDestRotation] = useState(new Quaternion());
 
@@ -91,17 +90,20 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
     [destRotation],
   );
 
-  useEffect(() => {
-    if (!geometry || !meshRef.current) return;
-    geometry.syncronizeVertex(+!activate);
+  function setScatter(status) {
+    setActivate(status);
 
-    if (!activate) return;
+    if (!status || !meshRef.current) return;
 
     const newPosition = getCameraFrontPosition(camera, meshRef.current, 5);
     const newRotation = getCameraRotation(camera, meshRef.current);
-
     setDestPosition(newPosition);
     setDestRotation(newRotation);
+  }
+
+  useEffect(() => {
+    if (!geometry) return;
+    geometry.syncronizeVertex(+!activate);
   }, [activate]);
 
   useFrame(() => {
@@ -112,10 +114,9 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
     if (meshRef.current?.parent) worldDestPosition.applyMatrix4(meshRef.current.parent.matrixWorld);
 
     const relativePosition = new Vector3().subVectors(worldDestPosition, camera.position);
-    if (!nowToggled && (zBasis.dot(relativePosition) < 0 || relativePosition.length() > scatterRadius * 2)) {
-      setActivate(false);
+    if (zBasis.dot(relativePosition) < 0 || relativePosition.length() > scatterRadius * 2) {
+      setScatter(false);
     }
-    if (nowToggled) setNowToggled(false);
   });
 
   function toggleActivate() {
@@ -126,8 +127,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
       if (camera.position.distanceTo(worldPosition.current) >= scatterRadius * 2) return;
     }
 
-    setActivate((prev) => !prev);
-    setNowToggled(true);
+    setScatter(!activate);
   }
 
   // why ts + react-spring + react-three/fiber is so messy!

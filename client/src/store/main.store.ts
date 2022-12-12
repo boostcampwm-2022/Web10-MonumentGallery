@@ -1,32 +1,36 @@
 // import create from "zustand";
 import create from "zustand";
 import createVanilla from "zustand/vanilla";
-import { IMainDataResponse } from "../@types/main";
+import { IMainDataResponse, IPreviewGalleryData } from "../@types/main";
 import { mainSelector } from "./selectors";
 
 interface IMainMonumentData {
-  data: IMainDataResponse;
+  gallery: IPreviewGalleryData[];
   positions: [number, number][];
 }
 interface MainStore {
   showSplash: boolean;
   grid: { [key: string]: IMainMonumentData };
-  getData: (positionKey: string) => IMainDataResponse;
+  search: string;
+  getData: (positionKey: string, searchState: string) => IMainDataResponse;
   setShowSplash: (show: boolean) => void;
-  setGrid: (data: IMainDataResponse, positionKey: string, positions: [number, number][]) => void;
+  setGrid: (gallery: IPreviewGalleryData[], positionKey: string, positions: [number, number][]) => void;
+  setSearch: (searchState: string) => void;
 }
 
 export const mainVanillaStore = createVanilla<MainStore>((set) => ({
   showSplash: true,
   grid: {},
-  getData: (positionKey) => mainSelector(positionKey).data,
+  search: "",
+  getData: (positionKey, searchState) => mainSelector(positionKey, searchState).data,
   setShowSplash: (show) => set({ showSplash: show }),
-  setGrid: (data, positionKey, positions) =>
+  setGrid: (gallery, positionKey, positions) =>
     set((state) => {
       const newGrid = { ...state.grid };
-      newGrid[positionKey] = { data, positions };
+      newGrid[positionKey] = { gallery, positions };
       return { ...state, grid: newGrid };
     }),
+  setSearch: (search) => set({ search }),
 }));
 
 const mainStore = create(mainVanillaStore);

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-57,0)">
+        <g id="Artboard1" transform="matrix(0.375,0,0,0.375,57,0)">
+            <rect x="0" y="0" width="64" height="64" style="fill:none;"/>
+            <g transform="matrix(3.2,0,0,2.66667,-184,0)">
+                <path d="M60.833,9L60.833,4C60.833,4 65,4 65,4C65.46,4 65.833,3.552 65.833,3C65.833,2.448 65.46,2 65,2L60,2C59.54,2 59.167,2.448 59.167,3L59.167,9C59.167,9.552 59.54,10 60,10C60.46,10 60.833,9.552 60.833,9Z" style="fill:white;"/>
+            </g>
+            <g transform="matrix(2.66667,0,0,2.66667,-152,0)">
+                <path d="M59,15L59,21C59,21.552 59.448,22 60,22L66,22C66.552,22 67,21.552 67,21C67,20.448 66.552,20 66,20L61,20C61,20 61,15 61,15C61,14.448 60.552,14 60,14C59.448,14 59,14.448 59,15Z" style="fill:white;"/>
+            </g>
+            <g transform="matrix(2.66667,0,0,2.66667,-152,0)">
+                <path d="M72,22L78,22C78.552,22 79,21.552 79,21L79,15C79,14.448 78.552,14 78,14C77.448,14 77,14.448 77,15L77,20C77,20 72,20 72,20C71.448,20 71,20.448 71,21C71,21.552 71.448,22 72,22Z" style="fill:white;"/>
+            </g>
+            <g transform="matrix(2.66667,0,0,2.66667,-152,0)">
+                <path d="M79,9L79,3C79,2.448 78.552,2 78,2L72,2C71.448,2 71,2.448 71,3C71,3.552 71.448,4 72,4L77,4C77,4 77,9 77,9C77,9.552 77.448,10 78,10C78.552,10 79,9.552 79,9Z" style="fill:white;"/>
+            </g>
+        </g>
+    </g>
+</svg>

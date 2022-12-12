@@ -2,8 +2,8 @@ import AudioHandler from "./AudioHandler";
 import ExpandButton from "./ExpandButton";
 
 import "./style.scss";
-import GithubMark from "../../assets/images/GitHub-Mark-Light-32px.png";
-import ScreenShotIcon from "../../assets/images/viewfinder.png";
+import GithubMark from "../../assets/images/github.svg";
+import ScreenShotIcon from "../../assets/images/screenshot.svg";
 
 export default function Footer() {
   return (

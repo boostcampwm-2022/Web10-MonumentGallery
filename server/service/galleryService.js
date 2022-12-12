@@ -241,11 +241,11 @@ export async function searchGalleryAll(requestSearchState) {
   const { searchState, gallery } = await searchGalleryRandom(requestSearchState, nowIdx);
 
   if (gallery.length === 0) {
-    const recentGallerys = await searchGalleryRecent(15);
-    if (recentGallerys.length < 15) {
+    const recentGallery = await searchGalleryRecent(15);
+    if (recentGallery.length < 15) {
       Object.keys(searchState).forEach((key) => (searchState[key].valid = false));
     }
-    return { searchState, gallery: recentGallerys };
+    return { searchState, gallery: recentGallery };
   }
   return { searchState, gallery };
 }

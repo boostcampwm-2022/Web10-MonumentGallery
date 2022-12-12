@@ -66,7 +66,8 @@ if (process.env.NODE_ENV === "production") {
   app.use("/", pageRouter);
   app.use("/assets", express.static("./dist/assets"));
   app.use("/reset.css", express.static("./dist/reset.css"));
-  app.use("/vite.svg", express.static("./dist/vite.svg"));
+  app.use("/favicon.ico", express.static("./dist/favicon.ico"));
+  app.use("/thumbnail.png", express.static("./dist/thumbnail.png"));
 }
 
 // error handler

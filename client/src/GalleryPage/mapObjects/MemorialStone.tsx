@@ -9,7 +9,7 @@ import { useBillboard } from "../../hooks/useBillboard";
 import { COLORS } from "../../@types/colors";
 import type { ITriggeredSpringState } from "../../@types/animator";
 import type { IGalleryPageSubTitle } from "../../@types/gallery";
-import MapoFont from "../../assets/MapoFlowerIsland.otf";
+import MapoFont from "../../assets/fonts/MapoFlowerIsland.otf";
 
 interface MemorialStonesProps {
   subtitles: IGalleryPageSubTitle[];

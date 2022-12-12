@@ -12,7 +12,7 @@ import { IWordPointData, makeWordsPointData, getDistributeIndex } from "../../ut
 import { Vector3Arr } from "../../@types/common";
 import { IKeywordMap } from "../../@types/gallery";
 
-import MapoFont from "../../assets/MapoFlowerIsland.otf";
+import MapoFont from "../../assets/fonts/MapoFlowerIsland.otf";
 
 interface WordObjectProps {
   data: IWordPointData;

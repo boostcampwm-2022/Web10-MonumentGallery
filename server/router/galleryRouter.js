@@ -23,7 +23,7 @@ router.get(
     console.log(requestSearchState, gallery);
     // res.cookie("searchState", encodeBase64FromJSON(searchState));
     res.status(200).json({
-      gallery,
+      gallery: gallery ?? [],
       searchState: encodeBase64FromJSON(searchState),
     });
   }),

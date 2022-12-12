@@ -63,19 +63,18 @@ class PixelFragmentGeometry extends BufferGeometry {
       pickedTriangles: [],
     };
 
-    const idx = Math.floor(Math.random() * 100000);
+    const _color = new Color();
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.columns; x++) {
         this.#setAttributes(x, y, attributes);
 
-        const { r, g, b } = new Color(pixels[y][x]);
+        const { r, g, b } = _color.set(pixels[y][x]);
         for (let i = 0; i < 6; i++) {
           normals.push(0, 0, 1);
           colors.push(r, g, b);
         }
       }
     }
-
     this.setAttribute("position", new Float32BufferAttribute(positions, 3));
     this.setAttribute("normal", new Float32BufferAttribute(normals, 3));
     this.setAttribute("uv", new Float32BufferAttribute(attributes.uvs, 2));

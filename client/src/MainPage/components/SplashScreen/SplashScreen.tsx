@@ -2,7 +2,8 @@ import { Suspense, useState } from "react";
 import Spinner from "../../../components/Spinner";
 
 import "./SplashScreen.scss";
-import SplashScreenLogo from "../../../assets/images/splashScreenLogo.png";
+import SplashScreenLogo from "../../../assets/images/splash-logo-1x.png";
+import SplashScreenLogo2x from "../../../assets/images/splash-logo-2x.png";
 import { splashSelector } from "../../../store/selectors";
 import mainStore from "../../../store/main.store";
 
@@ -20,7 +21,13 @@ function SplashScreen() {
 
   return (
     <div className={`splash-screen ${fadeOut}`} hidden={!show}>
-      <img src={SplashScreenLogo} width={480} height={480} alt="splash"></img>
+      <img
+        src={SplashScreenLogo}
+        width={480}
+        height={480}
+        alt="splash"
+        srcSet={`${SplashScreenLogo} 1x, ${SplashScreenLogo2x} 2x`}
+      ></img>
       {grid["[-1,-1]"] ? (
         <button
           onClick={() => {

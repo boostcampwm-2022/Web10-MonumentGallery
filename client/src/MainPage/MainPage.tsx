@@ -12,6 +12,7 @@ import userStore from "../store/user.store";
 import FloatLayout from "../layouts/FloatLayout";
 import Splash from "./components/SplashScreen/SplashScreen";
 import ThemeSeletor from "../components/ThemeSelector";
+import { Toast } from "../components/Toast/Toast";
 
 function CreateMonumentButton({ showModal }: { showModal: () => void }) {
   const isLoggedIn = userStore((store) => store.isLoggedIn);
@@ -40,8 +41,8 @@ export default function MainPage() {
       </div>
       <FloatLayout>
         <Header>
-          <ThemeSeletor />
           <UserInfo />
+          <ThemeSeletor />
         </Header>
         <CreateMonumentButton showModal={showModal} />
         <Footer />
@@ -49,6 +50,7 @@ export default function MainPage() {
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
         <CreateModal />
       </FullScreenModal>
+      <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
     </>
   );
 }

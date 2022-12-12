@@ -19,10 +19,11 @@ import {
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseService.js";
-import { getChildPages, getRawContentsFromNotion, getRoot, getLimitTime } from "./getNotionContentService.js";
+import { getChildPage, getRawContentsFromNotion, getRoot, getLimitTime } from "./getNotionContentService.js";
 import hash from "../utils/hash.js";
 import { BadRequestError, NotFoundError, ForbiddenError, InternalServerError } from "../utils/httpError.js";
 import { Client } from "@notionhq/client";
+import { getRandomInt, getRandomDate } from "../utils/randoms.js";
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
@@ -57,6 +58,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   const { ipaddr, requestUserID } = requestUserData;
 
   const user = await findUserByUserID(userID);
+  console.log(user);
   if (!user) throw NotFoundError("존재하지 않는 사용자입니다.");
 
   const { history } = user;
@@ -71,7 +73,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
 
   await increaseViewCount(ipaddr, galleryData);
 
-  return processDataForClient(galleryData);
+  return processDataForClient(galleryData, user);
 }
 
 async function increaseViewCount(ipaddr, galleryData) {
@@ -163,10 +165,11 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 5, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 10, data: {} }), res);
-  let pageContents = await getRoot(notion, limitTime);
+  let pageContent = [await getRoot(notion, limitTime)];
+  let pageNum = pageContent[0].length;
   let deepth = 0;
 
-  while (Object.keys(pageContents).length <= 85 && deepth++ < 2) {
+  while (pageNum < 85 && ++deepth < 3) {
     // console.log(pageContents);
     writeMessageSSE(
       JSON.stringify({
@@ -176,22 +179,20 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
       }),
       res,
     );
-    const childPages = await getChildPages(notion, pageContents, limitTime);
-    // console.log(childPages);
-    pageContents = { ...pageContents, ...childPages };
+    pageContent[deepth] = await getChildPage(notion, pageContent[deepth - 1], pageNum, limitTime);
+    pageNum += pageContent[deepth].length;
   }
-  console.log(pageContents);
-  pageContents = Object.keys(pageContents)
-    .splice(0, 85)
-    .map((pageID) => {
-      return pageContents[pageID];
-    });
+
+  const notionRawContent = pageContent.reduce((acc, cur) => {
+    acc = [...acc, ...cur];
+    return acc;
+  }, []);
 
   console.log("notionData 처리 시간", Date.now() - nowTime);
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 60, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "이미지 가공 중...", progress: 65, data: {} }), res);
-  const notionImageContent = await getImagePixelsFromPages(pageContents);
+  const notionImageContent = await getImagePixelsFromPages(notionRawContent);
   writeMessageSSE(JSON.stringify({ kind: "이미지 가공 완료", progress: 70, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "키워드 추출 중...", progress: 75, data: {} }), res);
@@ -205,16 +206,6 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
   return galleryID;
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
-}
-function getRandomDate() {
-  //2022년 12월 5일부터 현 시간까지
-  // return getRandomInt(1670224522812, Date.now());
-  return getRandomInt(0, Date.now());
-}
 function checkValidIndex(searchState, idx) {
   if (!(idx in searchState)) return true;
   return searchState[idx].valid;
@@ -259,10 +250,9 @@ function initSearchState() {
   }, {});
 }
 
-async function searchGalleryRecent(limit) {
-  const recentUsers = await findAllUserShared(15);
-  return await Promise.all(
-    recentUsers.map(async (user) => {
+function processUserList(users) {
+  return Promise.all(
+    users.map(async (user) => {
       const [lastGalleryID] = [...user.history].reduce(
         ([recentID, recentDate], [galleryID, date]) => {
           if (recentDate < date) return [galleryID, date];
@@ -275,11 +265,16 @@ async function searchGalleryRecent(limit) {
 
       return {
         userName: user.userName,
-        keywords: gallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),
+        keywords: gallery?.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword) ?? [],
         galleryURL: `/gallery/${user.userID}/${lastGalleryID}`,
       };
     }),
   );
+}
+
+async function searchGalleryRecent(limit) {
+  const recentUsers = await findAllUserShared(15);
+  return await processUserList(recentUsers);
 }
 
 async function searchGalleryRandom(searchState, nowIdx) {

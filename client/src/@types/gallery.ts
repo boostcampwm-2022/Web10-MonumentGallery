@@ -29,6 +29,7 @@ export interface IGalleryPageData {
 
 export interface IGalleryMapData {
   id?: string;
+  userName: string;
   theme: THEME;
   totalKeywords: IKeywordMap;
   groupKeywords: IGroupKeywordData[];

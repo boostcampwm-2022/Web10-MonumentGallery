@@ -39,7 +39,7 @@ export default function GalleryPageIsland({
       <MemorialStones subtitles={subtitle} animator={springs} />
       <SubWordCloud keywords={keywords} radius={6} scale={0.8} animator={springs} />
       {links && <LinkPedals links={links} />}
-      {imagePixel && <PictureFragments pixels={imagePixel} />}
+      {imagePixel && Array.isArray(imagePixel[0]) && <PictureFragments pixels={imagePixel} />}
     </RigidBody>
   );
 }

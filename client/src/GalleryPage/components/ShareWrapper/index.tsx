@@ -11,7 +11,6 @@ export default function ShareWrapper() {
   const userId = userStore((user) => user.user?.id);
   const isLoggedIn = userStore((user) => user.isLoggedIn);
   const isOwnGallery = isLoggedIn && galleryOwnerId === userId;
-  console.log(isOwnGallery);
 
   return (
     <div className={`share-wrapper${isOwnGallery ? "" : " hidden"}`}>

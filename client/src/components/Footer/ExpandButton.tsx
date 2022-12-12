@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import ExpandIcon from "../../assets/images/expand.png";
+import ExpandIcon from "../../assets/images/fullscreen.svg";
 
 export default function ExpandButton() {
   function onFullScreen() {

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 
@@ -15,12 +15,19 @@ import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
 import DevTools from "../components/Devtools";
 import settingStore from "../store/setting.store";
+import Environments from "./mapObjects/Environments";
 
 export default function Gallery() {
   const speed = settingStore((store) => store.speed);
   const data = galleryStore((store) => store.data);
   const theme = galleryStore((store) => store.theme);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
+
+  useEffect(() => {
+    if (data.userName) {
+      document.title = `${data.userName}의 갤러리`;
+    }
+  });
 
   return (
     <Canvas
@@ -37,6 +44,7 @@ export default function Gallery() {
         <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
+        <Environments />
         {/*<DevTools showDevtool={true} speed={5} />*/}
       </Physics>
       <ScreenshotCapturer />

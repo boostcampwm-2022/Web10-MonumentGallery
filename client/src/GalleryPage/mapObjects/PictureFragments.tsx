@@ -90,17 +90,20 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
     [destRotation],
   );
 
-  useEffect(() => {
-    if (!geometry || !meshRef.current) return;
-    geometry.syncronizeVertex(+!activate);
+  function setScatter(status: boolean) {
+    setActivate(status);
 
-    if (!activate) return;
+    if (!status || !meshRef.current) return;
 
     const newPosition = getCameraFrontPosition(camera, meshRef.current, 5);
     const newRotation = getCameraRotation(camera, meshRef.current);
-
     setDestPosition(newPosition);
     setDestRotation(newRotation);
+  }
+
+  useEffect(() => {
+    if (!geometry) return;
+    geometry.syncronizeVertex(+!activate);
   }, [activate]);
 
   useFrame(() => {
@@ -112,7 +115,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
 
     const relativePosition = new Vector3().subVectors(worldDestPosition, camera.position);
     if (zBasis.dot(relativePosition) < 0 || relativePosition.length() > scatterRadius * 2) {
-      setActivate(false);
+      setScatter(false);
     }
   });
 
@@ -124,7 +127,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
       if (camera.position.distanceTo(worldPosition.current) >= scatterRadius * 2) return;
     }
 
-    return setActivate((prev) => !prev);
+    setScatter(!activate);
   }
 
   // why ts + react-spring + react-three/fiber is so messy!

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getRandomInt } from "../utils/randoms.js";
 
 export async function getImagePixelsFromPages(pages, width = 50, height = 50) {
   //기본은 10x10으로 하되, 매개변수에 따라 달라짐
@@ -15,7 +16,9 @@ export async function getImagePixelsFromPages(pages, width = 50, height = 50) {
 
 async function getImagePixelFromFastAPI(page, width, height) {
   const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
-  if (page.image.length <= 0) return getMockData();
+  if (page.image.length <= 0) {
+    return getRandomInt(0, 100) === 0 ? getMockData() : [];
+  }
   const imageURL = page.image[0];
   //   console.log(imageURL);
   const imagePixel = await axios
@@ -31,7 +34,7 @@ async function getImagePixelFromFastAPI(page, width, height) {
     })
     .catch((err) => {
       console.log(imageURL, "이미지 처리 에러");
-      return getMockData();
+      return getRandomInt(0, 100) === 0 ? getMockData() : [];
     });
   return imagePixel;
 }

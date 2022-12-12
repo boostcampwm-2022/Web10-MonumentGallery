@@ -9,7 +9,7 @@ import { useBillboard } from "../../hooks/useBillboard";
 import type { Vector3Arr } from "../../@types/common";
 import type { ITriggeredSpringState } from "../../@types/animator";
 
-import MapoFont from "../../assets/MapoFlowerIsland.otf";
+import MapoFont from "../../assets/fonts/MapoFlowerIsland.otf";
 
 interface WordObjectProps {
   text: string;

@@ -10,19 +10,19 @@ export default function ThemeSeletor() {
   const themeList = [THEME.DREAM, THEME.SPRING, THEME.SUMMER, THEME.AUTUMN, THEME.WINTER];
 
   return (
-    <div className="select-box">
-      <div className="select-box__current" tabIndex={0}>
-        <div className="select-box__value">
-          <input className="select-box__input" type="radio" id="0" defaultChecked />
-          <p className="select-box__input-text">{theme}</p>
+    <div className="theme-select-box">
+      <div className="theme-select-box__current" tabIndex={0}>
+        <div className="theme-select-box__value">
+          <input className="theme-select-box__input" type="radio" id="0" defaultChecked />
+          <p className="theme-select-box__input-text">{theme}</p>
         </div>
       </div>
-      <ul className="select-box__list">
+      <ul className="theme-select-box__list">
         {themeList.map((themeItem) => {
           return (
             <li key={themeItem}>
               <label
-                className="select-box__option"
+                className="theme-select-box__option"
                 onClick={() => {
                   setTheme(themeItem);
                   setSourceUrl(themeItem);

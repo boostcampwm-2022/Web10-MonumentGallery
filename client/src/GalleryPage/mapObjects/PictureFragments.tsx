@@ -69,6 +69,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
   }, [pixels]);
 
   const [activate, setActivate] = useState(false);
+  const [nowToggled, setNowToggled] = useState(false);
   const [destPosition, setDestPosition] = useState(new Vector3());
   const [destRotation, setDestRotation] = useState(new Quaternion());
 
@@ -111,9 +112,10 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
     if (meshRef.current?.parent) worldDestPosition.applyMatrix4(meshRef.current.parent.matrixWorld);
 
     const relativePosition = new Vector3().subVectors(worldDestPosition, camera.position);
-    if (zBasis.dot(relativePosition) < 0 || relativePosition.length() > scatterRadius * 2) {
+    if (!nowToggled && (zBasis.dot(relativePosition) < 0 || relativePosition.length() > scatterRadius * 2)) {
       setActivate(false);
     }
+    if (nowToggled) setNowToggled(false);
   });
 
   function toggleActivate() {
@@ -124,7 +126,8 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
       if (camera.position.distanceTo(worldPosition.current) >= scatterRadius * 2) return;
     }
 
-    return setActivate((prev) => !prev);
+    setActivate((prev) => !prev);
+    setNowToggled(true);
   }
 
   // why ts + react-spring + react-three/fiber is so messy!

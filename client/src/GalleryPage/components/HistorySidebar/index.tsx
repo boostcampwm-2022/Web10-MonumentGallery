@@ -84,7 +84,6 @@ export default function HistorySidebar({ show, setShow, setRequestUrl }: History
       const newSelected = selected + distanceToSelected;
       setSelected(newSelected);
       setScrollOffset(newSelected);
-      return;
     }
     setShowHistoryModal(true);
   }

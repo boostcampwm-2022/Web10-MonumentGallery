@@ -7,74 +7,32 @@ export default function ThemeSeletor() {
   const theme = galleryStore((store) => store.theme);
   const setTheme = galleryStore((store) => store.setTheme);
   const setSourceUrl = audioStore((store) => store.setSourceUrl);
+  const themeList = [THEME.DREAM, THEME.SPRING, THEME.SUMMER, THEME.AUTUMN, THEME.WINTER];
 
   return (
     <div className="theme-select-box">
-      <div className="theme-select-box__current" tabIndex={1}>
+      <div className="theme-select-box__current" tabIndex={0}>
         <div className="theme-select-box__value">
           <input className="theme-select-box__input" type="radio" id="0" defaultChecked />
           <p className="theme-select-box__input-text">{theme}</p>
         </div>
       </div>
       <ul className="theme-select-box__list">
-        <li>
-          <label
-            className="theme-select-box__option"
-            onClick={() => {
-              setTheme(THEME.DREAM);
-              setSourceUrl(THEME.DREAM);
-            }}
-          >
-            {THEME.DREAM}
-          </label>
-        </li>
-        <li>
-          <label
-            className="theme-select-box__option"
-            onClick={() => {
-              setTheme(THEME.SPRING);
-              setSourceUrl(THEME.SPRING);
-            }}
-          >
-            {THEME.SPRING}
-          </label>
-        </li>
-        <li>
-          <label
-            className="theme-select-box__option"
-            htmlFor="2"
-            onClick={() => {
-              setTheme(THEME.SUMMER);
-              setSourceUrl(THEME.SUMMER);
-            }}
-          >
-            {THEME.SUMMER}
-          </label>
-        </li>
-        <li>
-          <label
-            className="theme-select-box__option"
-            htmlFor="2"
-            onClick={() => {
-              setTheme(THEME.AUTUMN);
-              setSourceUrl(THEME.AUTUMN);
-            }}
-          >
-            {THEME.AUTUMN}
-          </label>
-        </li>
-        <li>
-          <label
-            className="theme-select-box__option"
-            htmlFor="3"
-            onClick={() => {
-              setTheme(THEME.WINTER);
-              setSourceUrl(THEME.WINTER);
-            }}
-          >
-            {THEME.WINTER}
-          </label>
-        </li>
+        {themeList.map((themeItem) => {
+          return (
+            <li key={themeItem}>
+              <label
+                className="theme-select-box__option"
+                onClick={() => {
+                  setTheme(themeItem);
+                  setSourceUrl(themeItem);
+                }}
+              >
+                {themeItem}
+              </label>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

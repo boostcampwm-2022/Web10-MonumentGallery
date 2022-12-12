@@ -64,10 +64,7 @@ if (process.env.NODE_ENV === "development") {
 if (process.env.NODE_ENV === "production") {
   console.log("prod!");
   app.use("/", pageRouter);
-  app.use("/assets", express.static("./dist/assets"));
-  app.use("/reset.css", express.static("./dist/reset.css"));
-  app.use("/favicon.ico", express.static("./dist/favicon.ico"));
-  app.use("/thumbnail.png", express.static("./dist/thumbnail.png"));
+  app.use("/", express.static("./dist/", {index: false}));
 }
 
 // error handler

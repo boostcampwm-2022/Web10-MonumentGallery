@@ -21,7 +21,7 @@ export default function Ground() {
   return (
     <mesh receiveShadow ref={groundRef} position={[0, 0.1, 0]} rotation-x={-Math.PI / 2}>
       <planeGeometry args={[50, 50]} />
-      <meshStandardMaterial map={texture} map-repeat={[5, 5]} color="#999999" />
+      <meshLambertMaterial map={texture} map-repeat={[5, 5]} color="#999999" />
     </mesh>
   );
 }

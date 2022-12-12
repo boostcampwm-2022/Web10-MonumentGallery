@@ -61,7 +61,6 @@ export function useKeyMovement() {
     function keyUp(e: KeyboardEvent) {
       const movementKey = mapMovementKey(e.code);
       if (movementKey === null) return;
-      if (getKeyState(movementKey) === false) return;
       controlKeyState({ type: "keyup", code: movementKey });
     }
     function allRelease() {

@@ -10,7 +10,15 @@ export async function processDataFromRawContent(rawContent, theme) {
   const positionData = getPositions(grouppedPage);
   // console.log(positionData.pages);
   // console.log(positionData.nodes);
-  return attachAllDataForDB(rawContent, keywordData, theme, positionData);
+  return attachAllDataForDB(rawContent, keywordData, getValidTheme(theme), positionData);
+}
+
+function checkValidationTheme(theme) {
+  return theme === "DREAM" || theme === "SPRING" || theme === "SUMMER" || theme === "AUTUMN" || theme === "WINTER";
+}
+
+function getValidTheme(theme) {
+  return checkValidationTheme(theme) ? theme : "DREAM";
 }
 
 export function processDataForClient(galleryContent) {

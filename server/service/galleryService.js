@@ -19,7 +19,7 @@ import {
 import { processDataFromRawContent, processDataForClient } from "./dataProcessService.js";
 import { getImagePixelsFromPages } from "./imageProcessService.js";
 import { createConnectionSSE, endConnectionSSE, writeMessageSSE } from "./sseService.js";
-import { getChildPages, getRawContentsFromNotion, getRoot, getLimitTime } from "./getNotionContentService.js";
+import { getChildPage, getRawContentsFromNotion, getRoot, getLimitTime } from "./getNotionContentService.js";
 import hash from "../utils/hash.js";
 import { BadRequestError, NotFoundError, ForbiddenError, InternalServerError } from "../utils/httpError.js";
 import { Client } from "@notionhq/client";
@@ -164,10 +164,11 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 5, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오는 중...", progress: 10, data: {} }), res);
-  let pageContents = await getRoot(notion, limitTime);
+  let pageContent = [await getRoot(notion, limitTime)];
+  let pageNum = pageContent[0].length;
   let deepth = 0;
 
-  while (Object.keys(pageContents).length <= 85 && deepth++ < 2) {
+  while (pageNum < 85 && ++deepth < 3) {
     // console.log(pageContents);
     writeMessageSSE(
       JSON.stringify({
@@ -177,22 +178,20 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
       }),
       res,
     );
-    const childPages = await getChildPages(notion, pageContents, limitTime);
-    // console.log(childPages);
-    pageContents = { ...pageContents, ...childPages };
+    pageContent[deepth] = await getChildPage(notion, pageContent[deepth - 1], pageNum, limitTime);
+    pageNum += pageContent[deepth].length;
   }
-  console.log(pageContents);
-  pageContents = Object.keys(pageContents)
-    .splice(0, 85)
-    .map((pageID) => {
-      return pageContents[pageID];
-    });
+
+  const notionRawContent = pageContent.reduce((acc, cur) => {
+    acc = [...acc, ...cur];
+    return acc;
+  }, []);
 
   console.log("notionData 처리 시간", Date.now() - nowTime);
   writeMessageSSE(JSON.stringify({ kind: "노션 데이터 불러오기 완료", progress: 60, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "이미지 가공 중...", progress: 65, data: {} }), res);
-  const notionImageContent = await getImagePixelsFromPages(pageContents);
+  const notionImageContent = await getImagePixelsFromPages(notionRawContent);
   writeMessageSSE(JSON.stringify({ kind: "이미지 가공 완료", progress: 70, data: {} }), res);
 
   writeMessageSSE(JSON.stringify({ kind: "키워드 추출 중...", progress: 75, data: {} }), res);

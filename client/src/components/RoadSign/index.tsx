@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import RoadSignGLB from "../../../../assets/models/road-sign.glb?url";
+import RoadSignGLB from "../../assets/models/road-sign.glb?url";
 
 import { Html, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
@@ -7,8 +7,9 @@ import { useSpring, animated } from "@react-spring/three";
 import { useEffect, useRef, useState } from "react";
 
 import { useFrame, useThree } from "@react-three/fiber";
-import CloseIcon from "../../../../assets/images/close.png";
-import FullScreenModal from "../../../../components/modal/FullScreenModal";
+import CloseIcon from "../../assets/images/close.png";
+
+import FullScreenModal from "../modal/FullScreenModal";
 import RoadSignHtml from "./RoadSignHtml";
 import "./style.scss";
 
@@ -26,7 +27,11 @@ type GLTFResult = GLTF & {
 };
 
 export default function RoadSign(
-  props: JSX.IntrinsicElements["group"] & { show: boolean; setShow: React.Dispatch<React.SetStateAction<boolean>> },
+  props: JSX.IntrinsicElements["group"] & {
+    show: boolean;
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    offset: number[];
+  },
 ) {
   const { nodes, materials } = useGLTF(RoadSignGLB) as unknown as GLTFResult;
   const ref = useRef<THREE.Group>(null);
@@ -53,9 +58,9 @@ export default function RoadSign(
       if (!ref.current || !move) return;
       api.start({
         position: [
-          camera.position.x - 3 - 0.79,
-          floating ? camera.position.y - 20 + 2.6 : camera.position.y - 20 + 1.3,
-          camera.position.z - 15 + 0.62,
+          camera.position.x + props.offset[0] - 0.79,
+          floating ? camera.position.y + props.offset[1] + 2.6 : camera.position.y + props.offset[1] + 1.3,
+          camera.position.z + props.offset[2] + 0.62,
         ],
       });
       floating = !floating;
@@ -110,7 +115,7 @@ export default function RoadSign(
                   setShow={setShowModal}
                 >
                   <div className="modal" onWheel={(e) => e.stopPropagation()}>
-                    <RoadSignHtml />
+                    {props.children}
                     <button
                       className="sign-modal-close-button"
                       onClick={() => {

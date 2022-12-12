@@ -15,6 +15,7 @@ import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
 import DevTools from "../components/Devtools";
 import settingStore from "../store/setting.store";
+import Environments from "./mapObjects/Environments";
 
 export default function Gallery() {
   const speed = settingStore((store) => store.speed);
@@ -37,6 +38,7 @@ export default function Gallery() {
         <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
+        <Environments />
         {/*<DevTools showDevtool={true} speed={5} />*/}
       </Physics>
       <ScreenshotCapturer />

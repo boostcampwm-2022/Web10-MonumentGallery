@@ -9,17 +9,17 @@ export default function ThemeSeletor() {
   const setSourceUrl = audioStore((store) => store.setSourceUrl);
 
   return (
-    <div className="select-box">
-      <div className="select-box__current" tabIndex={1}>
-        <div className="select-box__value">
-          <input className="select-box__input" type="radio" id="0" defaultChecked />
-          <p className="select-box__input-text">{theme}</p>
+    <div className="theme-select-box">
+      <div className="theme-select-box__current" tabIndex={1}>
+        <div className="theme-select-box__value">
+          <input className="theme-select-box__input" type="radio" id="0" defaultChecked />
+          <p className="theme-select-box__input-text">{theme}</p>
         </div>
       </div>
-      <ul className="select-box__list">
+      <ul className="theme-select-box__list">
         <li>
           <label
-            className="select-box__option"
+            className="theme-select-box__option"
             onClick={() => {
               setTheme(THEME.DREAM);
               setSourceUrl(THEME.DREAM);
@@ -30,7 +30,7 @@ export default function ThemeSeletor() {
         </li>
         <li>
           <label
-            className="select-box__option"
+            className="theme-select-box__option"
             onClick={() => {
               setTheme(THEME.SPRING);
               setSourceUrl(THEME.SPRING);
@@ -41,7 +41,7 @@ export default function ThemeSeletor() {
         </li>
         <li>
           <label
-            className="select-box__option"
+            className="theme-select-box__option"
             htmlFor="2"
             onClick={() => {
               setTheme(THEME.SUMMER);
@@ -53,7 +53,7 @@ export default function ThemeSeletor() {
         </li>
         <li>
           <label
-            className="select-box__option"
+            className="theme-select-box__option"
             htmlFor="2"
             onClick={() => {
               setTheme(THEME.AUTUMN);
@@ -65,7 +65,7 @@ export default function ThemeSeletor() {
         </li>
         <li>
           <label
-            className="select-box__option"
+            className="theme-select-box__option"
             htmlFor="3"
             onClick={() => {
               setTheme(THEME.WINTER);

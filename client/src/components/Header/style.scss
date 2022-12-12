@@ -6,11 +6,22 @@
   pointer-events: none;
   .logo {
     width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .header-right-elem {
     display: flex;
     position: inherit;
     z-index: 1;
+
+    .theme-select-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Nato-sans";
+    }
+
     .userinfo {
       display: flex;
       justify-content: center;

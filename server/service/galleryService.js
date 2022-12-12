@@ -229,16 +229,16 @@ export async function searchGalleryAll(requestSearchState) {
   const nowIdx = getRandomIndex(requestSearchState);
   if (nowIdx === -1) return { searchState: requestSearchState, gallerys: [] };
 
-  const { searchState, gallerys } = await searchGalleryRandom(requestSearchState, nowIdx);
+  const { searchState, gallery } = await searchGalleryRandom(requestSearchState, nowIdx);
 
-  if (gallerys.length === 0) {
-    const recentGallerys = await searchGalleryRecent(15);
-    if (recentGallerys.length < 15) {
+  if (gallery.length === 0) {
+    const recentGallery = await searchGalleryRecent(15);
+    if (recentGallery.length < 15) {
       Object.keys(searchState).forEach((key) => (searchState[key].valid = false));
     }
-    return { searchState, gallerys: recentGallerys };
+    return { searchState, gallery: recentGallery };
   }
-  return { searchState, gallerys };
+  return { searchState, gallery };
 }
 
 function initSearchState() {
@@ -297,7 +297,7 @@ async function searchGalleryRandom(searchState, nowIdx) {
     // console.log(searchState);
   }
   // console.log(searchState);
-  return { searchState, gallerys };
+  return { searchState, gallery };
 }
 //search
 //{'0' : {start: Date, last : Date(가장 마지막으로 불러온 것), curved: 끝도달 여부}}

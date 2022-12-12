@@ -10,7 +10,7 @@ import Delayed from "../../components/Delayed/Delayed";
 import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 
 import type { Vector3Arr } from "../../@types/common";
-import type { IMainDataResponse } from "../../@types/main";
+import type { IMainDataResponse, IPreviewGalleryData } from "../../@types/main";
 
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 
@@ -48,20 +48,20 @@ export function Monument({ data, position }: MonumentProps) {
 }
 
 export function Monuments({
-  data,
+  gallery,
   gridPosition,
   positions,
 }: {
-  data: IMainDataResponse | null;
+  gallery: IPreviewGalleryData[] | null;
   gridPosition: number[] | null;
   positions: [number, number][] | null;
 }) {
-  if (!data || !gridPosition || !positions) return null;
+  if (!gallery || !gridPosition || !positions) return null;
   return (
     <>
       {positions.map(([positionX, positionZ], i) => (
         <Delayed key={`${positionX}_${positionZ}`} waitBeforeShow={i * 200 + 100}>
-          <Monument position={[gridPosition[0] + positionX, 0, gridPosition[1] + positionZ]} data={data[i]} />
+          <Monument position={[gridPosition[0] + positionX, 0, gridPosition[1] + positionZ]} data={gallery[i]} />
         </Delayed>
       ))}
     </>

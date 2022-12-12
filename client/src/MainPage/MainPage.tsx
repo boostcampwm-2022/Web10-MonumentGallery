@@ -41,8 +41,8 @@ export default function MainPage() {
       </div>
       <FloatLayout>
         <Header>
-          <ThemeSeletor />
           <UserInfo />
+          <ThemeSeletor />
         </Header>
         <CreateMonumentButton showModal={showModal} />
         <Footer />

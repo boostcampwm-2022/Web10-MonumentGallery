@@ -10,9 +10,8 @@ import { useFrame, useThree } from "@react-three/fiber";
 import CloseIcon from "../../assets/images/close.png";
 
 import FullScreenModal from "../modal/FullScreenModal";
-import "./style.scss";
-import lockStore from "../../store/lock.store";
 import { getCookie, setCookie } from "../../utils/cookie";
+import "./style.scss";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -40,7 +39,6 @@ export default function RoadSign(
   const [move, setMove] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const { camera, gl } = useThree();
-  const setLock = lockStore((store) => store.setLocked);
 
   const [springs, api] = useSpring(() => ({
     position: [-0.79, 1.3, 0.62],
@@ -79,7 +77,6 @@ export default function RoadSign(
 
   function onRoadSignClick() {
     gl.domElement.ownerDocument.exitPointerLock();
-    setLock(false);
     setShowModal(true);
   }
 

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 
@@ -22,6 +22,12 @@ export default function Gallery() {
   const data = galleryStore((store) => store.data);
   const theme = galleryStore((store) => store.theme);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
+
+  useEffect(() => {
+    if (data.userName) {
+      document.title = `${data.userName}의 갤러리`;
+    }
+  });
 
   return (
     <Canvas

@@ -273,7 +273,6 @@ function processUserList(users) {
   );
 }
 
-
 async function searchGalleryRecent(limit) {
   const recentUsers = await findAllUserShared(15);
   return await processUserList(recentUsers);

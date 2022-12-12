@@ -90,7 +90,7 @@ export default function PictureFragments({ pixels, size = 3, scatterRadius = 8, 
     [destRotation],
   );
 
-  function setScatter(status) {
+  function setScatter(status: boolean) {
     setActivate(status);
 
     if (!status || !meshRef.current) return;

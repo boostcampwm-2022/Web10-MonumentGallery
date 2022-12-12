@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from "react";
-import RoadSignMainPageHtml from "../../../components/RoadSign/RoadSignHtml";
+import { RoadSignMainPageHtml } from "../../../components/RoadSign/RoadSignHtml";
 import mainStore from "../../../store/main.store";
 
 const RoadSign = React.lazy(() => import("../../../components/RoadSign"));

@@ -10,8 +10,8 @@ import { useFrame, useThree } from "@react-three/fiber";
 import CloseIcon from "../../assets/images/close.png";
 
 import FullScreenModal from "../modal/FullScreenModal";
-import RoadSignHtml from "./RoadSignHtml";
 import "./style.scss";
+import lockStore from "../../store/lock.store";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -37,7 +37,8 @@ export default function RoadSign(
   const ref = useRef<THREE.Group>(null);
   const [move, setMove] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const { camera } = useThree();
+  const { camera, gl } = useThree();
+  const setLock = lockStore((store) => store.setLocked);
 
   const [springs, api] = useSpring(() => ({
     position: [-0.79, 1.3, 0.62],
@@ -70,6 +71,12 @@ export default function RoadSign(
     return () => clearTimeout(timeout);
   }, [move, props.show]);
 
+  function onRoadSignClick() {
+    gl.domElement.ownerDocument.exitPointerLock();
+    setLock(false);
+    setShowModal(true);
+  }
+
   if (!props.show) return null;
 
   return (
@@ -78,7 +85,13 @@ export default function RoadSign(
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[Math.PI / 2, 0, 0]}>
           <group position={[0.21, 4.91, 0.02]}>
-            <mesh castShadow receiveShadow geometry={nodes.Object_6.geometry} material={materials["WoodLight.001"]}>
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Object_6.geometry}
+              material={materials["WoodLight.001"]}
+              onClick={onRoadSignClick}
+            >
               <Html
                 position={[0.1, 0, -0.1]}
                 rotation={[0, Math.PI / 2, 0]}
@@ -91,7 +104,7 @@ export default function RoadSign(
                   className="road-sign"
                   onPointerEnter={() => setMove(false)}
                   onPointerLeave={() => setMove(true)}
-                  onClick={() => setShowModal(true)}
+                  onClick={onRoadSignClick}
                 >
                   <div>
                     <span>{showModal ? "" : "모뉴먼트 갤러리"}</span>
@@ -110,7 +123,7 @@ export default function RoadSign(
                   </button>
                 </div>
                 <FullScreenModal
-                  css={{ width: "70vw", height: "80vh", opacity: "0.9" }}
+                  css={{ width: "80%", height: "80%", opacity: "0.9" }}
                   show={showModal}
                   setShow={setShowModal}
                 >

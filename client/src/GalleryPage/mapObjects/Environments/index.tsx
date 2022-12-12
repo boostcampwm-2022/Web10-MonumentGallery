@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from "react";
-import RoadSignMainPageHtml from "../../../components/RoadSign/RoadSignHtml";
+import { RoadSignGalleryPageHtml } from "../../../components/RoadSign/RoadSignHtml";
 const RoadSign = React.lazy(() => import("../../../components/RoadSign"));
 
 export default function Environments() {
@@ -8,7 +8,7 @@ export default function Environments() {
   return (
     <Suspense fallback={null}>
       <RoadSign show={showSign} setShow={setShowSign} offset={[-10, -10, 0]} scale={[2, 2, 2]}>
-        <RoadSignMainPageHtml />
+        <RoadSignGalleryPageHtml />
       </RoadSign>
     </Suspense>
   );

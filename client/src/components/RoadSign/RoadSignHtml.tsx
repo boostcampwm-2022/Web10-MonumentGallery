@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-export default function RoadSignMainPageHtml() {
+export function RoadSignMainPageHtml() {
   const [showIframe, setShowIframe] = useState(false);
 
   return (
     <>
       <div className="sign-html-intro" hidden={showIframe}>
-        <h1>Monument Gallery 사용법</h1>
+        <h1>Monument Gallery 사용법 - 메인</h1>
         <br />
         <h3>
           🪦 현재 페이지는 <b>메인 페이지</b>에요.
@@ -39,6 +39,41 @@ export default function RoadSignMainPageHtml() {
         <div>- 갤러리 생성 페이지에서는 샘플 월드를 미리 체험할 수 있도록 준비해두었답니다.</div>
         <div>- 서버 작업이 오래걸릴 수 있으므로 기본 기능을 미리 알아볼 수 있어요.</div>
         <h3>🪦 이 외에도 여러가지 기능을 발견해보세요!</h3>
+      </div>
+      <button className="sign-html-notion-button" onClick={() => setShowIframe((state) => !state)}>
+        {showIframe ? "돌아가기" : "팀 노션 보기"}
+      </button>
+      <iframe
+        className="sign-html-iframe"
+        hidden={!showIframe}
+        loading="eager"
+        src="https://notioniframe.com/notion/12fqbg8hjtj"
+      ></iframe>
+    </>
+  );
+}
+
+export function RoadSignGalleryPageHtml() {
+  const [showIframe, setShowIframe] = useState(false);
+
+  return (
+    <>
+      <div className="sign-html-intro" hidden={showIframe}>
+        <h1>Monument Gallery 사용법 - 갤러리</h1>
+        <br />
+        <h3>
+          🪦 현재 페이지는 <b>갤러리 페이지</b>에요.
+        </h3>
+        <div>
+          - <b>WASD</b>로 <b>캐릭터</b>를 움직일 수 있어요.
+        </div>
+        <div>
+          - <b>Space</b>로 캐릭터를 위로, <b>Left Shift</b>로 캐릭터를 아래로 움직일 수 있어요.
+        </div>
+
+        <br />
+
+        <img height="400px" src="https://kr.object.ncloudstorage.com/monument-gallery/image/guide-gallery.png" />
       </div>
       <button className="sign-html-notion-button" onClick={() => setShowIframe((state) => !state)}>
         {showIframe ? "돌아가기" : "팀 노션 보기"}

@@ -4,7 +4,7 @@ import RoadSignGLB from "../../assets/models/road-sign.glb?url";
 import { Html, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useSpring, animated } from "@react-spring/three";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useFrame, useThree } from "@react-three/fiber";
 import CloseIcon from "../../assets/images/close.png";
@@ -12,6 +12,7 @@ import CloseIcon from "../../assets/images/close.png";
 import FullScreenModal from "../modal/FullScreenModal";
 import "./style.scss";
 import lockStore from "../../store/lock.store";
+import { getCookie, setCookie } from "../../utils/cookie";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -28,6 +29,7 @@ type GLTFResult = GLTF & {
 
 export default function RoadSign(
   props: JSX.IntrinsicElements["group"] & {
+    name: string;
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     offset: number[];
@@ -50,6 +52,10 @@ export default function RoadSign(
     const html = document.querySelector(".road-sign-html") as HTMLDivElement;
     html.style.transform = "none";
   });
+
+  useLayoutEffect(() => {
+    props.setShow(getCookie(props.name) !== "true");
+  }, []);
 
   useEffect(() => {
     if (!props.show) return;
@@ -116,6 +122,7 @@ export default function RoadSign(
                     className="sign-button"
                     onClick={(e) => {
                       e.stopPropagation();
+                      setCookie({ name: props.name, value: "true", maxAge: 60 * 60 * 24 });
                       props.setShow(false);
                     }}
                   >

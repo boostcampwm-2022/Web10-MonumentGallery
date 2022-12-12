@@ -7,7 +7,7 @@ export default function Environments() {
 
   return (
     <Suspense fallback={null}>
-      <RoadSign show={showSign} setShow={setShowSign} offset={[-10, -10, 0]} scale={[2, 2, 2]}>
+      <RoadSign name="gallerySign" show={showSign} setShow={setShowSign} offset={[-10, -10, 0]} scale={[2, 2, 2]}>
         <RoadSignGalleryPageHtml />
       </RoadSign>
     </Suspense>

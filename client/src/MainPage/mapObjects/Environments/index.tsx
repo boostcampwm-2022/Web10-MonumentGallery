@@ -13,6 +13,7 @@ export default function Environments() {
   return (
     <Suspense fallback={null}>
       <RoadSign
+        name="mainSign"
         show={showSign}
         setShow={setShowSign}
         offset={[-3, -20, -15]}

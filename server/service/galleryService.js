@@ -238,16 +238,16 @@ export async function searchGalleryAll(requestSearchState) {
   const nowIdx = getRandomIndex(requestSearchState);
   if (nowIdx === -1) return { searchState: requestSearchState, gallerys: [] };
 
-  const { searchState, gallerys } = await searchGalleryRandom(requestSearchState, nowIdx);
+  const { searchState, gallery } = await searchGalleryRandom(requestSearchState, nowIdx);
 
-  if (gallerys.length === 0) {
+  if (gallery.length === 0) {
     const recentGallerys = await searchGalleryRecent(15);
     if (recentGallerys.length < 15) {
       Object.keys(searchState).forEach((key) => (searchState[key].valid = false));
     }
-    return { searchState, gallerys: recentGallerys };
+    return { searchState, gallery: recentGallerys };
   }
-  return { searchState, gallerys };
+  return { searchState, gallery };
 }
 
 function initSearchState() {
@@ -285,7 +285,7 @@ async function searchGalleryRecent(limit) {
 async function searchGalleryRandom(searchState, nowIdx) {
   const users = await findAllUserRandom(nowIdx, searchState[nowIdx].last, 15);
   console.log(users);
-  const gallerys = await Promise.all(
+  const gallery = await Promise.all(
     users.map(async (user) => {
       const [lastGalleryID] = [...user.history].reduce(
         ([recentID, recentDate], [galleryID, date]) => {
@@ -295,11 +295,11 @@ async function searchGalleryRandom(searchState, nowIdx) {
         [null, 0],
       );
       //map에 null들어가면 어케 되려나
-      const gallery = await findGalleryByID(lastGalleryID);
+      const nowGallery = await findGalleryByID(lastGalleryID);
       console.log(user._id);
       return {
         userName: user.userName,
-        keywords: gallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),
+        keywords: nowGallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),
         galleryURL: `/gallery/${user.userID}/${lastGalleryID}`,
       };
     }),
@@ -320,7 +320,7 @@ async function searchGalleryRandom(searchState, nowIdx) {
     // console.log(searchState);
   }
   // console.log(searchState);
-  return { searchState, gallerys };
+  return { searchState, gallery };
 }
 //search
 //{'0' : {start: Date, last : Date(가장 마지막으로 불러온 것), curved: 끝도달 여부}}

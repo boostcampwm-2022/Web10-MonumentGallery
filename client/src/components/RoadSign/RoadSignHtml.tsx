@@ -72,7 +72,7 @@ export function RoadSignGalleryPageHtml() {
         </div>
 
         <br />
-        <img height="400px" src="https://kr.object.ncloudstorage.com/monument-gallery/image/guide-gallery.png" />
+        <img width="600px" src="https://kr.object.ncloudstorage.com/monument-gallery/image/guide-gallery.png" />
         <br />
 
         <br />
@@ -82,6 +82,9 @@ export function RoadSignGalleryPageHtml() {
           <br />
           테마를 변경하거나 히스토리를 조회할 수 있어요.
         </div>
+        <br />
+        <img width="600px" src=" https://kr.object.ncloudstorage.com/monument-gallery/image/guide-history.png" />
+        <br />
         <div> - 히스토리 버튼을 클릭하여 히스토리를 조회하고 불러올 수 있어요.</div>
 
         <br />

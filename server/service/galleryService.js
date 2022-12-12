@@ -23,6 +23,7 @@ import { getChildPages, getRawContentsFromNotion, getRoot, getLimitTime } from "
 import hash from "../utils/hash.js";
 import { BadRequestError, NotFoundError, ForbiddenError, InternalServerError } from "../utils/httpError.js";
 import { Client } from "@notionhq/client";
+import { getRandomInt, getRandomDate } from "../utils/randoms.js";
 
 function validateGalleryID(galleryID) {
   if (typeof galleryID !== "string" || galleryID.length !== 24) {
@@ -205,16 +206,6 @@ export async function createGalleryFromNotion(notionAccessToken, period, theme, 
   return galleryID;
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
-}
-function getRandomDate() {
-  //2022년 12월 5일부터 현 시간까지
-  // return getRandomInt(1670224522812, Date.now());
-  return getRandomInt(0, Date.now());
-}
 function checkValidIndex(searchState, idx) {
   if (!(idx in searchState)) return true;
   return searchState[idx].valid;

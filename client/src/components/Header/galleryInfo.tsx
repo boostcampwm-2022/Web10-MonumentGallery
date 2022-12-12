@@ -8,7 +8,7 @@ export default function GalleryInfo() {
   return (
     <div className="galleryinfo">
       <div>
-        {galleryData.userName} ({galleryData.id})
+        {galleryData.userName} {galleryData.id ? "(" + galleryData.id + ")" : ""}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { GLTF } from "three-stdlib";
 import { useSpring, animated } from "@react-spring/three";
 import { useEffect, useRef, useState } from "react";
 
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import CloseIcon from "../../../../assets/images/close.png";
 import FullScreenModal from "../../../../components/modal/FullScreenModal";
 import RoadSignHtml from "./RoadSignHtml";
@@ -38,6 +38,12 @@ export default function RoadSign(
     position: [-0.79, 1.3, 0.62],
     config: { mass: 2, tension: 200 },
   }));
+
+  useFrame(() => {
+    if (!showModal) return;
+    const html = document.querySelector(".road-sign-html") as HTMLDivElement;
+    html.style.transform = "none";
+  });
 
   useEffect(() => {
     if (!props.show) return;
@@ -73,6 +79,7 @@ export default function RoadSign(
                 rotation={[0, Math.PI / 2, 0]}
                 transform={!showModal}
                 occlude
+                wrapperClass="road-sign-html"
                 zIndexRange={[1, 10]}
               >
                 <div

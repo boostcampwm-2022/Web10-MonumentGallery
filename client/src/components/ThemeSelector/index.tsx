@@ -11,7 +11,7 @@ export default function ThemeSeletor() {
 
   return (
     <div className="select-box">
-      <div className="select-box__current" tabIndex={1}>
+      <div className="select-box__current" tabIndex={0}>
         <div className="select-box__value">
           <input className="select-box__input" type="radio" id="0" defaultChecked />
           <p className="select-box__input-text">{theme}</p>

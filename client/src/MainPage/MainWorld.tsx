@@ -21,7 +21,7 @@ export default function MainWorld() {
       <Ground />
       <Environments />
       <Player />
-      <DevTools speed={40} />
+      {/*<DevTools showDevtool={true} speed={10} />*/}
     </Physics>
   );
 }

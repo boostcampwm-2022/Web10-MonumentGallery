@@ -24,7 +24,7 @@ button:focus-visible {
   transform: translate(-5%, 0);
 }
 
-.modal {
+.road-sign-modal {
   font-family: Nato-sans;
   font-size: 20px;
   height: 100%;
@@ -69,7 +69,8 @@ button:focus-visible {
     border-radius: 10px;
   }
   .sign-html-iframe {
-    width: 65vw;
+    width: 55vw;
+    min-width: 650px;
     height: 70vh;
     border: 0;
     padding: 0;

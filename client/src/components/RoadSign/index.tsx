@@ -123,11 +123,11 @@ export default function RoadSign(
                   </button>
                 </div>
                 <FullScreenModal
-                  css={{ width: "80%", height: "80%", opacity: "0.9" }}
+                  css={{ width: "60%", minWidth: "800px", height: "80%", opacity: "0.9" }}
                   show={showModal}
                   setShow={setShowModal}
                 >
-                  <div className="modal" onWheel={(e) => e.stopPropagation()}>
+                  <div className="road-sign-modal" onWheel={(e) => e.stopPropagation()}>
                     {props.children}
                     <button
                       className="sign-modal-close-button"

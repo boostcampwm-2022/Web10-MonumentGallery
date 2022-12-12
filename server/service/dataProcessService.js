@@ -13,9 +13,10 @@ export async function processDataFromRawContent(rawContent, theme) {
   return attachAllDataForDB(rawContent, keywordData, theme, positionData);
 }
 
-export function processDataForClient(galleryContent) {
+export function processDataForClient(galleryContent, user) {
   return {
     id: galleryContent._id,
+    userName: user.userName,
     theme: galleryContent.theme,
     totalKeywords: getKeywordsAsDictionary(galleryContent.totalKeywords),
     groupKeywords: galleryContent.groupKeywords,

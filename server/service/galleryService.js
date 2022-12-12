@@ -285,25 +285,7 @@ async function searchGalleryRecent(limit) {
 async function searchGalleryRandom(searchState, nowIdx) {
   const users = await findAllUserRandom(nowIdx, searchState[nowIdx].last, 15);
   console.log(users);
-  const gallery = await Promise.all(
-    users.map(async (user) => {
-      const [lastGalleryID] = [...user.history].reduce(
-        ([recentID, recentDate], [galleryID, date]) => {
-          if (recentDate < date) return [galleryID, date];
-          return [recentID, recentDate];
-        },
-        [null, 0],
-      );
-      //map에 null들어가면 어케 되려나
-      const nowGallery = await findGalleryByID(lastGalleryID);
-      console.log(user._id);
-      return {
-        userName: user.userName,
-        keywords: nowGallery.totalKeywords.slice(0, 3).map((keywordData) => keywordData.keyword),
-        galleryURL: `/gallery/${user.userID}/${lastGalleryID}`,
-      };
-    }),
-  );
+  const gallerys = await processUserList(users);
 
   if (users.length > 0) searchState[nowIdx].last = Date.parse(users.at(-1).lastModified);
 

@@ -47,6 +47,7 @@ function Player() {
 
   const ghostRef = useRef<Group>(null);
   const rigidRef = useRef<RigidBodyApi>(null);
+  const rigidUpdateTime = useRef(0);
   const speed = settingStore((store) => store.speed);
 
   useEffect(() => {
@@ -60,7 +61,8 @@ function Player() {
   }, [moveDirection]);
 
   useFrame(({ camera }, frame) => {
-    if (!ghostRef.current || !rigidRef.current) return;
+    if (!ghostRef.current) return;
+    if (!rigidRef.current) return;
     const ghostPosition = ghostRef.current.position;
     const ghostRotation = ghostRef.current.quaternion;
 
@@ -72,7 +74,13 @@ function Player() {
 
     _quaternion.copy(prevRotation).slerp(currentRotation, spring.get());
     ghostRotation.copy(_quaternion);
-    rigidRef.current.setTranslation(ghostPosition);
+
+    if (moveDirection.x !== 0 || moveDirection.z !== 0) rigidUpdateTime.current += frame;
+    else if (rigidUpdateTime.current !== 0.125) rigidUpdateTime.current = 0;
+    if (rigidUpdateTime.current >= 0) {
+      rigidRef.current.setTranslation(ghostPosition);
+      rigidUpdateTime.current -= 0.125;
+    }
   });
 
   return (

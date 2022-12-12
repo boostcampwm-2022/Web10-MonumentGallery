@@ -12,29 +12,19 @@ import { useGalleryHistorySave } from "../hooks/useGalleryHistorySave";
 
 import galleryStore from "../store/gallery.store";
 import toastStore from "../store/toast.store";
-import { GalleryLoadErrorEvent } from "../@types/gallery";
 import "./style.scss";
+import useError from "../hooks/useError";
 
 export default function GalleryPage() {
   const [user, history] = useParams("gallery", []);
   const [requestUrl, setRequestUrl] = useState(getRequestUrl());
   const addToast = toastStore((store) => store.addToast);
+  useError((reason) => addToast(TOAST.ERROR(reason)));
 
   function getRequestUrl() {
     const END_POINT = "/api/gallery";
     return END_POINT + (user ? `/${user}` : ``) + (history ? `/${history}` : ``);
   }
-
-  useEffect(() => {
-    function errorHandler(e: GalleryLoadErrorEvent) {
-      if (!e.detail?.response) return;
-      const { reason } = e.detail.response.data;
-      addToast(TOAST.ERROR(reason));
-      console.log(reason);
-    }
-    document.addEventListener("error-reason", errorHandler);
-    return () => document.removeEventListener("error-reason", errorHandler);
-  }, []);
 
   return (
     <>

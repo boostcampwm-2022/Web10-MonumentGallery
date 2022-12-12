@@ -17,11 +17,15 @@ const router = express.Router();
 router.get(
   "/gallery/all",
   asyncHandler(async (req, res) => {
-    const cookieState = decodeBase64TOJSON(req.cookies.searchState);
-    const { searchState, gallerys } = await searchGalleryAll(cookieState);
+    const requestSearchState = decodeBase64TOJSON(req.query.searchState);
+    const { searchState, gallery } = await searchGalleryAll(requestSearchState);
 
-    res.cookie("searchState", encodeBase64FromJSON(searchState));
-    res.status(200).json(gallerys);
+    console.log(requestSearchState, gallery);
+    // res.cookie("searchState", encodeBase64FromJSON(searchState));
+    res.status(200).json({
+      gallery,
+      searchState: encodeBase64FromJSON(searchState),
+    });
   }),
 );
 

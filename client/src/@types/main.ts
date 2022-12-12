@@ -9,8 +9,10 @@ export interface IPreviewGalleryData {
   galleryURL: string;
 }
 
-export type IMainDataResponse = IPreviewGalleryData[];
-
+export type IMainDataResponse = {
+  gallery: IPreviewGalleryData[];
+  searchState: string;
+};
 export const GROUND_TEXTURES = {
   DREAM: dreamGround,
   SPRING: springGround,

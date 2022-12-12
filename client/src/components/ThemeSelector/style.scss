@@ -8,9 +8,13 @@
 
   &__current {
     position: relative;
-    box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
     cursor: pointer;
     outline: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &:focus {
       & + .theme-select-box__list {
         opacity: 1;
@@ -24,6 +28,7 @@
 
   &__value {
     display: flex;
+    width: 100%;
   }
 
   &__input {
@@ -36,7 +41,7 @@
 
   &__input-text {
     display: none;
-    width: 80px;
+    width: 100%;
     margin: 0;
     padding: 4px;
     background-color: #fff;
@@ -46,8 +51,9 @@
 
   &__list {
     position: absolute;
+    top: 100%;
     width: 100%;
-    margin-top: 200px;
+    margin: 0;
     padding: 0;
     list-style: none;
     opacity: 0;

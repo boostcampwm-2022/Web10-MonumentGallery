@@ -25,7 +25,7 @@ export function RoadSignMainPageHtml() {
         <h3>
           🪦 노션 로그인을 진행하기 어렵다면,
           <a href="/gallery">
-            <b> 샘플 월드</b>
+            <b> 튜토리얼</b>
           </a>
           로 이동해서 체험해보세요!
         </h3>

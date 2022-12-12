@@ -37,7 +37,7 @@ export function Monument({ data, position }: MonumentProps) {
         onIntersectionEnter={() => setCollision(true)}
         onIntersectionExit={() => setCollision(false)}
       />
-      <Text position={[0, 7, 0]} font={MapoFlowerIsland} fontSize={0.5} color="black">
+      <Text position={[0, 7, 0]} rotation={[0, -Math.PI / 4, 0]} font={MapoFlowerIsland} fontSize={0.8} color="black">
         {userName}
       </Text>
       <Monolith />

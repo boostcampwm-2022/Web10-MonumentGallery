@@ -58,6 +58,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
   const { ipaddr, requestUserID } = requestUserData;
 
   const user = await findUserByUserID(userID);
+  console.log(user);
   if (!user) throw NotFoundError("존재하지 않는 사용자입니다.");
 
   const { history } = user;
@@ -72,7 +73,7 @@ export async function loadGallery(requestUserData, userID, galleryID = null) {
 
   await increaseViewCount(ipaddr, galleryData);
 
-  return processDataForClient(galleryData);
+  return processDataForClient(galleryData, user);
 }
 
 async function increaseViewCount(ipaddr, galleryData) {
@@ -270,7 +271,6 @@ function processUserList(users) {
     }),
   );
 }
-
 
 async function searchGalleryRecent(limit) {
   const recentUsers = await findAllUserShared(15);

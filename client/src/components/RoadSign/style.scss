@@ -2,6 +2,10 @@ button:focus-visible {
   outline: none;
 }
 
+.skdjflsdf {
+  transform: none;
+}
+
 .road-sign {
   font-family: Nato-sans;
   text-align: center;
@@ -20,13 +24,12 @@ button:focus-visible {
   transform: translate(-5%, 0);
 }
 
-.modal {
+.road-sign-modal {
   font-family: Nato-sans;
   font-size: 20px;
   height: 100%;
-  display: flex;
+  display: grid;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
   overflow: scroll;
 
@@ -57,7 +60,7 @@ button:focus-visible {
     }
   }
   .sign-html-notion-button {
-    width: 50%;
+    width: 200px;
     height: 30px;
     font-size: 15px;
     color: #ffffff;
@@ -66,7 +69,8 @@ button:focus-visible {
     border-radius: 10px;
   }
   .sign-html-iframe {
-    width: 65vw;
+    width: 55vw;
+    min-width: 650px;
     height: 70vh;
     border: 0;
     padding: 0;

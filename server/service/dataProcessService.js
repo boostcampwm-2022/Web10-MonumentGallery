@@ -21,9 +21,10 @@ function getValidTheme(theme) {
   return checkValidationTheme(theme) ? theme : "DREAM";
 }
 
-export function processDataForClient(galleryContent) {
+export function processDataForClient(galleryContent, user) {
   return {
     id: galleryContent._id,
+    userName: user.userName,
     theme: galleryContent.theme,
     totalKeywords: getKeywordsAsDictionary(galleryContent.totalKeywords),
     groupKeywords: galleryContent.groupKeywords,

@@ -57,7 +57,7 @@ if (process.env.NODE_ENV === "development") {
 if (process.env.NODE_ENV === "production") {
   console.log("prod!");
   app.use("/", pageRouter);
-  app.use("/", express.static("./dist/", {index: false}));
+  app.use("/", express.static("./dist/", { index: false }));
 }
 
 // error handler

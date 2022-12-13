@@ -54,27 +54,35 @@ export function useKeyMovement() {
   useEffect(() => {
     function keyDown(e: KeyboardEvent) {
       const movementKey = mapMovementKey(e.code);
+      if (e.metaKey === true && e.shiftKey === true) {
+        allRelease();
+        return;
+      }
       if (movementKey === null) return;
       if (getKeyState(movementKey) === true) return;
       controlKeyState({ type: "keydown", code: movementKey });
     }
     function keyUp(e: KeyboardEvent) {
+      console.log("keyUp called");
       const movementKey = mapMovementKey(e.code);
       if (movementKey === null) return;
       controlKeyState({ type: "keyup", code: movementKey });
     }
     function allRelease() {
       controlKeyState({ type: "allKeyUp", code: "" });
+      console.log("All released");
     }
 
     document.addEventListener("keydown", keyDown);
     document.addEventListener("keyup", keyUp);
     window.addEventListener("blur", allRelease);
+    window.addEventListener("fullscreenchange", allRelease);
 
     return () => {
       document.removeEventListener("keydown", keyDown);
       document.removeEventListener("keyup", keyUp);
       window.removeEventListener("blur", allRelease);
+      window.removeEventListener("fullscreenchange", allRelease);
     };
   }, [keyState]);
 

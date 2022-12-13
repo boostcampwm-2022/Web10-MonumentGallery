@@ -15,6 +15,7 @@ const galleryStore = create<GalleryStore>((set) => ({
   data: {
     nodes: [[]],
     pages: [],
+    userName: "",
     totalKeywords: {},
     groupKeywords: [],
     theme: THEME.DREAM,

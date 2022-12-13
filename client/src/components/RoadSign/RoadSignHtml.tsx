@@ -1,11 +1,7 @@
-import { useState } from "react";
-
 export function RoadSignMainPageHtml() {
-  const [showIframe, setShowIframe] = useState(false);
-
   return (
     <>
-      <div className="sign-html-intro" hidden={showIframe}>
+      <div className="sign-html-intro">
         <h1>Monument Gallery 사용법 - 메인</h1>
         <br />
         <h3>
@@ -40,25 +36,15 @@ export function RoadSignMainPageHtml() {
         <div>- 서버 작업이 오래걸릴 수 있으므로 기본 기능을 미리 알아볼 수 있어요.</div>
         <h3>🪦 이 외에도 여러가지 기능을 발견해보세요!</h3>
       </div>
-      <button className="sign-html-notion-button" onClick={() => setShowIframe((state) => !state)}>
-        {showIframe ? "돌아가기" : "팀 노션 보기"}
-      </button>
-      <iframe
-        className="sign-html-iframe"
-        hidden={!showIframe}
-        loading="eager"
-        src="https://notioniframe.com/notion/12fqbg8hjtj"
-      ></iframe>
+      <Buttons />
     </>
   );
 }
 
 export function RoadSignGalleryPageHtml() {
-  const [showIframe, setShowIframe] = useState(false);
-
   return (
     <>
-      <div className="sign-html-intro" hidden={showIframe}>
+      <div className="sign-html-intro">
         <h1>Monument Gallery 사용법 - 갤러리</h1>
         <br />
         <h3>
@@ -115,15 +101,28 @@ export function RoadSignGalleryPageHtml() {
           <br />- 스크린샷을 찍거나 전체화면(<b>F</b>)으로 전환합니다.
         </div>
       </div>
-      <button className="sign-html-notion-button" onClick={() => setShowIframe((state) => !state)}>
-        {showIframe ? "돌아가기" : "팀 노션 보기"}
-      </button>
-      <iframe
-        className="sign-html-iframe"
-        hidden={!showIframe}
-        loading="eager"
-        src="https://notioniframe.com/notion/12fqbg8hjtj"
-      ></iframe>
+      <Buttons />
     </>
+  );
+}
+
+function Buttons() {
+  return (
+    <div className="sign-buttons">
+      <a
+        href="https://boostcamp7-monolith.notion.site/c8719b4dd0324032a134ad08f98a93f6"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <button className="sign-html-button">프로젝트 소개 보기</button>
+      </a>
+      <a
+        href="https://boostcamp7-monolith.notion.site/Monument-Gallery-7d1239b321684fed94d4669bcee673f0"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <button className="sign-html-button">팀 노션 보기</button>
+      </a>
+    </div>
   );
 }

@@ -41,7 +41,7 @@ export default function GalleryPage() {
 }
 
 function GalleryLoader({ url }: { url: string }) {
-  const [isInitialized, setInitialize] = useState(false);
+  const [isInitialized, setInitialized] = useState(false);
   const { applyGallery, initializeGallery } = useGalleryHistorySave();
   const getData = galleryStore((store) => store.getData);
 
@@ -51,7 +51,7 @@ function GalleryLoader({ url }: { url: string }) {
     const { gallery, userId, page } = data;
     if (!isInitialized) {
       initializeGallery(gallery, userId);
-      setInitialize(true);
+      setInitialized(true);
     } else applyGallery(gallery, userId, page);
   }, [data]);
 

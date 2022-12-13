@@ -1,4 +1,4 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import { Monuments } from "../mapObjects/Monument";
 import mainStore from "../../store/main.store";
@@ -6,15 +6,14 @@ import { generateRandomPosition } from "../../utils/random";
 import { MAIN_CAMERA_Z } from "../../constants/positions";
 
 export default function MapDataFetcher() {
-  const { camera } = useThree();
-  const setGrid = mainStore((store) => store.setGrid);
-  const grid = mainStore((store) => store.grid);
-  const search = mainStore((store) => store.search);
-  const setSearch = mainStore((store) => store.setSearch);
-  const getData = mainStore((store) => store.getData);
-  const [positionKey, setPositionKey] = useState(JSON.stringify([-1, -1]));
-
-  console.log(search);
+  const [getData, grid, setGrid, search, setSearch] = mainStore((store) => [
+    store.getData,
+    store.grid,
+    store.setGrid,
+    store.search,
+    store.setSearch,
+  ]);
+  const [positionKey, setPositionKey] = useState("[-1,-1]");
   const data = getData(positionKey, search);
 
   function calculateGridPosition(position: number[]) {
@@ -38,7 +37,7 @@ export default function MapDataFetcher() {
     return nearByPositions.map((position) => JSON.stringify(position));
   }
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock, camera }) => {
     const timer = clock.getElapsedTime();
     if (Math.floor(timer * 1000) % 10 === 0) {
       const playerPosition = [camera.position.x, camera.position.z - MAIN_CAMERA_Z];

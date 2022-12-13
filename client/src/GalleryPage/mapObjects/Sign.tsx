@@ -1,17 +1,12 @@
 import { useLoader } from "@react-three/fiber";
-import { OBJLoader } from "three-stdlib";
-import SignPillarObj from "../../assets/models/sign-pillar.obj?url";
-
-import SignObj from "../../assets/models/sign.obj?url";
 import { Text } from "@react-three/drei";
+import { OBJLoader } from "three-stdlib";
+import { useOBJGeometry } from "../../hooks/useObjGeometry";
+
+import SignPillarObj from "../../assets/models/sign-pillar.obj?url";
+import SignObj from "../../assets/models/sign.obj?url";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
-import { IGroupKeywordData } from "../../@types/gallery";
-function useOBJ(asset: string) {
-  const group = useLoader(OBJLoader, asset);
-  const target = Array.isArray(group) ? group[0].children[0] : group.children[0];
-  if (target == null) throw new Error("잘못된 obj파일");
-  return target.geometry;
-}
+import type { IGroupKeywordData } from "../../@types/gallery";
 
 interface SignProps {
   direction: number;
@@ -22,8 +17,8 @@ interface SignsProps {
 }
 
 function Sign({ direction, text }: SignProps) {
-  const pillar = useOBJ(SignPillarObj);
-  const sign = useOBJ(SignObj);
+  const pillar = useOBJGeometry(SignPillarObj);
+  const sign = useOBJGeometry(SignObj);
 
   const xDir = [6.5, 1, -6.5, -1];
   const zDir = [1, 6.5, -1, -6.5];

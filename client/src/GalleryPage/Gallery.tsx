@@ -24,7 +24,7 @@ export default function Gallery() {
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
 
   useEffect(() => {
-    if (data.userName) {
+    if (data.userName && data.id !== "TUTORIAL") {
       document.title = `${data.userName}의 갤러리`;
     }
   });

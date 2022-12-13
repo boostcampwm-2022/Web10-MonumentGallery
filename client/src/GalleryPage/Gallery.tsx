@@ -19,8 +19,7 @@ import Environments from "./mapObjects/Environments";
 
 export default function Gallery() {
   const speed = settingStore((store) => store.speed);
-  const data = galleryStore((store) => store.data);
-  const theme = galleryStore((store) => store.theme);
+  const [data, theme] = galleryStore((store) => [store.data, store.theme]);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
 
   useEffect(() => {

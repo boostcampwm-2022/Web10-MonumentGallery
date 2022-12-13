@@ -12,7 +12,7 @@ import { BACKGROUND_COLORS } from "../@types/colors";
 import { THEME } from "../@types/gallery";
 
 export default function MainCanvas() {
-  const { theme } = themeStore();
+  const theme = themeStore((store) => store.theme);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
 
   return (

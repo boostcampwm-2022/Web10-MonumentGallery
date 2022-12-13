@@ -1,12 +1,10 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import mainStore from "../../store/main.store";
 import { generateRandomPosition } from "../../utils/random";
 import { Monuments } from "../mapObjects/Monument";
 
 export default function MapDataFetcher() {
-  const { camera } = useThree();
-
   const [getData, grid, setGrid, search, setSearch] = mainStore((store) => [
     store.getData,
     store.grid,
@@ -14,9 +12,7 @@ export default function MapDataFetcher() {
     store.search,
     store.setSearch,
   ]);
-  const [positionKey, setPositionKey] = useState(JSON.stringify([-1, -1]));
-
-  console.log(search);
+  const [positionKey, setPositionKey] = useState("[-1,-1]");
   const data = getData(positionKey, search);
 
   function calculateGridPosition(position: number[]) {
@@ -40,7 +36,7 @@ export default function MapDataFetcher() {
     return nearByPositions.map((position) => JSON.stringify(position));
   }
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock, camera }) => {
     const timer = clock.getElapsedTime();
     if (Math.floor(timer * 1000) % 10 === 0) {
       const playerPosition = [camera.position.x, camera.position.z - 10];

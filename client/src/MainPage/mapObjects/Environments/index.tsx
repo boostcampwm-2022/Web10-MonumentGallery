@@ -6,7 +6,7 @@ const RoadSign = React.lazy(() => import("../../../components/RoadSign"));
 
 export default function Environments() {
   const [showSign, setShowSign] = useState(true);
-  const { showSplash } = mainStore();
+  const showSplash = mainStore((store) => store.showSplash);
 
   if (showSplash) return null;
 

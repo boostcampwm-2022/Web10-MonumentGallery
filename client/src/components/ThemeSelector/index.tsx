@@ -1,5 +1,5 @@
 import "./style.scss";
-import { THEME } from "../../@types/gallery";
+import { THEME } from "../../constants/theme";
 import galleryStore from "../../store/gallery.store";
 import audioStore from "../../store/audio.store";
 

@@ -1,13 +1,17 @@
-import { COLORS } from "../@types/colors";
-import POSITION from "./randomPosition.json";
+import { COLORS } from "../constants/colors";
+import { POSITION } from "../constants/positions";
 
-type POSITION = keyof typeof POSITION;
+export type POSITION_KEY = keyof typeof POSITION;
+
+function randInt(n: number): number {
+  return Math.floor(Math.random() * n);
+}
 
 function generateRandomPick<Item>(array: Item[], count = 1): Item[] {
   const picked: Item[] = [];
   (function picker() {
     if (picked.length === count || picked.length >= array.length) return;
-    const pickedValue = array[Math.floor(Math.random() * array.length)];
+    const pickedValue = array[randInt(array.length)];
     if (!picked.includes(pickedValue)) picked.push(pickedValue);
     picker();
   })();
@@ -15,11 +19,11 @@ function generateRandomPick<Item>(array: Item[], count = 1): Item[] {
   return picked;
 }
 
-export function generateRandomPastelColors(count = 1) {
+export function generateRandomPastelColor(): COLORS {
   const colors = Object.keys(COLORS);
-  return generateRandomPick<keyof typeof COLORS>(colors as (keyof typeof COLORS)[], count);
+  return COLORS[colors[randInt(colors.length)] as keyof typeof COLORS];
 }
 
-export function generateRandomPosition(val: POSITION, count = 1) {
-  return generateRandomPick<[number, number]>(POSITION[val] as [number, number][], count);
+export function generateRandomPosition(type: POSITION_KEY, count = 1) {
+  return generateRandomPick<[number, number]>(POSITION[type] as [number, number][], count);
 }

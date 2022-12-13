@@ -10,7 +10,8 @@ import URLCreator from "../../../utils/URLCreator";
 
 import "./style.scss";
 
-import type { IGalleryMapData, THEME } from "../../../@types/gallery";
+import type { IGalleryMapData } from "../../../@types/gallery";
+import type { THEME } from "../../../constants/theme";
 
 interface IOnLoadFunction {
   <T>(a: T): void;

@@ -1,7 +1,7 @@
 import { animated, Interpolation } from "@react-spring/three";
 import { MeshDistortMaterial } from "@react-three/drei";
-import { Vector3Arr } from "../../@types/common";
-import { COLORS } from "../../@types/colors";
+import type { Vector3Arr } from "../../@types/common";
+import type { COLORS } from "../../constants/colors";
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 

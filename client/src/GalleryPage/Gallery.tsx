@@ -4,18 +4,18 @@ import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
 import Light from "./mapObjects/Light";
+import Environments from "./mapObjects/Environments";
 import CollisionPlayerBody from "./components/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
 import ScreenshotCapturer from "../components/ScreenshotCapturer";
+// import DevTools from "../components/Devtools";
 
 import galleryStore from "../store/gallery.store";
-
-import { BACKGROUND_COLORS } from "../@types/colors";
-import { THEME } from "../@types/gallery";
-import DevTools from "../components/Devtools";
 import settingStore from "../store/setting.store";
-import Environments from "./mapObjects/Environments";
+
+import { BACKGROUND_COLORS } from "../constants/colors";
+import { THEME } from "../constants/theme";
 
 export default function Gallery() {
   const speed = settingStore((store) => store.speed);

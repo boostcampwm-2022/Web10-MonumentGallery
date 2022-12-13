@@ -1,8 +1,8 @@
 import { Vector3, Quaternion } from "three";
-import { Vector3Arr } from "../../@types/common";
 import galleryStore from "../../store/gallery.store";
-import { BRIDGE_COLORS } from "../../@types/colors";
-import { THEME } from "../../@types/gallery";
+import { BRIDGE_COLORS } from "../../constants/colors";
+import { THEME } from "../../constants/theme";
+import type { Vector3Arr } from "../../@types/common";
 
 interface BridgeProps {
   start: Vector3Arr;

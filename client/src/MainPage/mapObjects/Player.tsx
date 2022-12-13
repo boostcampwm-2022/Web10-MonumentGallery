@@ -6,8 +6,10 @@ import { CapsuleCollider, RigidBody, RigidBodyApi } from "@react-three/rapier";
 
 import Ghost from "./Ghost";
 import { useKeyMovement } from "../../hooks/useKeyMovement";
-import type { Group } from "three";
 import settingStore from "../../store/setting.store";
+import { MAIN_CAMERA_Y, MAIN_CAMERA_Z } from "../../constants/positions";
+
+import type { Group } from "three";
 
 const _euler = new Euler(0, 0, 0, "YXZ");
 const _quaternion = new Quaternion();
@@ -69,8 +71,8 @@ function Player() {
     ghostPosition.addScaledVector(moveDirection, speed * frame);
 
     camera.position.copy(ghostPosition);
-    camera.position.y += 20;
-    camera.position.z += 20;
+    camera.position.y += MAIN_CAMERA_Y;
+    camera.position.z += MAIN_CAMERA_Z;
 
     _quaternion.copy(prevRotation).slerp(currentRotation, spring.get());
     ghostRotation.copy(_quaternion);

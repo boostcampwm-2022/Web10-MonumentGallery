@@ -4,8 +4,8 @@ import { animated } from "@react-spring/three";
 
 import Pedestal from "./Pedestal";
 import { useBillboard } from "../../hooks/useBillboard";
+import { COLORS } from "../../constants/colors";
 
-import { COLORS } from "../../@types/colors";
 import type { Mesh } from "three";
 import type { ITriggeredSpringState } from "../../@types/animator";
 import type { IGalleryPageSubTitle } from "../../@types/gallery";

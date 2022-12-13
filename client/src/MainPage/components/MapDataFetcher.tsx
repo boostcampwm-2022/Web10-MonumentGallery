@@ -1,8 +1,9 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useState } from "react";
+import { Monuments } from "../mapObjects/Monument";
 import mainStore from "../../store/main.store";
 import { generateRandomPosition } from "../../utils/random";
-import { Monuments } from "../mapObjects/Monument";
+import { MAIN_CAMERA_Z } from "../../constants/positions";
 
 export default function MapDataFetcher() {
   const { camera } = useThree();
@@ -40,7 +41,7 @@ export default function MapDataFetcher() {
   useFrame(({ clock }) => {
     const timer = clock.getElapsedTime();
     if (Math.floor(timer * 1000) % 10 === 0) {
-      const playerPosition = [camera.position.x, camera.position.z - 10];
+      const playerPosition = [camera.position.x, camera.position.z - MAIN_CAMERA_Z];
       const newPositionKey = calculateGridPosition(playerPosition);
       if (positionKey !== newPositionKey) {
         setPositionKey(newPositionKey);

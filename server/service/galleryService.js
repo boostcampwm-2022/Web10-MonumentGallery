@@ -280,7 +280,7 @@ async function searchGalleryRecent(limit) {
 async function searchGalleryRandom(searchState, nowIdx) {
   const users = await findAllUserRandom(nowIdx, searchState[nowIdx].last, 15);
   console.log(users);
-  const gallerys = await processUserList(users);
+  const gallery = await processUserList(users);
 
   if (users.length > 0) searchState[nowIdx].last = Date.parse(users.at(-1).lastModified);
 

@@ -10,7 +10,7 @@ import Delayed from "../../components/Delayed/Delayed";
 import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 
 import type { Vector3Arr } from "../../@types/common";
-import type { IMainDataResponse, IPreviewGalleryData } from "../../@types/main";
+import type { IPreviewGalleryData } from "../../@types/main";
 
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 

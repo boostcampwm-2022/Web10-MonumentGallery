@@ -6,11 +6,14 @@ import { Monuments } from "../mapObjects/Monument";
 
 export default function MapDataFetcher() {
   const { camera } = useThree();
-  const setGrid = mainStore((store) => store.setGrid);
-  const grid = mainStore((store) => store.grid);
-  const search = mainStore((store) => store.search);
-  const setSearch = mainStore((store) => store.setSearch);
-  const getData = mainStore((store) => store.getData);
+
+  const [getData, grid, setGrid, search, setSearch] = mainStore((store) => [
+    store.getData,
+    store.grid,
+    store.setGrid,
+    store.search,
+    store.setSearch,
+  ]);
   const [positionKey, setPositionKey] = useState(JSON.stringify([-1, -1]));
 
   console.log(search);

@@ -2,8 +2,8 @@ import { Suspense, useState } from "react";
 import Spinner from "../../../components/Spinner";
 
 import "./SplashScreen.scss";
-import SplashScreenLogo from "../../../assets/images/splash-logo-1x.png";
-import SplashScreenLogo2x from "../../../assets/images/splash-logo-2x.png";
+import SplashScreenLogo from "../../../assets/images/splash-logo-1x.webp";
+import SplashScreenLogo2x from "../../../assets/images/splash-logo-2x.webp";
 import { splashSelector } from "../../../store/selectors";
 import mainStore from "../../../store/main.store";
 

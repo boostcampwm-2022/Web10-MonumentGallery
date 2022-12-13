@@ -4,7 +4,8 @@ import galleryStore from "../../store/gallery.store";
 import audioStore from "../../store/audio.store";
 
 export default function ThemeSeletor() {
-  const [theme, setTheme] = galleryStore((store) => [store.theme, store.setTheme]);
+  const theme = galleryStore((store) => store.theme);
+  const setTheme = galleryStore((store) => store.setTheme);
   const setSourceUrl = audioStore((store) => store.setSourceUrl);
   const themeList = Object.values(THEME);
 

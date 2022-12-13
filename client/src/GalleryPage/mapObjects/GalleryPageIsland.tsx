@@ -10,8 +10,10 @@ import PictureFragments from "./PictureFragments";
 
 import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 import galleryStore from "../../store/gallery.store";
-import { IGalleryPageData, THEME } from "../../@types/gallery";
-import { ISLAND_COLORS } from "../../@types/colors";
+import { ISLAND_COLORS } from "../../constants/colors";
+import { THEME } from "../../constants/theme";
+
+import type { IGalleryPageData } from "../../@types/gallery";
 
 export default function GalleryPageIsland({
   position,

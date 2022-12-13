@@ -63,14 +63,12 @@ export function useKeyMovement() {
       controlKeyState({ type: "keydown", code: movementKey });
     }
     function keyUp(e: KeyboardEvent) {
-      console.log("keyUp called");
       const movementKey = mapMovementKey(e.code);
       if (movementKey === null) return;
       controlKeyState({ type: "keyup", code: movementKey });
     }
     function allRelease() {
       controlKeyState({ type: "allKeyUp", code: "" });
-      console.log("All released");
     }
 
     document.addEventListener("keydown", keyDown);

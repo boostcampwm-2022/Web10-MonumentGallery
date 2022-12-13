@@ -9,7 +9,6 @@ export const COLORS = {
   SKY300: "#92EBE7",
   SKY200: "#B5EBE7",
 } as const;
-
 export type COLORS = typeof COLORS[keyof typeof COLORS];
 
 export const CENTER_ISLAND_COLORS = {

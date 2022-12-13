@@ -5,6 +5,7 @@ import SpaceCreater, { PeriodType } from "../components/SpaceCreater";
 import FullScreenModal from "../components/modal/FullScreenModal";
 import { Toast } from "../components/Toast/Toast";
 import TOAST from "../components/Toast/ToastList";
+import Footer from "../components/Footer";
 import FloatLayout from "../layouts/FloatLayout";
 
 import Gallery from "../GalleryPage/Gallery";
@@ -14,9 +15,8 @@ import toastStore from "../store/toast.store";
 import galleryStore from "../store/gallery.store";
 
 import "./style.scss";
-import { THEME } from "../@types/gallery";
 import URLCreator from "../utils/URLCreator";
-import Footer from "../components/Footer";
+import type { THEME } from "../constants/theme";
 
 interface IPostGalleryResponse {
   page: string;

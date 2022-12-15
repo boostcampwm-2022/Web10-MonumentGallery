@@ -1,4 +1,4 @@
-import ScreenShotIcon from "../../../assets/images/screenshot.svg";
+import ScreenShotIcon from "../../assets/images/screenshot.svg";
 export default function ScreenshotButton() {
   return (
     <button

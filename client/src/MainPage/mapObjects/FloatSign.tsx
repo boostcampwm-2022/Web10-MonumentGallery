@@ -78,14 +78,15 @@ export default function FloatSign() {
 function CloseButton({ onClick }: CloseButtonProps) {
   return (
     <Html
-      position={[0.4, 0.9, -1]}
+      transform={true}
+      position={[0.2, 0.6, -1]}
       rotation={[0, Math.PI / 2, 0]}
       occlude
       wrapperClass="road-sign-html"
       zIndexRange={[1, 10]}
     >
       <button className="sign-button" onClick={onClick}>
-        <img width={10} height={10} src={CloseIcon} alt="closeIcon" />
+        <img width={6} height={6} src={CloseIcon} alt="closeIcon" />
       </button>
     </Html>
   );

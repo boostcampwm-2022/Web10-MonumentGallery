@@ -37,6 +37,7 @@ export interface IGalleryMapData {
   pages: IGalleryPageData[];
   nodes: number[][];
   views?: number;
+  modifiedDate?: number;
 }
 
 export interface IGalleryDataResponse {

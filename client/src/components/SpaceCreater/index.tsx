@@ -1,11 +1,9 @@
 import useSelectorComponent from "../Selector";
 import ProgressBar from "../ProgressBar";
-
-import styles from "./style.module.scss";
-import { THEME } from "../../constants/theme";
-
-export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
-
+import { THEME, THEME_ITEM_LIST } from "../../constants/theme";
+import { PeriodType, ThemeType } from "../../@types/gallery";
+import { PERIOD_ITEM_LIST } from "../../constants/periods";
+import "./style.scss";
 const ModalName = {
   create: "갤러리 만들기",
   sync: "갤러리 동기화하기",
@@ -22,7 +20,7 @@ interface IOnLoadFunction {
 
 interface SpaceCreaterProps {
   eventSourceUrl: string;
-  onSubmit: (period: PeriodType | null, theme: THEME | null) => void;
+  onSubmit: (period: PeriodType | null, theme: ThemeType | null) => void;
   onLoad: IOnLoadFunction;
   requested: boolean;
   setRequested: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,33 +36,27 @@ export default function SpaceCreater({
   type = "create",
 }: SpaceCreaterProps) {
   const [period, PeriodSelectorWrapper, PeriodSelectorItem] = useSelectorComponent<PeriodType>("all");
-  const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent<THEME>(THEME.DREAM);
+  const [theme, ThemeSelectorWrapper, ThemeSelectorItem] = useSelectorComponent<ThemeType>(THEME.DREAM);
   return (
     <div className="create-modal">
       <span className="make-gallery">{ModalName[type]}</span>
       <PeriodSelectorWrapper title="기간">
-        <PeriodSelectorItem value="all">전체</PeriodSelectorItem>
-        <PeriodSelectorItem value="2w">14일</PeriodSelectorItem>
-        <PeriodSelectorItem value="1m">1개월</PeriodSelectorItem>
-        <PeriodSelectorItem value="3m">3개월</PeriodSelectorItem>
-        <PeriodSelectorItem value="1y">1년</PeriodSelectorItem>
+        {PERIOD_ITEM_LIST.map((periodItem) => (
+          <PeriodSelectorItem key={`period-item-${periodItem.value}`} value={`${periodItem.value}`}>
+            {periodItem.text}
+          </PeriodSelectorItem>
+        ))}
       </PeriodSelectorWrapper>
       <ThemeSelectorWrapper title="테마">
-        <ThemeSelectorItem value={THEME.DREAM} className={styles.dream}>
-          꿈
-        </ThemeSelectorItem>
-        <ThemeSelectorItem value={THEME.SPRING} className={styles.spring}>
-          봄
-        </ThemeSelectorItem>
-        <ThemeSelectorItem value={THEME.SUMMER} className={styles.summer}>
-          여름
-        </ThemeSelectorItem>
-        <ThemeSelectorItem value={THEME.AUTUMN} className={styles.autumn}>
-          가을
-        </ThemeSelectorItem>
-        <ThemeSelectorItem value={THEME.WINTER} className={styles.winter}>
-          겨울
-        </ThemeSelectorItem>
+        {THEME_ITEM_LIST.map((themeItem) => (
+          <ThemeSelectorItem
+            key={`theme-item-${themeItem.value}`}
+            value={`${themeItem.value}`}
+            className={`${themeItem.style}`}
+          >
+            {themeItem.text}
+          </ThemeSelectorItem>
+        ))}
       </ThemeSelectorWrapper>
       {requested ? (
         <ProgressBar eventSourceUrl={eventSourceUrl} onLoad={onLoad as IOnLoadFunction} />

@@ -76,6 +76,7 @@ router.get(
 router.get(
   "/gallery/sync",
   authMiddleware,
+  catchAuthError,
   asyncHandler(async (req, res) => {
     req.connection.setTimeout(60 * 5 * 1000); //5분
     const requestUserID = req.userid;

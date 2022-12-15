@@ -24,7 +24,7 @@ export default function AudioHandler() {
 
   return (
     <>
-      <audio ref={audioRef} />
+      <audio ref={audioRef} loop={true} />
       <button
         className="footer-element"
         onClick={(e) => {

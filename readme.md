@@ -1,12 +1,20 @@
+![logo](https://user-images.githubusercontent.com/68687144/207802799-8133d3e2-8d97-4521-b434-183302a218d0.png)
+
 ## 🎆프로젝트 소개
 
 <img width="1280" alt="monument gallery" src="https://user-images.githubusercontent.com/32293736/205430959-b6713512-819c-4075-a103-c720b7629285.png">
+
+<br />
 
 **데모** : https://monumentgallery.ddns.net/
 
 **저희의 고민들** : [Monument Gallery Notion](https://boostcamp7-monolith.notion.site/Monument-Gallery-7d1239b321684fed94d4669bcee673f0)
 
-### 🪦 **당신의 기록들을 작품으로 만들어드립니다!**
+**시연영상** : [시연영상 보러가기](https://www.youtube.com/watch?v=0VZyVAeBpco)
+
+**발표영상** : [발표영상 보러가기](https://www.youtube.com/watch?v=w01j1Fw2EUY)
+
+### 🪦 **당신의 기록을 예술로 만들어드립니다!**
 
 노션 API를 이용해 사용자의 노션 글, 그림 데이터들을 받아오고 3D 공간 안에서 시각화 해주는 프로젝트입니다.
 
@@ -16,6 +24,8 @@
 - 메인 로비에서는 다른 유저들의 갤러리를 탐방할 수 있습니다.
   - 유저의 갤러리들이 하나의 형태(**모뉴먼트**)로 존재합니다.
   - 3인칭 시점 조작으로 나의 캐릭터를 움직여 해당 유저의 갤러리로 이동합니다.
+
+자주묻는 질문 : [프로젝트 상세 소개](https://www.notion.so/boostcamp7-monolith/aec3c6f5e42f4d088026037d439cc6f6)
 
 ## 👨‍👨‍👦‍👦팀 소개
 
@@ -36,6 +46,8 @@
 
 ### 🖼️갤러리
 
+![gallery](https://user-images.githubusercontent.com/68687144/207827402-6cac009f-d0bd-42be-bfe3-71b6d799e7a8.png)
+
 - 1인칭 플레이어 이동, E키로 모드 전환 및 레이캐스터 변경
 - 3D 워드클라우드
 - 링크 반석 상호작용
@@ -45,6 +57,8 @@
 - 갤러리 동기화 기능
 
 ### 🏛️메인 로비
+
+![main](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/98790b62-2292-4edc-9941-0633e037e1af/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221215%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221215T094008Z&X-Amz-Expires=86400&X-Amz-Signature=df2ccb49a48a951ef909aed785471d70786dd07ce9a66d19addf14609cc8cbfb&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 - 3인칭 플레이어 이동
 - 모뉴먼트에 가까이 갈 시 페이지 이동

@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 
-export default function Zoom() {
+export default function useZoom() {
   const [cameraScale, setCameraScale] = useState(1);
 
   useFrame(({ camera }) => {
@@ -20,6 +20,4 @@ export default function Zoom() {
     document.addEventListener("wheel", wheelHandler);
     return () => document.removeEventListener("wheel", wheelHandler);
   }, [cameraScale]);
-
-  return null;
 }

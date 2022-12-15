@@ -31,7 +31,7 @@ export interface IGalleryPageData {
 export interface IGalleryMapData {
   id?: string;
   userName: string;
-  theme: THEME;
+  theme: ThemeType;
   totalKeywords: IKeywordMap;
   groupKeywords: IGroupKeywordData[];
   pages: IGalleryPageData[];
@@ -56,3 +56,6 @@ export type GalleryLoadErrorEvent = Event & {
 };
 
 type GalleryLoadError = { reason: string };
+
+export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
+export type ThemeType = typeof THEME[keyof typeof THEME];

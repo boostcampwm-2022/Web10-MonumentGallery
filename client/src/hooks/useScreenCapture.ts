@@ -1,13 +1,12 @@
-import { useRef, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 
-export default function ScreenshotCapturer() {
+export default function useScreenshotCapture() {
   const { gl, scene, camera } = useThree();
   const virtualLink = useRef(document.createElement("a"));
 
   function saveBlob(blob: Blob | null) {
     if (!virtualLink.current || blob === null) return;
-
     const img = window.URL.createObjectURL(blob);
     virtualLink.current.href = img;
     virtualLink.current.download = "Monument Gallery";
@@ -23,6 +22,4 @@ export default function ScreenshotCapturer() {
     document.addEventListener("save-screenshot", saveScreenshot);
     return () => document.removeEventListener("save-screenshot", saveScreenshot);
   }, []);
-
-  return null;
 }

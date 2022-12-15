@@ -3,7 +3,7 @@ import ExpandButton from "./ExpandButton";
 
 import "./style.scss";
 import GithubMark from "../../assets/images/github.svg";
-import ScreenShotIcon from "../../assets/images/screenshot.svg";
+import ScreenshotButton from "./ScreenshotButton";
 
 export default function Footer() {
   return (
@@ -15,16 +15,7 @@ export default function Footer() {
         </button>
       </a>
       <AudioHandler />
-      <button
-        type="button"
-        className="footer-element"
-        onClick={(e) => {
-          document.dispatchEvent(new CustomEvent("save-screenshot"));
-          e.currentTarget.blur();
-        }}
-      >
-        <img width={24} height={24} src={ScreenShotIcon} alt="screenshot" />
-      </button>
+      <ScreenshotButton />
       <ExpandButton />
     </div>
   );

@@ -1,15 +1,15 @@
 import create from "zustand";
 import { gallerySelector } from "./selectors";
 import { THEME } from "../constants/theme";
-import type { IGalleryDataResponse, IGalleryMapData } from "../@types/gallery";
+import type { IGalleryDataResponse, IGalleryMapData, ThemeType } from "../@types/gallery";
 
 interface GalleryStore {
   data: IGalleryMapData;
   userId: string | null;
-  theme: THEME | null;
+  theme: ThemeType | null;
   getData: (url: string) => IGalleryDataResponse;
   setData: (gallery: IGalleryMapData, userId: string) => void;
-  setTheme: (theme: THEME) => void;
+  setTheme: (theme: ThemeType) => void;
 }
 
 const galleryStore = create<GalleryStore>((set) => ({

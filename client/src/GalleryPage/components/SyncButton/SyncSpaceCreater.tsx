@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import SpaceCreater, { PeriodType } from "../../../components/SpaceCreater";
+import SpaceCreater from "../../../components/SpaceCreater";
 import TOAST from "../../../components/Toast/ToastList";
 
 import { useGalleryHistorySave } from "../../../hooks/useGalleryHistorySave";
@@ -10,8 +10,7 @@ import URLCreator from "../../../utils/URLCreator";
 
 import "./style.scss";
 
-import type { IGalleryMapData } from "../../../@types/gallery";
-import type { THEME } from "../../../constants/theme";
+import type { IGalleryMapData, PeriodType, ThemeType } from "../../../@types/gallery";
 
 interface IOnLoadFunction {
   <T>(a: T): void;
@@ -43,7 +42,7 @@ export default function SyncSpaceCreater({ closeModal }: SyncSpaceCreaterProps) 
   return (
     <SpaceCreater
       eventSourceUrl={eventSourceUrl}
-      onSubmit={(period: PeriodType | null, theme: THEME | null) => {
+      onSubmit={(period: PeriodType | null, theme: ThemeType | null) => {
         const eventSourceUrl = URLCreator({
           path: "/api/gallery/sync",
           params: { period: period, theme: theme },

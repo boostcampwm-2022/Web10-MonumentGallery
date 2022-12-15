@@ -1,5 +1,5 @@
 import create from "zustand";
-import type { THEME } from "../constants/theme";
+import { ThemeType } from "../@types/gallery";
 
 const AudioTrackUrl = {
   DREAM: "https://kr.object.ncloudstorage.com/monument-gallery/audio/dream.mp3",
@@ -13,7 +13,7 @@ interface AudioStore {
   sourceUrl: string;
   isPlaying: boolean;
   volume: number;
-  setSourceUrl: (theme: THEME) => void;
+  setSourceUrl: (theme: ThemeType) => void;
   setIsPlaying: (isPlaying: boolean) => void;
   setVolume: (volume: number) => void;
 }

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 
 import Header from "../components/Header";
-import SpaceCreater, { PeriodType } from "../components/SpaceCreater";
+import SpaceCreater from "../components/SpaceCreater";
 import FullScreenModal from "../components/modal/FullScreenModal";
 import { Toast } from "../components/Toast/Toast";
 import TOAST from "../components/Toast/ToastList";
@@ -17,7 +17,7 @@ import galleryStore from "../store/gallery.store";
 
 import "./style.scss";
 import URLCreator from "../utils/URLCreator";
-import type { THEME } from "../constants/theme";
+import { PeriodType, ThemeType } from "../@types/gallery";
 
 interface IPostGalleryResponse {
   page: string;
@@ -67,7 +67,7 @@ export default function CreatePage() {
       <FullScreenModal show={show} css={{ width: "70%", height: "55%", minHeight: "480px" }} setShow={setShow}>
         <SpaceCreater
           eventSourceUrl={eventSourceUrl}
-          onSubmit={(period: PeriodType | null, theme: THEME | null) => {
+          onSubmit={(period: PeriodType | null, theme: ThemeType | null) => {
             const eventSourceUrl = URLCreator({
               path: "/api/gallery/create",
               params: { period: period, theme: theme },

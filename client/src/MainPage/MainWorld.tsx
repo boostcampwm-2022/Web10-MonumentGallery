@@ -7,9 +7,14 @@ import Player from "./mapObjects/Player";
 import MapDataFetcher from "./components/MapDataFetcher";
 import Ground from "./mapObjects/Ground";
 import FloatSign from "./mapObjects/FloatSign";
+import useScreenshotCapture from "../hooks/useScreenCapture";
+import useZoom from "../hooks/useZoom";
 // import DevTools from "../components/Devtools";
 
 export default function MainWorld() {
+  useScreenshotCapture();
+  useZoom();
+
   return (
     <Physics gravity={[0, 0, 0]}>
       <ErrorBoundary fallback={null}>

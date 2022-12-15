@@ -4,7 +4,7 @@ import Helper from "./Helper";
 
 import "./style.scss";
 import GithubMark from "../../assets/images/github.svg";
-import ScreenShotIcon from "../../assets/images/screenshot.svg";
+import ScreenshotButton from "./ScreenshotButton";
 
 import type { ReactNode } from "react";
 
@@ -23,16 +23,7 @@ export default function Footer({ helper }: FooterProps) {
       </a>
       {helper && <Helper>{helper}</Helper>}
       <AudioHandler />
-      <button
-        type="button"
-        className="footer-element"
-        onClick={(e) => {
-          document.dispatchEvent(new CustomEvent("save-screenshot"));
-          e.currentTarget.blur();
-        }}
-      >
-        <img width={24} height={24} src={ScreenShotIcon} alt="screenshot" />
-      </button>
+      <ScreenshotButton />
       <ExpandButton />
     </div>
   );

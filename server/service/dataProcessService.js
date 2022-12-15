@@ -86,7 +86,7 @@ async function getKeywordFromFastAPI(rawContent) {
   try {
     const fastapiEndpoint = process.env.FASTAPI_ENDPOINT;
     const fastapiData = getFastAPIFormData(rawContent);
-    // console.log(fastapiData);
+    // console.log(JSON.stringify(fastapiData));
     // console.log(fastapiData.pages);
     const fastapiResponse = await axios.post(fastapiEndpoint + "/preprocess/text", fastapiData);
     return fastapiResponse.data;
@@ -135,7 +135,7 @@ function getFastAPIFormData(rawContent) {
     (acc, cur) => {
       // console.log(cur);
       acc.pages[cur] = {
-        title: rawContent[cur].title,
+        title: rawContent[cur].title ?? "",
         h1: rawContent[cur].h1,
         h2: rawContent[cur].h2,
         h3: rawContent[cur].h3,

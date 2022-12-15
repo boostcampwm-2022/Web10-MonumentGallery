@@ -22,6 +22,7 @@ export default function Easel(props: GroupProps) {
   const { gl } = useThree();
   function openHelp(e: ThreeEvent<MouseEvent>) {
     if (e.distance >= 20) return;
+    e.stopPropagation();
     gl.domElement.ownerDocument.exitPointerLock();
     document.dispatchEvent(new CustomEvent("open-help"));
   }

@@ -6,7 +6,7 @@
 
 **저희의 고민들** : [Monument Gallery Notion](https://boostcamp7-monolith.notion.site/Monument-Gallery-7d1239b321684fed94d4669bcee673f0)
 
-### 🪦 **당신의 기록들을 작품으로 만들어드립니다!**
+### 🪦 **당신의 기록을 예술로 만들어드립니다!**
 
 노션 API를 이용해 사용자의 노션 글, 그림 데이터들을 받아오고 3D 공간 안에서 시각화 해주는 프로젝트입니다.
 

@@ -25,6 +25,8 @@
   - 유저의 갤러리들이 하나의 형태(**모뉴먼트**)로 존재합니다.
   - 3인칭 시점 조작으로 나의 캐릭터를 움직여 해당 유저의 갤러리로 이동합니다.
 
+자주묻는 질문 : [프로젝트 상세 소개](https://www.notion.so/boostcamp7-monolith/aec3c6f5e42f4d088026037d439cc6f6)
+
 ## 👨‍👨‍👦‍👦팀 소개
 
 | 🧑‍🚀[J215 한기종](https://github.com/lybell-art)           | 🥷[J010 고세연](https://github.com/koseyeon)           | 🙉[J154 이정욱](https://github.com/kddkdkk)               | 🕵️[J155 이종찬](https://github.com/Lipeya)               |

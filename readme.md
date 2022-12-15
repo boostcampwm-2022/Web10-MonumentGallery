@@ -46,7 +46,7 @@
 
 ### 🖼️갤러리
 
-![gallery](https://user-images.githubusercontent.com/68687144/207826672-83b413ec-df19-47f5-8f46-0dde70b2acd3.png)
+![gallery](https://user-images.githubusercontent.com/68687144/207827402-6cac009f-d0bd-42be-bfe3-71b6d799e7a8.png)
 
 - 1인칭 플레이어 이동, E키로 모드 전환 및 레이캐스터 변경
 - 3D 워드클라우드

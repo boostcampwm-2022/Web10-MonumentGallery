@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+}
+
+.progress-bar__container {
+  width: 80%;
+  height: 30px;
+  border-radius: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s;
+  will-change: transform;
+  box-shadow: 0 0 5px #e76f51;
+}
+
+.progress-bar {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: #e76f51;
+  left: -100%;
+  border-radius: inherit;
+}
+.progress-bar__text {
+  margin-top: 10px;
+}

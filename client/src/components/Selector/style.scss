@@ -1,0 +1,40 @@
+.selector-wrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 10px;
+	width: 80%;
+	max-width: 500px;
+	margin-bottom: 20px;
+	.selector-title {
+		font-size: 24px;
+	}
+	.selector-list {
+		display: flex;
+		justify-content: space-between;
+		gap: 10px;
+		width: 100%;
+		height: 80px;
+		.selector-item {
+			flex: 1 0 10px;
+			width: 1px;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border: 2px solid var(--border-color, #222222);
+			color: #222222;
+			border-radius: 10px;
+			transition: transform 0.2s;
+			cursor: pointer;
+			&.selected {
+				border: none;
+				background: var(--background, #222222);
+				color: #ffffff;
+			}
+			&:hover {
+				transform: scale(1.04);
+			}
+		}
+	}
+}

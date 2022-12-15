@@ -1,0 +1,16 @@
+.cross-pointer {
+  position: absolute;
+  left: calc(50vw - 15px);
+  top: calc(50vh - 15px);
+  width: 30px;
+  height: 30px;
+  font-size: 30px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  &.hidden {
+    visibility: hidden;
+  }
+}

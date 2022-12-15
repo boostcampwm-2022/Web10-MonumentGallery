@@ -1,0 +1,55 @@
+name: Deploy
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main", "demo"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the express Docker image & push to dockerhub
+        run: |
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+          echo "---- build client ----"
+          cd ./client
+          npm i
+          npm run build
+          cd ..
+          echo "---- express-server ----"
+          echo "${{secrets.MONGO_URL}}" >> ./server/.env
+          echo "${{secrets.FASTAPI_ENDPOINT}}" >> ./server/.env
+          echo "${{secrets.NOTION_CLIENT_ID}}" >> ./server/.env
+          echo "${{secrets.NOTION_CLIENT_SECRET}}" >> ./server/.env
+          echo "${{secrets.TOKEN_SECRET}}" >> ./server/.env
+          echo "${{secrets.REDIS_URL}}" >> ./server/.env
+          echo "${{secrets.NOTION_LOGIN_URL}}" >> ./server/.env
+          echo "${{secrets.NOTION_REDIRECT_URL}}" >> ./server/.env
+          echo "NODE_ENV=production" >> ./server/.env
+          cat ./server/.env
+          docker build -t express-server ./server
+          docker tag express-server ${{secrets.DOCKER_USERNAME}}/express-server
+          docker push ${{secrets.DOCKER_USERNAME}}/express-server
+          echo "---- fastapi-server ----"
+          docker build -t fastapi-server ./python
+          docker tag fastapi-server ${{secrets.DOCKER_USERNAME}}/fastapi-server
+          docker push ${{secrets.DOCKER_USERNAME}}/fastapi-server
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.NCLOUD_HOST}}
+          username: ${{secrets.NCLOUD_USERNAME}}
+          password: ${{secrets.NCLOUD_PASSWORD}}
+          script: |
+            docker pull ${{secrets.DOCKER_USERNAME}}/express-server
+            docker pull ${{secrets.DOCKER_USERNAME}}/fastapi-server
+            docker tag ${{secrets.DOCKER_USERNAME}}/express-server express-server
+            docker tag ${{secrets.DOCKER_USERNAME}}/fastapi-server fastapi-server
+            cd ~/proxy
+            curl -o docker-compose.yaml https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/dev/docker-compose.yaml
+            curl -o nginx.conf https://raw.githubusercontent.com/boostcampwm-2022/Web10-MonumentGallery/dev/proxy/nginx.conf
+            docker-compose stop
+            docker rm express
+            docker rm fastapi
+            docker-compose up -d

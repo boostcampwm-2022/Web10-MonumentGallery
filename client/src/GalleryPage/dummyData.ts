@@ -8,8 +8,7 @@ const dummyData: IGalleryMapData = {
   totalKeywords: {
     자세한: 4,
     사용방법은: 7,
-    날라다니는: 5,
-    표지판을: 10,
+    이젤을: 15,
     클릭하세요: 6,
   },
   groupKeywords: [

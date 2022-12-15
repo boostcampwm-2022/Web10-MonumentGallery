@@ -4,7 +4,6 @@ import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
 import Light from "./mapObjects/Light";
-import Environments from "./mapObjects/Environments";
 import CollisionPlayerBody from "./components/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
@@ -44,7 +43,6 @@ export default function Gallery() {
         <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
-        <Environments />
         {/*<DevTools showDevtool={true} speed={5} />*/}
       </Physics>
       <ScreenshotCapturer />

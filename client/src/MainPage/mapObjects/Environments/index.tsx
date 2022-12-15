@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from "react";
-import { RoadSignMainPageHtml } from "../../../components/RoadSign/RoadSignHtml";
+// import { RoadSignMainPageHtml } from "../../../components/RoadSign/RoadSignHtml";
 import mainStore from "../../../store/main.store";
 
 const RoadSign = React.lazy(() => import("../../../components/RoadSign"));
@@ -19,9 +19,7 @@ export default function Environments() {
         offset={[-3, -20, -15]}
         rotation={[0, -Math.PI / 2, 0]}
         scale={[2, 2, 2]}
-      >
-        <RoadSignMainPageHtml />
-      </RoadSign>
+      ></RoadSign>
     </Suspense>
   );
 }

@@ -1,14 +1,12 @@
-import { useState } from "react";
 import { OBJLoader } from "three-stdlib";
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 
-import GalleryGuideModal from "./Modal";
-import EaselObj from "../../../assets/models/easel.obj?url";
-import EaselTexture from "../../../assets/images/easel-texture.png";
+import EaselObj from "../../assets/models/easel.obj?url";
+import EaselTexture from "../../assets/images/easel-texture.png";
 
 import type { Mesh } from "three";
-import type { GroupProps } from "@react-three/fiber";
+import type { GroupProps, ThreeEvent } from "@react-three/fiber";
 
 function useEaselLoader() {
   const group = useLoader(OBJLoader, EaselObj);
@@ -19,16 +17,20 @@ function useEaselLoader() {
 }
 
 export default function Easel(props: GroupProps) {
-  const [showSign, setShowSign] = useState(false);
   const [easelGeometry, pannelGeometry] = useEaselLoader();
   const texture = useTexture(EaselTexture);
+  const { gl } = useThree();
+  function openHelp(e: ThreeEvent<MouseEvent>) {
+    if (e.distance >= 20) return;
+    gl.domElement.ownerDocument.exitPointerLock();
+    document.dispatchEvent(new CustomEvent("open-help"));
+  }
   return (
     <group {...props}>
       <mesh castShadow geometry={easelGeometry}>
         <meshLambertMaterial color={0x906746} />
       </mesh>
-      <mesh castShadow geometry={pannelGeometry} onClick={() => setShowSign(true)}>
-        <GalleryGuideModal show={showSign} setShow={setShowSign} />
+      <mesh castShadow geometry={pannelGeometry} onClick={openHelp}>
         <meshLambertMaterial toneMapped={false} map={texture} color={0xf3f3f3} />
       </mesh>
     </group>

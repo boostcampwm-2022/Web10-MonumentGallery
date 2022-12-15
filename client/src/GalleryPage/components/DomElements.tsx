@@ -3,6 +3,7 @@ import { useState } from "react";
 import ShareWrapper from "./ShareWrapper";
 import HistorySidebar from "./HistorySidebar";
 import CrossPointer from "./CrossPointer";
+import GalleryHelp from "./GalleryHelp";
 import Header from "../../components/Header";
 import UserInfo from "../../components/Header/UserInfo";
 import ThemeSeletor from "../../components/ThemeSelector";
@@ -39,7 +40,7 @@ export default function DomElements({
             </button>
           </Header>
           <ShareWrapper />
-          <Footer />
+          <Footer helper={<GalleryHelp />} />
         </FloatLayout>
         <HistorySidebar show={showSidebar} setShow={setShowSidebar} setRequestUrl={setRequestUrl} />
       </div>

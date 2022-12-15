@@ -1,4 +1,5 @@
 import User from "../schema/userSchema.js";
+import { getRandomInt } from "../utils/randoms.js";
 
 export async function findUserByUserID(userID) {
   const isExists = await User.exists({ userID });
@@ -32,6 +33,7 @@ export async function updateUserHistoryByUserID(userID, userName, galleryID, ses
       {
         userID,
         userName,
+        randIdx: getRandomInt(0, 5),
         isShared: false,
         history,
       },

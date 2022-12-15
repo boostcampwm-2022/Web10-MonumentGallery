@@ -1,10 +1,18 @@
+![logo](https://user-images.githubusercontent.com/68687144/207802799-8133d3e2-8d97-4521-b434-183302a218d0.png)
+
 ## 🎆프로젝트 소개
 
 <img width="1280" alt="monument gallery" src="https://user-images.githubusercontent.com/32293736/205430959-b6713512-819c-4075-a103-c720b7629285.png">
 
+<br />
+
 **데모** : https://monumentgallery.ddns.net/
 
 **저희의 고민들** : [Monument Gallery Notion](https://boostcamp7-monolith.notion.site/Monument-Gallery-7d1239b321684fed94d4669bcee673f0)
+
+**시연영상** : [시연영상 보러가기](https://www.youtube.com/watch?v=0VZyVAeBpco)
+
+**발표영상** : [발표영상 보러가기](https://www.youtube.com/watch?v=w01j1Fw2EUY)
 
 ### 🪦 **당신의 기록을 예술로 만들어드립니다!**
 

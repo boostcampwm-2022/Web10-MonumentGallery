@@ -2,6 +2,7 @@ import Island from "./Island";
 import Monolith from "./Monolith";
 import MainWordCloud from "./MainWordCloud";
 import Sign from "./Sign";
+import Easel from "./Easel";
 
 import galleryStore from "../../store/gallery.store";
 import { CENTER_ISLAND_COLORS } from "../../constants/colors";
@@ -22,6 +23,7 @@ export default function GalleryCenterIsland({ keywords, groupKeywords }: Gallery
       <Monolith />
       <Sign groupKeywords={groupKeywords} />
       <MainWordCloud keywords={keywords} />
+      <Easel position={[4, 0, -4]} rotation-y={-Math.PI / 4} scale={0.9} />
     </group>
   );
 }

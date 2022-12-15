@@ -6,7 +6,7 @@ import ErrorBoundary from "../components/common/ErrorBoundary";
 import Player from "./mapObjects/Player";
 import MapDataFetcher from "./components/MapDataFetcher";
 import Ground from "./mapObjects/Ground";
-import Environments from "./mapObjects/Environments";
+import FloatSign from "./mapObjects/FloatSign";
 import useScreenshotCapture from "../hooks/useScreenCapture";
 import useZoom from "../hooks/useZoom";
 // import DevTools from "../components/Devtools";
@@ -24,8 +24,8 @@ export default function MainWorld() {
       </ErrorBoundary>
       <Light />
       <Ground />
-      <Environments />
       <Player />
+      <FloatSign />
       {/*<DevTools showDevtool={true} speed={10} />*/}
     </Physics>
   );

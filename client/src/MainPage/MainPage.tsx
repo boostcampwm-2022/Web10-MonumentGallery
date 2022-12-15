@@ -3,6 +3,7 @@ import { Suspense, useState } from "react";
 
 import MainCanvas from "./MainCanvas";
 import CreateModal from "./components/CreateModal/CreateModal";
+import MainHelp from "./components/MainHelp";
 import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
@@ -56,7 +57,7 @@ export default function MainPage() {
           <ThemeSeletor />
         </Header>
         <CreateMonumentButton showModal={showModal} />
-        <Footer />
+        <Footer helper={<MainHelp />} />
       </FloatLayout>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
         <CreateModal />

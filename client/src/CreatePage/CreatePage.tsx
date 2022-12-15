@@ -10,6 +10,7 @@ import FloatLayout from "../layouts/FloatLayout";
 
 import Gallery from "../GalleryPage/Gallery";
 import dummyData from "../GalleryPage/dummyData";
+import GalleryHelp from "../GalleryPage/components/GalleryHelp";
 
 import toastStore from "../store/toast.store";
 import galleryStore from "../store/gallery.store";
@@ -61,7 +62,7 @@ export default function CreatePage() {
         <button className="upload-btn" type="button" onClick={showModal}>
           Upload
         </button>
-        <Footer />
+        <Footer helper={<GalleryHelp />} />
       </FloatLayout>
       <FullScreenModal show={show} css={{ width: "70%", height: "55%", minHeight: "480px" }} setShow={setShow}>
         <SpaceCreater

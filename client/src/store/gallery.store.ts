@@ -20,11 +20,12 @@ const galleryStore = create<GalleryStore>((set) => ({
     totalKeywords: {},
     groupKeywords: [],
     theme: THEME.DREAM,
+    modifiedDate: Date.now(),
   },
   userId: null,
   theme: THEME.DREAM,
   getData: (url) => gallerySelector(url).data,
-  setData: (data, userId) => set({ data, userId, theme: data.theme }),
+  setData: (data, userId) => set({ data: { ...data, modifiedDate: Date.now() }, userId, theme: data.theme }),
   setTheme: (theme) => set({ theme }),
 }));
 

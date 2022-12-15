@@ -3,8 +3,6 @@ import { Canvas } from "@react-three/fiber";
 
 // import MainWorld from "./MainWorld";
 const MainWorld = React.lazy(() => import("./MainWorld"));
-import ScreenshotCapturer from "../components/ScreenshotCapturer";
-import Zoom from "./components/Zoom";
 
 import galleryStore from "../store/gallery.store";
 import { BACKGROUND_COLORS } from "../constants/colors";
@@ -26,8 +24,6 @@ export default function MainCanvas() {
       <Suspense fallback={null}>
         <MainWorld />
       </Suspense>
-      <Zoom />
-      <ScreenshotCapturer />
     </Canvas>
   );
 }

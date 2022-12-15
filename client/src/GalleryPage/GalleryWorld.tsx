@@ -3,6 +3,7 @@ import GalleryCenterIsland from "./mapObjects/GalleryCenterIsland";
 import Bridge from "./mapObjects/Bridge";
 import { Vector3Arr } from "../@types/common";
 import { IGalleryMapData, IGalleryPageData } from "../@types/gallery";
+import useScreenshotCapture from "../hooks/useScreenCapture";
 
 interface GalleryWorldProps {
   data: IGalleryMapData;
@@ -15,6 +16,8 @@ export default function GalleryWorld({ data }: GalleryWorldProps) {
     if (i === -1) return [0, 0, 0];
     return pageIslandPosition[i];
   };
+
+  useScreenshotCapture();
 
   return (
     <>

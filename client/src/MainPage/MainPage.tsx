@@ -7,11 +7,16 @@ import Header from "../components/Header";
 import UserInfo from "../components/Header/UserInfo";
 import FullScreenModal from "../components/modal/FullScreenModal";
 import Footer from "../components/Footer";
-
-import userStore from "../store/user.store";
-import FloatLayout from "../layouts/FloatLayout";
+import { Toast } from "../components/Toast/Toast";
+import TOAST from "../components/Toast/ToastList";
 import Splash from "./components/SplashScreen/SplashScreen";
 import ThemeSeletor from "../components/ThemeSelector";
+
+import useError from "../hooks/useError";
+import userStore from "../store/user.store";
+import toastStore from "../store/toast.store";
+import mainStore from "../store/main.store";
+import FloatLayout from "../layouts/FloatLayout";
 
 function CreateMonumentButton({ showModal }: { showModal: () => void }) {
   const isLoggedIn = userStore((store) => store.isLoggedIn);
@@ -25,6 +30,13 @@ function CreateMonumentButton({ showModal }: { showModal: () => void }) {
 
 export default function MainPage() {
   const [show, setShow] = useState<boolean>(false);
+  const addToast = toastStore((store) => store.addToast);
+  const setShowSplash = mainStore((store) => store.setShowSplash);
+
+  useError((reason) => {
+    addToast(TOAST.ERROR(reason));
+    setShowSplash(false);
+  });
 
   function showModal() {
     setShow(true);
@@ -40,8 +52,8 @@ export default function MainPage() {
       </div>
       <FloatLayout>
         <Header>
-          <ThemeSeletor />
           <UserInfo />
+          <ThemeSeletor />
         </Header>
         <CreateMonumentButton showModal={showModal} />
         <Footer />
@@ -49,6 +61,7 @@ export default function MainPage() {
       <FullScreenModal show={show} css={{ width: "70%", height: "55%" }} setShow={setShow}>
         <CreateModal />
       </FullScreenModal>
+      <Toast position="bottom-right" autoDelete={true} autoDeleteTime={2000} />
     </>
   );
 }

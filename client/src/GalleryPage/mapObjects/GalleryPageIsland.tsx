@@ -10,8 +10,10 @@ import PictureFragments from "./PictureFragments";
 
 import useTriggeredSpring from "../../hooks/useTriggeredSpring";
 import galleryStore from "../../store/gallery.store";
-import { IGalleryPageData, THEME } from "../../@types/gallery";
-import { ISLAND_COLORS } from "../../@types/colors";
+import { ISLAND_COLORS } from "../../constants/colors";
+import { THEME } from "../../constants/theme";
+
+import type { IGalleryPageData } from "../../@types/gallery";
 
 export default function GalleryPageIsland({
   position,
@@ -39,7 +41,7 @@ export default function GalleryPageIsland({
       <MemorialStones subtitles={subtitle} animator={springs} />
       <SubWordCloud keywords={keywords} radius={6} scale={0.8} animator={springs} />
       {links && <LinkPedals links={links} />}
-      {imagePixel && <PictureFragments pixels={imagePixel} />}
+      {imagePixel && Array.isArray(imagePixel[0]) && <PictureFragments pixels={imagePixel} />}
     </RigidBody>
   );
 }

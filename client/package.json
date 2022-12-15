@@ -41,7 +41,6 @@
     "sass": "^1.56.1",
     "typescript": "^4.6.4",
     "vite": "^3.2.4",
-    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-eslint": "^1.8.1"
   }
 }

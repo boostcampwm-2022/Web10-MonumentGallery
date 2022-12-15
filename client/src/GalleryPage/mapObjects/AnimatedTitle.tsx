@@ -4,10 +4,10 @@ import { animated, Interpolation } from "@react-spring/three";
 
 import Balloon from "./Balloon";
 import { useBillboard } from "../../hooks/useBillboard";
-import { generateRandomPastelColors } from "../../utils/random";
+import { generateRandomPastelColor } from "../../utils/random";
+import { COLORS } from "../../constants/colors";
 import MapoFlowerIsland from "../../assets/fonts/MapoFlowerIsland.otf";
 
-import { COLORS } from "../../@types/colors";
 import type { ITriggeredSpringState } from "../../@types/animator";
 
 interface AnimatedTitleProps {
@@ -23,8 +23,9 @@ export default function AnimatedTitle({ text, animator }: AnimatedTitleProps) {
   const balloonScale: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [0, 1]), []);
   const textY: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-2, 6]), []);
   const balloonY: Interpolation<number, number> = useMemo(() => spring.to([0, 1], [-2, 8]), []);
-  const randomColors = useMemo<keyof typeof COLORS>(() => generateRandomPastelColors()[0], []);
-  const color: Interpolation<number, COLORS> = spring.to([0, 1], [COLORS.SKY400, COLORS[randomColors]]);
+  const color: Interpolation<number, COLORS> = useMemo(() => {
+    return spring.to([0, 1], [COLORS.SKY400, generateRandomPastelColor()]);
+  }, []);
   const rotation = spring.to([0, 1], [0, Math.PI * 4]);
 
   return (

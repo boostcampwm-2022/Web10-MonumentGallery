@@ -1,6 +1,7 @@
 import create from "zustand";
-import { IGalleryDataResponse, IGalleryMapData, THEME } from "../@types/gallery";
 import { gallerySelector } from "./selectors";
+import { THEME } from "../constants/theme";
+import type { IGalleryDataResponse, IGalleryMapData } from "../@types/gallery";
 
 interface GalleryStore {
   data: IGalleryMapData;
@@ -15,6 +16,7 @@ const galleryStore = create<GalleryStore>((set) => ({
   data: {
     nodes: [[]],
     pages: [],
+    userName: "",
     totalKeywords: {},
     groupKeywords: [],
     theme: THEME.DREAM,

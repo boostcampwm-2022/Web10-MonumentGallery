@@ -6,8 +6,10 @@ import { CapsuleCollider, RigidBody, RigidBodyApi } from "@react-three/rapier";
 
 import Ghost from "./Ghost";
 import { useKeyMovement } from "../../hooks/useKeyMovement";
-import type { Group } from "three";
 import settingStore from "../../store/setting.store";
+import { MAIN_CAMERA_Y, MAIN_CAMERA_Z } from "../../constants/positions";
+
+import type { Group } from "three";
 
 const _euler = new Euler(0, 0, 0, "YXZ");
 const _quaternion = new Quaternion();
@@ -47,6 +49,7 @@ function Player() {
 
   const ghostRef = useRef<Group>(null);
   const rigidRef = useRef<RigidBodyApi>(null);
+  const rigidUpdateTime = useRef(0);
   const speed = settingStore((store) => store.speed);
 
   useEffect(() => {
@@ -60,19 +63,26 @@ function Player() {
   }, [moveDirection]);
 
   useFrame(({ camera }, frame) => {
-    if (!ghostRef.current || !rigidRef.current) return;
+    if (!ghostRef.current) return;
+    if (!rigidRef.current) return;
     const ghostPosition = ghostRef.current.position;
     const ghostRotation = ghostRef.current.quaternion;
 
     ghostPosition.addScaledVector(moveDirection, speed * frame);
 
     camera.position.copy(ghostPosition);
-    camera.position.y += 20;
-    camera.position.z += 20;
+    camera.position.y += MAIN_CAMERA_Y;
+    camera.position.z += MAIN_CAMERA_Z;
 
     _quaternion.copy(prevRotation).slerp(currentRotation, spring.get());
     ghostRotation.copy(_quaternion);
-    rigidRef.current.setTranslation(ghostPosition);
+
+    if (moveDirection.x !== 0 || moveDirection.z !== 0) rigidUpdateTime.current += frame;
+    else if (rigidUpdateTime.current !== 0.125) rigidUpdateTime.current = 0;
+    if (rigidUpdateTime.current >= 0) {
+      rigidRef.current.setTranslation(ghostPosition);
+      rigidUpdateTime.current -= 0.125;
+    }
   });
 
   return (

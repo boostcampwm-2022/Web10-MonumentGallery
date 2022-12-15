@@ -54,6 +54,10 @@ export function useKeyMovement() {
   useEffect(() => {
     function keyDown(e: KeyboardEvent) {
       const movementKey = mapMovementKey(e.code);
+      if (e.metaKey === true && e.shiftKey === true) {
+        allRelease();
+        return;
+      }
       if (movementKey === null) return;
       if (getKeyState(movementKey) === true) return;
       controlKeyState({ type: "keydown", code: movementKey });
@@ -61,7 +65,6 @@ export function useKeyMovement() {
     function keyUp(e: KeyboardEvent) {
       const movementKey = mapMovementKey(e.code);
       if (movementKey === null) return;
-      if (getKeyState(movementKey) === false) return;
       controlKeyState({ type: "keyup", code: movementKey });
     }
     function allRelease() {
@@ -71,11 +74,13 @@ export function useKeyMovement() {
     document.addEventListener("keydown", keyDown);
     document.addEventListener("keyup", keyUp);
     window.addEventListener("blur", allRelease);
+    window.addEventListener("fullscreenchange", allRelease);
 
     return () => {
       document.removeEventListener("keydown", keyDown);
       document.removeEventListener("keyup", keyUp);
       window.removeEventListener("blur", allRelease);
+      window.removeEventListener("fullscreenchange", allRelease);
     };
   }, [keyState]);
 

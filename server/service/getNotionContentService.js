@@ -2,6 +2,7 @@ import { Client } from "@notionhq/client";
 //notion의 데이터를 불러오는 로직
 
 //url 탐지
+
 const urlRegEx =
   // eslint-disable-next-line max-len, no-useless-escape
   /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/gim;
@@ -22,6 +23,7 @@ function getPageBasic(result, type) {
     innerText = getTextFromTextObject(result?.title).length > 0 ? getTextFromTextObject(result?.title)[0] : "-";
   }
   return {
+    type: type,
     id: result.id,
     title: innerText,
     createdTime: result.created_time,
@@ -58,36 +60,38 @@ function changeArrayToObject(ary) {
     return acc;
   }, {});
 }
-async function getRootPages(notion, limitTime, type) {
+
+async function getPageDetail(notion, pageContent) {
+  return await Promise.all(
+    pageContent.map(async (page) => {
+      return sumObject(
+        page,
+        page.type === "page" ? await getDataFromPage(notion, page.id) : await getDataFromDatabase(notion, page.id),
+      );
+    }),
+  );
+}
+async function getRootPage(notion, limitTime, type) {
   const pageResponse = await notion.search({
     filter: { property: "object", value: type },
   });
 
-  const pageContents = pageResponse.results.reduce((acc, result) => {
-    if (
-      result.object === type &&
-      result.parent.type === "workspace" &&
-      Date.parse(result.last_edited_time) >= limitTime
-    ) {
-      acc[result.id] = getPageBasic(result, type);
-    }
-    return acc;
-  }, {});
+  const pageContent = pageResponse.results
+    .filter(
+      (result) =>
+        result.object === type &&
+        result.parent.type === "workspace" &&
+        Date.parse(result.last_edited_time) >= limitTime,
+    )
+    .map((result) => {
+      return getPageBasic(result, type);
+    });
 
-  return changeArrayToObject(
-    await Promise.all(
-      Object.keys(pageContents).map(async (pageID) => {
-        return sumObject(
-          pageContents[pageID],
-          type === "page" ? await getDataFromPage(notion, pageID) : await getDataFromDatabase(notion, pageID),
-        );
-      }),
-    ),
-  );
+  return await getPageDetail(notion, pageContent);
 }
 
 export async function getRoot(notion, limitTime) {
-  return { ...(await getRootPages(notion, limitTime, "page")), ...(await getRootPages(notion, limitTime, "database")) };
+  return [...(await getRootPage(notion, limitTime, "page")), ...(await getRootPage(notion, limitTime, "database"))];
 }
 
 function sumArray(ary) {
@@ -97,34 +101,30 @@ function sumArray(ary) {
   }, []);
 }
 
-export async function getChildPages(notion, pageContents, limitTime) {
-  return changeArrayToObject(
-    sumArray(
-      await Promise.all(
-        Object.keys(pageContents).map(async (pageID) => {
-          return await Promise.all(
-            pageContents[pageID].childPage
-              .filter((page) => Date.parse(page.lastEditedTime) >= limitTime)
-              .map(async (page) => {
-                return sumObject(
-                  page,
-                  page.type === "page"
-                    ? await getDataFromPage(notion, page.id)
-                    : await getDataFromDatabase(notion, page.id),
-                );
-              }),
-          );
-        }),
-      ),
-    ),
-  );
+function sumChildPage(pageContent, limitTime) {
+  return pageContent
+    .reduce((acc, cur) => {
+      acc = [...acc, ...cur.childPage];
+      return acc;
+    }, [])
+    .filter((page) => Date.parse(page.lastEditedTime) >= limitTime);
+}
+function getMaxPage(pageContent, pageNum, limitTime) {
+  const childPage = sumChildPage(pageContent, limitTime);
+  return pageNum + childPage.length > 85 ? childPage.splice(0, 85 - pageNum) : childPage;
+}
+
+export async function getChildPage(notion, pageContent, pageNum, limitTime) {
+  const childPage = getMaxPage(pageContent, pageNum, limitTime);
+
+  return await getPageDetail(notion, childPage);
 }
 async function getPages(notion, limitTime) {
   //deprecated
   //root page 처리
   const pageContents = {
-    ...(await getRootPages(notion, limitTime, "page")),
-    ...(await getRootPages(notion, limitTime, "database")),
+    ...(await getRootPage(notion, limitTime, "page")),
+    ...(await getRootPage(notion, limitTime, "database")),
   };
   const pageID = Object.keys(pageContents);
   // console.log(pageID);
@@ -241,6 +241,7 @@ function processPageData(data) {
           createdTime: val.created_time,
           lastEditedTime: val.last_edited_time,
         });
+        res.paragraph.push(val.child_page.title);
         break;
       case "child_database":
         res.childDatabase.push(val.id);

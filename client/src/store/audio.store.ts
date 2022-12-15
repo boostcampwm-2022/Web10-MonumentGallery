@@ -1,5 +1,5 @@
 import create from "zustand";
-import { THEME } from "../@types/gallery";
+import type { THEME } from "../constants/theme";
 
 const AudioTrackUrl = {
   DREAM: "https://kr.object.ncloudstorage.com/monument-gallery/audio/dream.mp3",

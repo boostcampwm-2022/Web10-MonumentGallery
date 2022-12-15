@@ -1,4 +1,5 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
+import type { THEME } from "../constants/theme";
 
 export interface IKeywordMap {
   [keyword: string]: number;
@@ -29,6 +30,7 @@ export interface IGalleryPageData {
 
 export interface IGalleryMapData {
   id?: string;
+  userName: string;
   theme: THEME;
   totalKeywords: IKeywordMap;
   groupKeywords: IGroupKeywordData[];
@@ -48,15 +50,6 @@ export interface IHistory {
   date: string;
   time: string;
 }
-
-export const THEME = {
-  DREAM: "DREAM",
-  SPRING: "SPRING",
-  SUMMER: "SUMMER",
-  AUTUMN: "AUTUMN",
-  WINTER: "WINTER",
-} as const;
-export type THEME = typeof THEME[keyof typeof THEME];
 
 export type GalleryLoadErrorEvent = Event & {
   detail?: AxiosError<GalleryLoadError>;

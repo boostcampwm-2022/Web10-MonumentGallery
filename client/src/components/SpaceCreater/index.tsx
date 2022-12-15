@@ -2,7 +2,7 @@ import useSelectorComponent from "../Selector";
 import ProgressBar from "../ProgressBar";
 
 import styles from "./style.module.scss";
-import { THEME } from "../../@types/gallery";
+import { THEME } from "../../constants/theme";
 
 export type PeriodType = "all" | "2w" | "1m" | "3m" | "1y";
 

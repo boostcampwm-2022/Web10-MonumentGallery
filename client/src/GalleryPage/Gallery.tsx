@@ -1,26 +1,32 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 
 import GalleryWorld from "./GalleryWorld";
 import Light from "./mapObjects/Light";
+import Environments from "./mapObjects/Environments";
 import CollisionPlayerBody from "./components/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
 import ScreenshotCapturer from "../components/ScreenshotCapturer";
+// import DevTools from "../components/Devtools";
 
 import galleryStore from "../store/gallery.store";
-
-import { BACKGROUND_COLORS } from "../@types/colors";
-import { THEME } from "../@types/gallery";
-import DevTools from "../components/Devtools";
 import settingStore from "../store/setting.store";
+
+import { BACKGROUND_COLORS } from "../constants/colors";
+import { THEME } from "../constants/theme";
 
 export default function Gallery() {
   const speed = settingStore((store) => store.speed);
-  const data = galleryStore((store) => store.data);
-  const theme = galleryStore((store) => store.theme);
+  const [data, theme] = galleryStore((store) => [store.data, store.theme]);
   const backgroundColor = useMemo(() => (theme && BACKGROUND_COLORS[theme]) || THEME.DREAM, [theme]);
+
+  useEffect(() => {
+    if (data.userName && data.id !== "TUTORIAL") {
+      document.title = `${data.userName}의 갤러리`;
+    }
+  });
 
   return (
     <Canvas
@@ -37,6 +43,7 @@ export default function Gallery() {
         <MovementController speed={speed} />
         <ViewRotateController />
         <GalleryWorld data={data} />
+        <Environments />
         {/*<DevTools showDevtool={true} speed={5} />*/}
       </Physics>
       <ScreenshotCapturer />

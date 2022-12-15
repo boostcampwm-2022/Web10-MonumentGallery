@@ -4,9 +4,10 @@ import MainWordCloud from "./MainWordCloud";
 import Sign from "./Sign";
 
 import galleryStore from "../../store/gallery.store";
+import { CENTER_ISLAND_COLORS } from "../../constants/colors";
+import { THEME } from "../../constants/theme";
 
-import { IGroupKeywordData, IKeywordMap, THEME } from "../../@types/gallery";
-import { CENTER_ISLAND_COLORS } from "../../@types/colors";
+import type { IGroupKeywordData, IKeywordMap } from "../../@types/gallery";
 
 interface GalleryCenterIslandProps {
   keywords: IKeywordMap;

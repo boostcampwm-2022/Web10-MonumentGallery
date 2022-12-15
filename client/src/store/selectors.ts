@@ -17,10 +17,10 @@ export const gallerySelector = (url?: string) =>
     get: () => axios({ method: "get", url }),
   });
 
-export const mainSelector = (positionKey?: string) =>
+export const mainSelector = (positionKey?: string, searchState?: string) =>
   select<AxiosResponse<IMainDataResponse>>({
     key: `main selector ${positionKey}`,
-    get: () => axios({ method: "get", url: "/api/gallery/all" }),
+    get: () => axios({ method: "get", params: { searchState }, url: "/api/gallery/all" }),
   });
 
 export const splashSelector = () =>

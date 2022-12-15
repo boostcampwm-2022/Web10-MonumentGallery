@@ -8,7 +8,6 @@ import Environments from "./mapObjects/Environments";
 import CollisionPlayerBody from "./components/CollisionPlayerBody";
 import MovementController from "./components/MovementController";
 import ViewRotateController from "./components/ViewRotateController";
-import ScreenshotCapturer from "../components/ScreenshotCapturer";
 // import DevTools from "../components/Devtools";
 
 import galleryStore from "../store/gallery.store";
@@ -47,7 +46,6 @@ export default function Gallery() {
         <Environments />
         {/*<DevTools showDevtool={true} speed={5} />*/}
       </Physics>
-      <ScreenshotCapturer />
     </Canvas>
   );
 }

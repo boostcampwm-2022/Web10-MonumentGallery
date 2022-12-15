@@ -10,7 +10,7 @@ export default function CollisionPlayerBody() {
 
   useFrame(({ camera }) => {
     if (!ref.current) return;
-    ref.current.setTranslation(_vector3(camera.position.x, 1, camera.position.z));
+    ref.current.setTranslation(_vector3.set(camera.position.x, 1, camera.position.z));
   });
 
   return (

@@ -46,6 +46,8 @@
 
 ### 🖼️갤러리
 
+![gallery](https://user-images.githubusercontent.com/68687144/207826672-83b413ec-df19-47f5-8f46-0dde70b2acd3.png)
+
 - 1인칭 플레이어 이동, E키로 모드 전환 및 레이캐스터 변경
 - 3D 워드클라우드
 - 링크 반석 상호작용
@@ -55,6 +57,8 @@
 - 갤러리 동기화 기능
 
 ### 🏛️메인 로비
+
+![main](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/98790b62-2292-4edc-9941-0633e037e1af/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221215%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221215T094008Z&X-Amz-Expires=86400&X-Amz-Signature=df2ccb49a48a951ef909aed785471d70786dd07ce9a66d19addf14609cc8cbfb&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 - 3인칭 플레이어 이동
 - 모뉴먼트에 가까이 갈 시 페이지 이동

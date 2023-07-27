@@ -29,9 +29,9 @@
 
 ## 👨‍👨‍👦‍👦팀 소개
 
-| 🧑‍🚀[J215 한기종](https://github.com/lybell-art)           | 🥷[J010 고세연](https://github.com/koseyeon)           | 🙉[J154 이정욱](https://github.com/kddkdkk)               | 🕵️[J155 이종찬](https://github.com/Lipeya)               |
+| 🧑‍🚀[J215 한기종](https://github.com/lybell-art)           | 🥷[J010 고세연](https://github.com/koseyeon)           | 🙉[J154 이정욱](https://github.com/junguk98)               | 🕵️[J155 이종찬](https://github.com/Lipeya)               |
 | -------------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------- | -------------------------------------------------------- |
-| <img src="https://github.com/lybell-art.png" width=100/> | <img src="https://github.com/koseyeon.png" width=100/> | <img src="https://github.com/kddkdkk.png" width="100px"/> | <img src="https://github.com/Lipeya.png" width="100px"/> |
+| <img src="https://github.com/lybell-art.png" width=100/> | <img src="https://github.com/koseyeon.png" width=100/> | <img src="https://github.com/junguk98.png" width="100px"/> | <img src="https://github.com/Lipeya.png" width="100px"/> |
 | 팀의 휴식담당                                            | 팀의 맏형담당                                          | 팀의 꼬마담당                                             | 팀의 낮잠담당                                            |
 | 민트초코 좋아함                                          | 아자아자파이팅                                         | 난집게리아가아냐                                          | 기계는부숴야제맛                                         |
 
